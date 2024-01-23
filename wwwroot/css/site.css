@@ -18,5 +18,54 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  margin: 0;
+}
+
+header {
+    background-color: limegreen
+}
+
+.navbar {
+
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px;
+}
+
+.navbar-brand {
+    padding: 5px 10px;
+}
+
+.navbar-brand img {
+    max-height: 100px;
+    width: auto;
+}
+
+.navbar-toggler {
+    font-size: 20px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.page-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+.container {
+    flex: 1;
+}
+
+.footer {
+    background-color: limegreen;
+    color: snow;
+    text-align: center;
+    padding: 10px 0;
 }
