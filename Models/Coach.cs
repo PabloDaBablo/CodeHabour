@@ -17,7 +17,7 @@ namespace WMBA_7_2_.Models
         public string CoachName { get; set; }
 
         [Display(Name = "Coach Number")]
-        [Required(ErrorMessage = "Coach number cannot be blank.")]
+        
         public int CoachNumber { get; set; }
 
         [Display(Name = "Coach Position")]
