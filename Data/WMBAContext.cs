@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using WMBA_7_2_.Models;
 
 namespace WMBA_7_2_.Data
 {
@@ -6,8 +7,16 @@ namespace WMBA_7_2_.Data
     {
         public WMBAContext(DbContextOptions<WMBAContext> options) : base(options) { }
 
+        public DbSet<League> Leagues { get; set; }
+        public DbSet<Divisions> Divisions { get; set; }
 
-        //public DbSet<classname> WMBA { get; set; }
-        //to add models to the database I believe
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+
+            modelBuilder.Entity<Team_Coach>()
+                .HasKey(tc => new { tc.CoachID, tc.TeamID});
+
+        }
+
     }
 }
