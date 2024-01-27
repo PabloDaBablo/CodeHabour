@@ -6,3 +6,8 @@ Update-Database -Context WMBAContext
 
 Remeber to add...
             ExtraMigration.Steps(migrationBuilder);
+
+
+------------------------
+git pull origin master
+
