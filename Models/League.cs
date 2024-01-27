@@ -5,7 +5,7 @@ namespace WMBA_7_2_.Models
     public class League
     {
 
-        public int LeagueID { get; set; }
+        public int ID { get; set; }
 
         [Display(Name = "League Type")]
         [Required(ErrorMessage = "League Type cannot be empty.")]

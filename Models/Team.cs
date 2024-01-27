@@ -5,7 +5,7 @@ namespace WMBA_7_2_.Models
     public class Team
     {
 
-        public int TeamID { get; set; }
+        public int ID { get; set; }
 
         [Display(Name = "Team Name")]
         [Required (ErrorMessage = "Team Name cannot be empty.")]
