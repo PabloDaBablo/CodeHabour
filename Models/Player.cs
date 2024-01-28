@@ -26,8 +26,9 @@ namespace WMBA_7_2_.Models
         
         [Display(Name = "MemberID")]
         [Required(ErrorMessage = "MemberID is required")]
-        public string MemberID { get; set; }    
+        public string MemberID { get; set; }
 
-
+        [Display(Name = "Stats")]
+        public ICollection<Stats> StatsTotal { get; set; } = new HashSet<Stats>();
     }
 }
