@@ -5,7 +5,6 @@ namespace WMBA_7_2_.Models
 {
     public class Divisions
     {
-        [Key]
         public int DivID { get; set; }
 
         [Display(Name = "Division Age")]

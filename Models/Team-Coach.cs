@@ -13,5 +13,6 @@ namespace WMBA_7_2_.Models
 
         public int TeamID { get; set; }
         public Team Team { get; set; }
+        
     }
 }
