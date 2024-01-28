@@ -5,7 +5,7 @@ namespace WMBA_7_2_.Models
     public class Divisions
     {
 
-        public int DivID { get; set; }
+        public int ID { get; set; }
 
         [Display(Name = "Division Age")]
         [Required(ErrorMessage = "Division Age cannot be empty.")]
