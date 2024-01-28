@@ -16,12 +16,11 @@ namespace WMBA_7_2_.Models
         [Display(Name = "Team Stats")]
         public TeamStats TeamStats { get; set; }
 
-
-        //public ICollection<Player>Players = new Hashset<Player>() havent made the model yet for this table
-
+        [Display(Name = "Player")]
+        public ICollection<Player> Players { get; set; } = new HashSet<Player>();
 
         [Display(Name = "Coach")]
-        public ICollection<Team_Coach> TeamCoach { get; set; } = new HashSet<Team_Coach>();
+        public ICollection<Team_Coach> TeamCoaches { get; set; } = new HashSet<Team_Coach>();
 
 
     }
