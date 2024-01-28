@@ -22,6 +22,7 @@ namespace WMBA_7_2_.Models
         [Display(Name = "Coach")]
         public ICollection<Team_Coach> TeamCoaches { get; set; } = new HashSet<Team_Coach>();
 
-
+        [Display(Name = "Stats")]
+        public ICollection<Stats> StatsTotal { get; set; } = new HashSet<Stats>();
     }
 }
