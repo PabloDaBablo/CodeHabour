@@ -13,7 +13,7 @@ namespace WMBA_7_2_.Models
         [Required(ErrorMessage = "Must enter an away team.")]
         [StringLength(100, ErrorMessage = "Team name must have a max of 100 characters.")]
         public string AwayTeam { get; set; }
-        public int LineUpId { get; set; }
+        public int LineUpID { get; set; }
         public int GameID { get; set; }
     }
 }
