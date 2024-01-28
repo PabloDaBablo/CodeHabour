@@ -5,7 +5,7 @@ namespace WMBA_7_2_.Models
     public class Coach
     {
 
-        public int CoachID {  get; set; }
+        public int ID {  get; set; }
 
         [Display(Name = "Coach Member ID")]//not sure if this is required or not, but ill leave it in a comment the code
         //[Required(ErrorMessage = "Coach Member ID Required.)] also not sure if its a string or int lol
@@ -18,7 +18,7 @@ namespace WMBA_7_2_.Models
 
         [Display(Name = "Coach Number")]
         
-        public int CoachNumber { get; set; }
+        public int? CoachNumber { get; set; }
 
         [Display(Name = "Coach Position")]
         [Required(ErrorMessage = "Coach position cannot be blank.")]
