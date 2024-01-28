@@ -4,7 +4,7 @@ namespace WMBA_7_2_.Models
 {
     public class Schedule
     {
-        public int ScheduleID { get; set; }
+        public int ID { get; set; }
 
         [Display(Name = "Date")]
         [DataType(DataType.Date)]
