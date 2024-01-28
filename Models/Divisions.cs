@@ -1,11 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace WMBA_7_2_.Models
 {
     public class Divisions
     {
-
-        public int ID { get; set; }
+        public int DivID { get; set; }
 
         [Display(Name = "Division Age")]
         [Required(ErrorMessage = "Division Age cannot be empty.")]
