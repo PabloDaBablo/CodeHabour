@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WMBA_7_2_.Data;
 
@@ -10,9 +11,11 @@ using WMBA_7_2_.Data;
 namespace WMBA_7_2_.Data.WMBAMigrations
 {
     [DbContext(typeof(WMBAContext))]
-    partial class WMBAContextModelSnapshot : ModelSnapshot
+    [Migration("20240129182718_Nullable")]
+    partial class Nullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.15");
@@ -284,6 +287,12 @@ namespace WMBA_7_2_.Data.WMBAMigrations
                     b.Property<int>("CoachID")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("PlayerID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("PlayerID1")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("TeamName")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -292,6 +301,8 @@ namespace WMBA_7_2_.Data.WMBAMigrations
                     b.HasKey("ID");
 
                     b.HasIndex("CoachID");
+
+                    b.HasIndex("PlayerID1");
 
                     b.ToTable("Teams");
                 });
@@ -446,7 +457,13 @@ namespace WMBA_7_2_.Data.WMBAMigrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("WMBA_7_2_.Models.Player", "Player")
+                        .WithMany()
+                        .HasForeignKey("PlayerID1");
+
                     b.Navigation("Coach");
+
+                    b.Navigation("Player");
                 });
 
             modelBuilder.Entity("WMBA_7_2_.Models.TeamStats", b =>

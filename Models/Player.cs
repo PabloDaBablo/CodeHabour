@@ -26,11 +26,12 @@ namespace WMBA_7_2_.Models
         public ICollection<Stats> StatsTotal { get; set; } = new HashSet<Stats>();
 
         [Display(Name = "Team")]
-        public int TeamID { get; set; }
+        public int? TeamID { get; set; }
 
         [Display(Name = "Team")]
         public Team Team { get; set; }
 
-
+        [Display(Name = "Full Name")]
+        public string PlayerFullName => $"{PlayerFirstName} {PlayerLastName}";
     }
 }

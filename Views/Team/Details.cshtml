@@ -24,10 +24,10 @@
             @Html.DisplayFor(model => model.TeamName)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.PlayerID)
+            @Html.DisplayNameFor(model => model.Players.FirstOrDefault().PlayerFullName)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Player.PlayerFirstName)
+            @Html.DisplayFor(model => model.Players.FirstOrDefault().PlayerFullName)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Coach)

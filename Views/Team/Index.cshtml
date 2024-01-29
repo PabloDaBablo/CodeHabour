@@ -24,10 +24,10 @@
                 @Html.DisplayNameFor(model => model.TeamName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.FirstOrDefault().Player.PlayerFirstName)
+                @Html.DisplayNameFor(model => model.Players.FirstOrDefault().PlayerFirstName)
             </th>
             <td>
-                @Html.DisplayNameFor(model => model.FirstOrDefault().Player.PlayerLastName)
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Players.FirstOrDefault().PlayerLastName)
             </td>
             <th>
                 @Html.DisplayNameFor(model => model.Coach)

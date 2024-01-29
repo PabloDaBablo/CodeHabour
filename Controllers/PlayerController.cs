@@ -86,6 +86,8 @@ namespace WMBA_7_2_.Controllers
             {
                 return NotFound();
             }
+
+
             return View(player);
         }
 
