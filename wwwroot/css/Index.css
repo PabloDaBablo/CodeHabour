@@ -2,7 +2,7 @@
 .column-container {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 0; 
+    gap: 0;
     min-height: 100vh;
     justify-content: center;
     align-items: center;
@@ -11,15 +11,17 @@
 .column {
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
 }
+
 
 .custom-btn {
     display: block;
     padding: 10px 20px;
     margin-bottom: 30px;
-    background-color: dimgray;
-    color: white;
+    background-color: #0E138A;
+    color: snow;
     text-align: center;
     text-decoration: none;
     border-radius: 5px;
