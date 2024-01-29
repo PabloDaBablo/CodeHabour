@@ -40,7 +40,9 @@ namespace WMBA_7_2_.Data
             modelBuilder.Entity<Player>()
                 .HasOne(p => p.Team)
                 .WithMany( t => t.Players)
-                .HasForeignKey( p => p.TeamID);
+                .HasForeignKey( p => p.TeamID)
+                .OnDelete(DeleteBehavior.Restrict);
+            ;
 
         }
 
