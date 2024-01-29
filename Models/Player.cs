@@ -4,9 +4,7 @@ namespace WMBA_7_2_.Models
 {
     public class Player
     {
-
         public int ID { get; set; }
-
 
         [Display(Name = "Player Member ID ")]
         public int PlayerMemberID { get; set; }
