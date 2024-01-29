@@ -27,19 +27,19 @@ namespace WMBA_7_2_.Controllers
             var end = workSheet.Dimension.End;
 
             //Start a new list to hold imported objects
-            //List<AppointmentReason> appointmentReasons = new List<AppointmentReason>();
+            List<Team> teams = new List<Team>();
 
-            //for (int row = start.Row; row <= end.Row; row++)
-            //{
-            //    // Row by row...
-            //    AppointmentReason a = new AppointmentReason
-            //    {
-            //        ReasonName = workSheet.Cells[row, 1].Text
-            //    };
-            //    appointmentReasons.Add(a);
-            //}
-            //_context.AppointmentReasons.AddRange(appointmentReasons);
-            //_context.SaveChanges();
+            for (int row = start.Row; row <= end.Row; row++)
+            {
+                  // Row by row...
+                Team a = new Team
+                {
+                    ReasonName = workSheet.Cells[row, 7].Text
+                };
+                teams.Add(a);
+            }
+            _context.Teams.AddRange(teams);
+            _context.SaveChanges();
             //Note that we are assuming that you are using the Preferred Approach to Lookup Values
             //And the custom LookupsController
             return Redirect(ViewData["returnURL"].ToString());
