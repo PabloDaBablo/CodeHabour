@@ -4,19 +4,28 @@ using System.Diagnostics;
 using WMBA_7_2_.Models;
 using Microsoft.EntityFrameworkCore;
 using OfficeOpenXml;
+using WMBA_7_2_.Data;
 
 namespace WMBA_7_2_.Controllers
 {
     public class InsertController : Controller
     {
+        private readonly WMBAContext _context;
+
+        // GET: Excel Data
+        public async Task<IActionResult> Index()
+        {
+            return View();
+        }
         [HttpPost]
         public async Task<IActionResult> InsertFromExcel(IFormFile theExcel)
         {
-            //Note: This is a very basic example and has 
-            //no ERROR HANDLING.  It also assumes that
-            //duplicate values are allowed, both in the 
-            //uploaded data and the DbSet.
-            ExcelPackage excel;
+             
+        //Note: This is a very basic example and has 
+        //no ERROR HANDLING.  It also assumes that
+        //duplicate values are allowed, both in the 
+        //uploaded data and the DbSet.
+        ExcelPackage excel;
             using (var memoryStream = new MemoryStream())
             {
                 await theExcel.CopyToAsync(memoryStream);
@@ -34,7 +43,7 @@ namespace WMBA_7_2_.Controllers
                   // Row by row...
                 Team a = new Team
                 {
-                    ReasonName = workSheet.Cells[row, 7].Text
+                    TeamName = workSheet.Cells[row, 7].Text
                 };
                 teams.Add(a);
             }
