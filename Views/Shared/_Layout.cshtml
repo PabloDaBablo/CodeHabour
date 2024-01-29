@@ -29,15 +29,20 @@
 
                     <ul class="navbar-nav">
                         <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Home")">Home</a></li>
-                        <li class="nav-item"><a class="nav-link" href="@Url.Action("Privacy", "Home")">About</a></li>
                         <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Player")">Player</a></li>
                         <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Team")">Team</a></li>
+                        <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Game")">Game</a></li>
+                        <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Insert")">Upload Excel Data</a></li>
+                        @* <li class="nav-item"><a class="nav-link" href="@Url.Action("Privacy", "Home")">About</a></li> *@
                         
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
+        <div class="top-bar">
+            
+        </div>
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
