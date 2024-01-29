@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Migrations;
 using WMBA_7_2_.Models;
 
 namespace WMBA_7_2_.Data
@@ -35,6 +36,11 @@ namespace WMBA_7_2_.Data
 
             modelBuilder.Entity<Team_Coach>()
                 .HasKey(tc => new { tc.CoachID, tc.TeamID});
+
+            modelBuilder.Entity<Player>()
+                .HasOne(p => p.Team)
+                .WithMany( t => t.Players)
+                .HasForeignKey( p => p.TeamID);
 
         }
 

@@ -34,6 +34,8 @@ namespace WMBA_7_2_.Controllers
             }
 
             var player = await _context.Players
+                .Include(f => f.Team)
+                .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.ID == id);
             if (player == null)
             {

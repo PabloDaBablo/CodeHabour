@@ -1,32 +1,176 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using WMBA_7_2_.Data;
 using WMBA_7_2_.Models;
 
 namespace WMBA_7_2_.Controllers
 {
     public class TeamController : Controller
     {
-        private readonly ILogger<TeamController> _logger;
+        private readonly WMBAContext _context;
 
-        public TeamController(ILogger<TeamController> logger)
+        public TeamController(WMBAContext context)
         {
-            _logger = logger;
+            _context = context;
         }
 
-        public IActionResult Index()
+        // GET: Team
+        public async Task<IActionResult> Index()
         {
+            var wMBAContext = _context.Teams
+                .Include(t => t.Coach)
+                .Include(p => p.Players)
+                .AsNoTracking();
+                
+            return View(await wMBAContext.ToListAsync());
+        }
+
+        // GET: Team/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null || _context.Teams == null)
+            {
+                return NotFound();
+            }
+
+            var team = await _context.Teams
+                .Include(t => t.Coach)
+                .Include(t => t.Players)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(m => m.ID == id);
+            if (team == null)
+            {
+                return NotFound();
+            }
+
+            return View(team);
+        }
+
+        // GET: Team/Create
+        public IActionResult Create()
+        {
+            ViewData["CoachID"] = new SelectList(_context.Coaches, "ID", "CoachName");
             return View();
         }
 
-        public IActionResult Privacy()
+        // POST: Team/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("ID,TeamName,PlayerID,CoachID")] Team team)
         {
-            return View();
+            if (ModelState.IsValid)
+            {
+                _context.Add(team);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            ViewData["CoachID"] = new SelectList(_context.Coaches, "ID", "CoachName", team.CoachID);
+            return View(team);
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        // GET: Team/Edit/5
+        public async Task<IActionResult> Edit(int? id)
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            if (id == null || _context.Teams == null)
+            {
+                return NotFound();
+            }
+
+            var team = await _context.Teams.FindAsync(id);
+            if (team == null)
+            {
+                return NotFound();
+            }
+            ViewData["CoachID"] = new SelectList(_context.Coaches, "ID", "CoachName", team.CoachID);
+            return View(team);
+        }
+
+        // POST: Team/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("ID,TeamName,PlayerID,CoachID")] Team team)
+        {
+            if (id != team.ID)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(team);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!TeamExists(team.ID))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            ViewData["CoachID"] = new SelectList(_context.Coaches, "ID", "CoachName", team.CoachID);
+            return View(team);
+        }
+
+        // GET: Team/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null || _context.Teams == null)
+            {
+                return NotFound();
+            }
+
+            var team = await _context.Teams
+                .Include(t => t.Coach)
+                .Include(t => t.Players)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(m => m.ID == id);
+            if (team == null)
+            {
+                return NotFound();
+            }
+
+            return View(team);
+        }
+
+        // POST: Team/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            if (_context.Teams == null)
+            {
+                return Problem("Entity set 'WMBAContext.Teams'  is null.");
+            }
+            var team = await _context.Teams.FindAsync(id);
+            if (team != null)
+            {
+                _context.Teams.Remove(team);
+            }
+            
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        private bool TeamExists(int id)
+        {
+          return _context.Teams.Any(e => e.ID == id);
         }
     }
 }
