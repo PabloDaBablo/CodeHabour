@@ -22,7 +22,12 @@ namespace WMBA_7_2_.Controllers
         // GET: Player
         public async Task<IActionResult> Index()
         {
-              return View(await _context.Players.ToListAsync());
+            var players = await _context.Players
+                .Include(p => p.Team)
+                .AsNoTracking()
+                .ToListAsync();
+
+            return View(players);
         }
 
         // GET: Player/Details/5
@@ -75,7 +80,8 @@ namespace WMBA_7_2_.Controllers
                 return NotFound();
             }
 
-            var player = await _context.Players.FindAsync(id);
+            var player = await _context.Players
+                .FindAsync(id);
             if (player == null)
             {
                 return NotFound();
@@ -127,6 +133,8 @@ namespace WMBA_7_2_.Controllers
             }
 
             var player = await _context.Players
+                .Include(f => f.Team)
+                .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.ID == id);
             if (player == null)
             {

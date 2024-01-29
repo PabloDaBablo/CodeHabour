@@ -83,13 +83,19 @@ namespace WMBA_7_2_.Controllers
                 return NotFound();
             }
 
-            var team = await _context.Teams.FindAsync(id);
+            var team = await _context.Teams
+                             .Include(t => t.Players)
+                             .Include(t => t.Coach)
+                             .FirstOrDefaultAsync(t => t.ID == id);
+
             if (team == null)
             {
                 return NotFound();
             }
             ViewData["CoachID"] = new SelectList(_context.Coaches, "ID", "CoachName", team.CoachID);
-            return View(team);
+            ViewData["PlayerID"] = new SelectList(_context.Players, "ID", "PlayerFirstName", team.PlayerID);
+
+            return View();
         }
 
         // POST: Team/Edit/5
