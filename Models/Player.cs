@@ -22,11 +22,13 @@ namespace WMBA_7_2_.Models
         [Required(ErrorMessage = "Player number cannot be empty!")]
         public int PlayerNumber { get; set; }
         
-        [Display(Name = "MemberID")]
-        [Required(ErrorMessage = "MemberID is required")]
-        public string MemberID { get; set; }
-
         [Display(Name = "Stats")]
         public ICollection<Stats> StatsTotal { get; set; } = new HashSet<Stats>();
+
+        [Display(Name = "Team")]
+        public int TeamID { get; set; }
+
+        [Display(Name = "Team")]
+        public Team Team { get; set; }
     }
 }
