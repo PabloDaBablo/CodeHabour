@@ -1,41 +1,38 @@
-html {
-  font-size: 14px;
-}
 
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
-}
-
-body {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  margin: 0;
-}
-
-header {
-
-}
-
-.img-fluid logo-text{
-    
-}
 
 .top-bar {
     background-color: #0E138A;
     width: auto;
     height: 50px;
+}
+
+html {
+    font-size: 14px;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+}
+
+header {
 }
 
 .navbar {
@@ -49,10 +46,10 @@ header {
     padding: 5px 10px;
 }
 
-.navbar-brand img {
-    max-height: 100px;
-    width: auto;
-}
+    .navbar-brand img {
+        max-height: 100px;
+        width: auto;
+    }
 
 .navbar-toggler {
     font-size: 20px;
@@ -60,7 +57,6 @@ header {
     display: flex;
     align-items: center;
     justify-content: center;
-
 }
 
 .page-container {
@@ -68,6 +64,7 @@ header {
     flex-direction: column;
     flex: 1;
 }
+
 .container {
     flex: 1;
 }
@@ -78,5 +75,6 @@ header {
     text-align: center;
     padding: 10px 0;
 }
+
 
 

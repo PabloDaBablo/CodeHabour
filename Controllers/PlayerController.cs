@@ -20,8 +20,9 @@ namespace WMBA_7_2_.Controllers
         }
 
         // GET: Player
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder)
         {
+
             var players = await _context.Players
                 .Include(p => p.Team)
                 .AsNoTracking()

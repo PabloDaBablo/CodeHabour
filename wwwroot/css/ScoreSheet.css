@@ -108,14 +108,6 @@ body {
     flex: 1;
 }
 
-.footer {
-    background-color: #0E138A;
-    color: snow;
-    text-align: center;
-    padding: 10px 0;
-    height: 50px; /* Add a fixed height of 50px */
-}
-
 .scoreboard-labels {
     display: flex;
     justify-content: space-around;
