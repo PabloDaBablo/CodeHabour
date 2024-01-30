@@ -1,7 +1,7 @@
-﻿@model WMBA_7_2_.Models.Team
+﻿@model WMBA_7_2_.ViewModels.TeamVM
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Team Create";
 }
 
 <head>
@@ -26,13 +26,12 @@
                 <span asp-validation-for="TeamName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="PlayerID" class="control-label"></label>
-                <input asp-for="PlayerID" class="form-control" />
-                <span asp-validation-for="PlayerID" class="text-danger"></span>
+                <label asp-for="SelectedPlayerID" class="control-label">Select Players</label>
+                <select asp-for="SelectedPlayerID" class="form-control" asp-items="ViewBag.PlayerID" multiple="multiple"></select>
             </div>
             <div class="form-group">
                 <label asp-for="CoachID" class="control-label"></label>
-                <select asp-for="CoachID" class ="form-control" asp-items="ViewBag.CoachID"></select>
+                <select asp-for="CoachID" class ="form-control" asp-items="ViewBag.CoachID" multiple="multiple"></select>
             </div>
             <br />
             <div class="form-group">

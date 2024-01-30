@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<WMBA_7_2_.Models.Team>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Team";
 }
 
 
@@ -24,11 +24,8 @@
                 @Html.DisplayNameFor(model => model.TeamName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.FirstOrDefault().Player.PlayerFirstName)
+                @Html.DisplayNameFor(model => model.Players.FirstOrDefault().PlayerFullName)
             </th>
-            <td>
-                @Html.DisplayNameFor(model => model.FirstOrDefault().Player.PlayerLastName)
-            </td>
             <th>
                 @Html.DisplayNameFor(model => model.Coach)
             </th>
@@ -39,13 +36,14 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.TeamName)
+                @Html.DisplayFor(modelItem => item.TeamName);
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Player.PlayerFirstName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Player.PlayerLastName)
+                @foreach (var player in item.Players)
+                {
+                    @Html.DisplayFor(modelItem => player.PlayerFullName)
+                    <br />
+                }
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Coach.CoachName)

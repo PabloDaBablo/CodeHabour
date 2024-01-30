@@ -42,7 +42,6 @@ namespace WMBA_7_2_.Data
                 .WithMany( t => t.Players)
                 .HasForeignKey( p => p.TeamID)
                 .OnDelete(DeleteBehavior.Restrict);
-            ;
 
         }
 
