@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using WMBA_7_2_.Data;
 using WMBA_7_2_.Models;
@@ -21,14 +22,36 @@ namespace WMBA_7_2_.Controllers
         }
 
         // GET: Team
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder)
         {
             var wMBAContext = _context.Teams
                 .Include(t => t.Coach)
                 .Include(p => p.Players)
-                .AsNoTracking();
-                
-            return View(await wMBAContext.ToListAsync());
+            .AsNoTracking();
+
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["CoachSortParm"] = sortOrder == "Coach" ? "coach_desc" : "Coach";
+
+            var teams = from t in _context.Teams.Include(t => t.Coach).Include(t => t.Players)
+            select t;
+
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    teams = teams.OrderByDescending(t => t.TeamName);
+                    break;
+                case "Coach":
+                    teams = teams.OrderBy(t => t.Coach.CoachName);
+                    break;
+                case "coach_desc":
+                    teams = teams.OrderByDescending(t => t.Coach.CoachName);
+                    break;
+                default:
+                    teams = teams.OrderBy(t => t.TeamName);
+                    break;
+            }
+
+            return View(await teams.AsNoTracking().ToListAsync());
         }
 
         // GET: Team/Details/5
@@ -61,7 +84,7 @@ namespace WMBA_7_2_.Controllers
                 SelectedPlayerID = new List<int>()
             };
             ViewData["CoachID"] = new SelectList(_context.Coaches, "ID", "CoachName");
-            ViewData["PlayerIDs"] = new SelectList(_context.Players, "ID", "PlayerFullName");
+            ViewData["PlayerID"] = new SelectList(_context.Players, "ID", "PlayerFullName");
             return View();
         }
 
@@ -146,7 +169,8 @@ namespace WMBA_7_2_.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["CoachID"] = new SelectList(_context.Coaches, "ID", "CoachName", team.CoachID);
-            ViewData["PlayerID"] = new SelectList(_context.Players, "ID", "PlayerFirstName", team.Players.FirstOrDefault().TeamID);
+            ViewData["PlayerID"] = new SelectList(_context.Players, "ID", "PlayerFullName");
+
             return View(team);
         }
 
