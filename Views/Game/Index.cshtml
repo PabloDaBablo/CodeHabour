@@ -1,9 +1,10 @@
-﻿@model IEnumerable<WMBA_7_2_.Models.Team>
+﻿@model IEnumerable<WMBA_7_2_.Models.Game>
 
 @{
-    ViewData["Title"] = "Team";
+    ViewData["Title"] = "Index";
 }
 
+<h1>Game</h1>
 
 <head>
 
@@ -12,8 +13,6 @@
     <link rel="stylesheet" href="/css/site.css" asp-append-version="true" />
 </head>
 
-<h1>Index</h1>
-
 <p>
     <a asp-action="Create">Create New</a>
 </p>
@@ -21,14 +20,9 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.TeamName)
+                @Html.DisplayNameFor(model => model.Line_UpID)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Players.FirstOrDefault().PlayerFullName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Coach)
-            </th>
+           
             <th></th>
         </tr>
     </thead>
@@ -36,17 +30,7 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.TeamName);
-            </td>
-            <td>
-                @foreach (var player in item.Players)
-                {
-                    @Html.DisplayFor(modelItem => player.PlayerFullName)
-                    <br />
-                }
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Coach.CoachName)
+                @Html.DisplayFor(modelItem => item.Team.TeamName)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |

@@ -11,11 +11,6 @@ namespace WMBA_7_2_.Models
         [StringLength(100, ErrorMessage = "Team name cannot be longer than 100 characters!")]
         public string TeamName { get; set; }
 
-        [Display(Name = "Player")]
-        public int PlayerID { get; set; }
-        [Display(Name = "Player")]
-        public Player Player { get; set; }
-        [Display(Name = "Coach")]
         public int CoachID { get; set; }
         [Display(Name = "Coach")]
         public Coach Coach { get; set; }

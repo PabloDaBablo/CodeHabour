@@ -10,103 +10,88 @@ using WMBA_7_2_.Models;
 
 namespace WMBA_7_2_.Controllers
 {
-    public class PlayerController : Controller
+    public class GameController : Controller
     {
         private readonly WMBAContext _context;
 
-        public PlayerController(WMBAContext context)
+        public GameController(WMBAContext context)
         {
             _context = context;
         }
 
-        // GET: Player
+        // GET: Game
         public async Task<IActionResult> Index()
         {
-            var players = await _context.Players
-                .Include(p => p.Team)
-                .AsNoTracking()
-                .ToListAsync();
-
-            return View(players);
+              return View(await _context.Games.ToListAsync());
         }
 
-        // GET: Player/Details/5
+        // GET: Game/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Players == null)
+            if (id == null || _context.Games == null)
             {
                 return NotFound();
             }
 
-            var player = await _context.Players
-                .Include(f => f.Team)
-                .AsNoTracking()
-                .FirstOrDefaultAsync(m => m.ID == id);
-            if (player == null)
+            var game = await _context.Games
+                 .Include(f => f.Line_Up)
+                 .AsNoTracking()
+                 .FirstOrDefaultAsync(m => m.ID == id);
+          
+            if (game == null)
             {
                 return NotFound();
             }
 
-            return View(player);
+            return View(game);
         }
 
-        // GET: Player/Create
+        // GET: Game/Create
         public IActionResult Create()
         {
-
-            ViewData["TeamID"] = new SelectList(_context.Teams, "ID", "TeamName");
-
             return View();
         }
 
-        // POST: Player/Create
+        // POST: Game/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,PlayerMemberID,PlayerFirstName,PlayerLastName,PlayerNumber,MemberID,TeamID")] Player player)
+        public async Task<IActionResult> Create([Bind("ID,ScheduleID")] Game game)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(player);
+                _context.Add(game);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-
-            ViewData["TeamID"] = new SelectList(_context.Teams, "ID", "TeamName");
-
-            return View(player);
+            return View(game);
         }
 
-        // GET: Player/Edit/5
+        // GET: Game/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Players == null)
+            if (id == null || _context.Games == null)
             {
                 return NotFound();
             }
 
-            var player = await _context.Players
-                .FindAsync(id);
-            if (player == null)
+            var game = await _context.Games.FindAsync(id);
+            if (game == null)
             {
                 return NotFound();
             }
-
-
-            ViewData["TeamID"] = new SelectList(_context.Teams, "ID", "TeamName");
-
-            return View(player);
+            return View(game);
         }
 
-        // POST: Player/Edit/5
+        // POST: Game/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,PlayerMemberID,PlayerFirstName,PlayerLastName,PlayerNumber,MemberID,TeamID")] Player player)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,ScheduleID")] Game game)
         {
-            if (id != player.ID)
+            if (id != game.ID)
             {
                 return NotFound();
             }
@@ -115,12 +100,12 @@ namespace WMBA_7_2_.Controllers
             {
                 try
                 {
-                    _context.Update(player);
+                    _context.Update(game);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PlayerExists(player.ID))
+                    if (!GameExists(game.ID))
                     {
                         return NotFound();
                     }
@@ -131,54 +116,49 @@ namespace WMBA_7_2_.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-
-            ViewData["TeamID"] = new SelectList(_context.Teams, "ID", "TeamName");
-
-            return View(player);
+            return View(game);
         }
 
-        // GET: Player/Delete/5
+        // GET: Game/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Players == null)
+            if (id == null || _context.Games == null)
             {
                 return NotFound();
             }
 
-            var player = await _context.Players
-                .Include(f => f.Team)
-                .AsNoTracking()
+            var game = await _context.Games
                 .FirstOrDefaultAsync(m => m.ID == id);
-            if (player == null)
+            if (game == null)
             {
                 return NotFound();
             }
 
-            return View(player);
+            return View(game);
         }
 
-        // POST: Player/Delete/5
+        // POST: Game/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Players == null)
+            if (_context.Games == null)
             {
-                return Problem("Entity set 'WMBAContext.Players'  is null.");
+                return Problem("Entity set 'WMBAContext.Games'  is null.");
             }
-            var player = await _context.Players.FindAsync(id);
-            if (player != null)
+            var game = await _context.Games.FindAsync(id);
+            if (game != null)
             {
-                _context.Players.Remove(player);
+                _context.Games.Remove(game);
             }
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool PlayerExists(int id)
+        private bool GameExists(int id)
         {
-          return _context.Players.Any(e => e.ID == id);
+          return _context.Games.Any(e => e.ID == id);
         }
     }
 }

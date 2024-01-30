@@ -13,7 +13,7 @@ namespace WMBA_7_2_.Models
         [Required(ErrorMessage = "Player name cannot be empty!")]
         [StringLength(75, ErrorMessage = "Player name cannot be longer than 75 characters!")]
         public string PlayerFirstName { get; set; }
-        
+
         [Display(Name = "Last Name")]
         [Required(ErrorMessage = "Player name cannot be empty!")]
         [StringLength(75, ErrorMessage = "Player name cannot be longer than 75 characters!")]
@@ -21,14 +21,17 @@ namespace WMBA_7_2_.Models
         [Display(Name = "Player Number")]
         [Required(ErrorMessage = "Player number cannot be empty!")]
         public int PlayerNumber { get; set; }
-        
+
         [Display(Name = "Stats")]
         public ICollection<Stats> StatsTotal { get; set; } = new HashSet<Stats>();
 
         [Display(Name = "Team")]
-        public int TeamID { get; set; }
+        public int? TeamID { get; set; }
 
         [Display(Name = "Team")]
         public Team Team { get; set; }
+
+        [Display(Name = "Full Name")]
+        public string PlayerFullName => $"{PlayerFirstName} {PlayerLastName}";
     }
 }
