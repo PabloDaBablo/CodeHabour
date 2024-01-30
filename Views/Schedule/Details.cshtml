@@ -1,7 +1,7 @@
-﻿@model WMBA_7_2_.Models.Team
+﻿@model WMBA_7_2_.Models.Schedule
 
 @{
-    ViewData["Title"] = "Team Details";
+    ViewData["Title"] = "Details";
 }
 
 <head>
@@ -14,30 +14,32 @@
 <h1>Details</h1>
 
 <div>
-    <h4>Team</h4>
+    <h4>Schedule</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.TeamName)
+            @Html.DisplayNameFor(model => model.ScheduleDate)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TeamName)
+            @Html.DisplayFor(model => model.ScheduleDate)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Players.FirstOrDefault().PlayerFullName)
+            @Html.DisplayNameFor(model => model.ScheduleTime)
         </dt>
         <dd class = "col-sm-10">
-            @foreach (var player in Model.Players)
-            {
-                @Html.DisplayFor(modelItem => player.PlayerFullName)
-                <br />
-            }
+            @Html.DisplayFor(model => model.ScheduleTime)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Coach)
+            @Html.DisplayNameFor(model => model.ScheduleSeason)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Coach.CoachName)
+            @Html.DisplayFor(model => model.ScheduleSeason)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.ScheduleLocation)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.ScheduleLocation)
         </dd>
     </dl>
 </div>

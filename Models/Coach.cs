@@ -4,7 +4,7 @@ namespace WMBA_7_2_.Models
 {
     public class Coach
     {
-
+        [Display(Name = "Coach")]
         public int ID {  get; set; }
 
         [Display(Name = "Coach Member ID")]//not sure if this is required or not, but ill leave it in a comment the code

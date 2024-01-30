@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WMBA_7_2_.Data;
 using WMBA_7_2_.Models;
+using WMBA_7_2_.ViewModels;
 
 namespace WMBA_7_2_.Controllers
 {
@@ -54,7 +55,13 @@ namespace WMBA_7_2_.Controllers
         // GET: Team/Create
         public IActionResult Create()
         {
+
+            var viewModel = new TeamVM
+            {
+                SelectedPlayerID = new List<int>()
+            };
             ViewData["CoachID"] = new SelectList(_context.Coaches, "ID", "CoachName");
+            ViewData["PlayerIDs"] = new SelectList(_context.Players, "ID", "PlayerFullName");
             return View();
         }
 
@@ -63,16 +70,24 @@ namespace WMBA_7_2_.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,TeamName,PlayerID,CoachID")] Team team)
+        public async Task<IActionResult> Create(TeamVM viewModel)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(team);
+                var team = new Team
+                {
+                    TeamName = viewModel.TeamName,
+                    CoachID = viewModel.CoachID,
+                };
+
+                _context.Teams.Add(team);
                 await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CoachID"] = new SelectList(_context.Coaches, "ID", "CoachName", team.CoachID);
-            return View(team);
+
+            ViewData["PlayerID"] = new SelectList(_context.Players, "ID", "PlayerFullName");
+            return View(viewModel);
         }
 
         // GET: Team/Edit/5
@@ -83,13 +98,19 @@ namespace WMBA_7_2_.Controllers
                 return NotFound();
             }
 
-            var team = await _context.Teams.FindAsync(id);
+            var team = await _context.Teams
+                             .Include(t => t.Players)
+                             .Include(t => t.Coach)
+                             .FirstOrDefaultAsync(t => t.ID == id);
+
             if (team == null)
             {
                 return NotFound();
             }
             ViewData["CoachID"] = new SelectList(_context.Coaches, "ID", "CoachName", team.CoachID);
-            return View(team);
+            ViewData["PlayerID"] = new SelectList(_context.Players, "ID", "PlayerFullName");
+
+            return View();
         }
 
         // POST: Team/Edit/5
@@ -125,6 +146,7 @@ namespace WMBA_7_2_.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["CoachID"] = new SelectList(_context.Coaches, "ID", "CoachName", team.CoachID);
+            ViewData["PlayerID"] = new SelectList(_context.Players, "ID", "PlayerFirstName", team.Players.FirstOrDefault().TeamID);
             return View(team);
         }
 

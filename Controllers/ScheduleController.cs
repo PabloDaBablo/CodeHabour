@@ -10,103 +10,85 @@ using WMBA_7_2_.Models;
 
 namespace WMBA_7_2_.Controllers
 {
-    public class PlayerController : Controller
+    public class ScheduleController : Controller
     {
         private readonly WMBAContext _context;
 
-        public PlayerController(WMBAContext context)
+        public ScheduleController(WMBAContext context)
         {
             _context = context;
         }
 
-        // GET: Player
+        // GET: Schedule
         public async Task<IActionResult> Index()
         {
-            var players = await _context.Players
-                .Include(p => p.Team)
-                .AsNoTracking()
-                .ToListAsync();
-
-            return View(players);
+              return View(await _context.Schedules.ToListAsync());
         }
 
-        // GET: Player/Details/5
+        // GET: Schedule/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Players == null)
+            if (id == null || _context.Schedules == null)
             {
                 return NotFound();
             }
 
-            var player = await _context.Players
-                .Include(f => f.Team)
-                .AsNoTracking()
+            var schedule = await _context.Schedules
                 .FirstOrDefaultAsync(m => m.ID == id);
-            if (player == null)
+            if (schedule == null)
             {
                 return NotFound();
             }
 
-            return View(player);
+            return View(schedule);
         }
 
-        // GET: Player/Create
+        // GET: Schedule/Create
         public IActionResult Create()
         {
-
-            ViewData["TeamID"] = new SelectList(_context.Teams, "ID", "TeamName");
-
             return View();
         }
 
-        // POST: Player/Create
+        // POST: Schedule/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,PlayerMemberID,PlayerFirstName,PlayerLastName,PlayerNumber,MemberID,TeamID")] Player player)
+        public async Task<IActionResult> Create([Bind("ID,ScheduleDate,ScheduleTime,ScheduleSeason,ScheduleLocation")] Schedule schedule)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(player);
+                _context.Add(schedule);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-
-            ViewData["TeamID"] = new SelectList(_context.Teams, "ID", "TeamName");
-
-            return View(player);
+            return View(schedule);
         }
 
-        // GET: Player/Edit/5
+        // GET: Schedule/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Players == null)
+            if (id == null || _context.Schedules == null)
             {
                 return NotFound();
             }
 
-            var player = await _context.Players
-                .FindAsync(id);
-            if (player == null)
+            var schedule = await _context.Schedules.FindAsync(id);
+            if (schedule == null)
             {
                 return NotFound();
             }
-
-
-            ViewData["TeamID"] = new SelectList(_context.Teams, "ID", "TeamName");
-
-            return View(player);
+            return View(schedule);
         }
 
-        // POST: Player/Edit/5
+        // POST: Schedule/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,PlayerMemberID,PlayerFirstName,PlayerLastName,PlayerNumber,MemberID,TeamID")] Player player)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,ScheduleDate,ScheduleTime,ScheduleSeason,ScheduleLocation")] Schedule schedule)
         {
-            if (id != player.ID)
+            if (id != schedule.ID)
             {
                 return NotFound();
             }
@@ -115,12 +97,12 @@ namespace WMBA_7_2_.Controllers
             {
                 try
                 {
-                    _context.Update(player);
+                    _context.Update(schedule);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PlayerExists(player.ID))
+                    if (!ScheduleExists(schedule.ID))
                     {
                         return NotFound();
                     }
@@ -131,54 +113,49 @@ namespace WMBA_7_2_.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-
-            ViewData["TeamID"] = new SelectList(_context.Teams, "ID", "TeamName");
-
-            return View(player);
+            return View(schedule);
         }
 
-        // GET: Player/Delete/5
+        // GET: Schedule/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Players == null)
+            if (id == null || _context.Schedules == null)
             {
                 return NotFound();
             }
 
-            var player = await _context.Players
-                .Include(f => f.Team)
-                .AsNoTracking()
+            var schedule = await _context.Schedules
                 .FirstOrDefaultAsync(m => m.ID == id);
-            if (player == null)
+            if (schedule == null)
             {
                 return NotFound();
             }
 
-            return View(player);
+            return View(schedule);
         }
 
-        // POST: Player/Delete/5
+        // POST: Schedule/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Players == null)
+            if (_context.Schedules == null)
             {
-                return Problem("Entity set 'WMBAContext.Players'  is null.");
+                return Problem("Entity set 'WMBAContext.Schedules'  is null.");
             }
-            var player = await _context.Players.FindAsync(id);
-            if (player != null)
+            var schedule = await _context.Schedules.FindAsync(id);
+            if (schedule != null)
             {
-                _context.Players.Remove(player);
+                _context.Schedules.Remove(schedule);
             }
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool PlayerExists(int id)
+        private bool ScheduleExists(int id)
         {
-          return _context.Players.Any(e => e.ID == id);
+          return _context.Schedules.Any(e => e.ID == id);
         }
     }
 }
