@@ -1,7 +1,7 @@
 ﻿@model WMBA_7_2_.ViewModels.TeamVM
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Team Create";
 }
 
 <head>
@@ -27,7 +27,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="SelectedPlayerID" class="control-label">Select Players</label>
-                <select asp-for="SelectedPlayerID" class="form-control" asp-items="ViewBag.PlayerIDs" multiple="multiple"></select>
+                <select asp-for="SelectedPlayerID" class="form-control" asp-items="ViewBag.PlayerID" multiple="multiple"></select>
             </div>
             <div class="form-group">
                 <label asp-for="CoachID" class="control-label"></label>

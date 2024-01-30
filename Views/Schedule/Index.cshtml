@@ -1,10 +1,8 @@
-﻿@model IEnumerable<WMBA_7_2_.Models.Player>
+﻿@model IEnumerable<WMBA_7_2_.Models.Schedule>
 
 @{
-    ViewData["Title"] = "Players";
+    ViewData["Title"] = "Index";
 }
-
-<h1>Index</h1>
 
 <head>
 
@@ -13,6 +11,8 @@
     <link rel="stylesheet" href="/css/site.css" asp-append-version="true" />
 </head>
 
+<h1>Index</h1>
+
 <p>
     <a asp-action="Create">Create New</a>
 </p>
@@ -20,19 +20,16 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.PlayerMemberID)
+                @Html.DisplayNameFor(model => model.ScheduleDate)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.PlayerFirstName)
+                @Html.DisplayNameFor(model => model.ScheduleTime)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.PlayerLastName)
+                @Html.DisplayNameFor(model => model.ScheduleSeason)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.PlayerNumber)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FirstOrDefault().Team.TeamName)
+                @Html.DisplayNameFor(model => model.ScheduleLocation)
             </th>
             <th></th>
         </tr>
@@ -41,21 +38,17 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.PlayerMemberID)
+                @Html.DisplayFor(modelItem => item.ScheduleDate)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.PlayerFirstName)
+                @Html.DisplayFor(modelItem => item.ScheduleTime)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.PlayerLastName)
+                @Html.DisplayFor(modelItem => item.ScheduleSeason)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.PlayerNumber)
+                @Html.DisplayFor(modelItem => item.ScheduleLocation)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Team.TeamName)
-            </td>
-                
             <td>
                 <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
