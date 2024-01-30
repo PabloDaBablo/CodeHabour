@@ -1,0 +1,135 @@
+﻿/* ScoreSheet.css */
+.player-row {
+    display: grid;
+    grid-template-columns: auto auto 1fr auto auto;
+    align-items: center;
+    background-color: #002366;
+    color: white;
+    padding: 10px;
+    gap: 10px;
+}
+
+.top-bar {
+    margin-bottom: 2%;
+}
+
+.player-icon {
+    width: 50px;
+    height: 50px;
+    background: url('path_to_your_icon_image') no-repeat center center;
+    background-size: cover;
+}
+
+button {
+    padding: 5px 15px;
+    border: 1px solid #000;
+    background-color: #0047AB;
+    color: white;
+    cursor: pointer;
+}
+
+    button:hover {
+        background-color: #003366;
+    }
+
+.container {
+    color: snow;
+}
+
+html {
+    font-size: 14px;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.header {
+}
+
+.img-fluid logo-text {
+}
+
+.top-bar {
+    background-color: #0E138A;
+    width: auto;
+    height: 50px;
+}
+
+.navbar {
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px;
+}
+
+.navbar-brand {
+    padding: 5px 10px;
+}
+
+    .navbar-brand img {
+        max-height: 100px;
+        width: auto;
+    }
+
+.navbar-toggler {
+    font-size: 20px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.page-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.container {
+    flex: 1;
+}
+
+.footer {
+    background-color: #0E138A;
+    color: snow;
+    text-align: center;
+    padding: 10px 0;
+    height: 50px; /* Add a fixed height of 50px */
+}
+
+.scoreboard-labels {
+    display: flex;
+    justify-content: space-around;
+    color: #0E138A;
+}
+
+.label-box {
+    padding: 10px;
+    margin: 10px;
+    background-color: #0047AB; /* Lighter blue background */
+    color: white;
+    text-align: center;
+}
+
+.label {
+    font-size: 1.25em; /* Larger text for the label */
+}
