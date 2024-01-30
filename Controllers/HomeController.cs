@@ -18,7 +18,7 @@ namespace WMBA_7_2_.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+        public IActionResult About()
         {
             return View();
         }
