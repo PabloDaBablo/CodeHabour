@@ -1,11 +1,21 @@
-﻿
-.column-container {
+﻿.column-container {
     display: grid;
     grid-template-columns: repeat(1, 1fr);
     gap: 0;
     min-height: 100vh;
+    justify-items: center; 
+    align-items: center; 
+}
+
+.container {
+    display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: center; 
+    height: 100vh; 
+}
+
+.item {
+
 }
 
 .column {
@@ -15,13 +25,13 @@
     align-items: center;
 }
 
-
 .custom-btn {
     display: block;
     padding: 10px 20px;
-    margin-bottom: 30px;
+    margin: 0 auto; 
+    margin-bottom: 30px; 
     background-color: #0E138A;
-    color: snow;
+    color: white;
     text-align: center;
     text-decoration: none;
     border-radius: 5px;
@@ -29,21 +39,12 @@
     width: 80%;
 }
 
-.custom-btn:hover {
-    background-color: #0056b3;
-}
-
+    .custom-btn:hover {
+        background-color: #0056b3;
+    }
 
 @media (max-width: 768px) {
-    @media (max-width: 768px) {
-        .column-container {
-            grid-template-columns: repeat(1, 1fr); 
-            gap: 0; 
-        }
-
-        .column {
-            margin-bottom: 0; 
-        }
+    @media (max-width: 768px) {/*Got rid of column, column-container styling since it was interfering with button position.*/
 
         .custom-btn {
             margin-bottom: 30px; 
