@@ -30,4 +30,10 @@
     <Folder Include="Data\WMBAMigrations\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="WMBADatabase.db">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

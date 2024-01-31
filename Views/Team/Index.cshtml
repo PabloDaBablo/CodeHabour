@@ -34,9 +34,7 @@
                                 <td>
                                     @foreach (var player in item.Players)
                                     {
-                                        @Html.DisplayFor(modelItem => player.PlayerFullName)
-
-                                        <br />
+                                        @Html.DisplayFor(modelItem => player.PlayerFullName)<br />
                                     }
                                 </td>
                                 <td>@Html.DisplayFor(modelItem => item.Coach.CoachName)</td>

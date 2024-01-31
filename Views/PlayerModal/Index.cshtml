@@ -1,0 +1,82 @@
+﻿@model WMBA_7_2_.Models.Player
+
+@{
+	ViewData["Title"] = "Player List";
+}
+
+<head>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="/css/site.css" asp-append-version="true" />
+</head>
+
+<h3>@ViewData["Title"]</h3>
+<hr />
+<div>
+	<button class="btn btn-primary mb-2" id="btnAdd">Add Player</button>
+</div>
+<div class="container">
+	<table class="table table-striped table-bordered table-responsive table-hover">
+		<thead>
+			<tr>
+				<th>@Html.DisplayNameFor(model => model.PlayerMemberID)</th>
+				<th>@Html.DisplayNameFor(model => model.PlayerFirstName)</th>
+				<th>@Html.DisplayNameFor(model => model.PlayerLastName)</th>
+				<th>@Html.DisplayNameFor(model => model.PlayerNumber)</th>
+				<th>@Html.DisplayNameFor(model => model.Team.TeamName)</th>
+				<th>Action</th>
+			</tr>
+		</thead>
+		<tbody id="tblBody">
+
+		</tbody>
+	</table>
+</div>
+<div class="modal" id="PlayerModal">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h3 class="modal-title" id="modalTitle"></h3>
+			</div>
+			<div class="modal-body">
+				<input type="hidden" asp-for="ID" value="0" />
+				<div class="mb-2">
+					<label asp-for=PlayerMemberID></label>
+					<input type="text" asp-for="PlayerMemberID" class="form-control"
+						placeholder="Ex. 13442334" />
+				</div>
+				<div class="mb-2">
+					<label asp-for=PlayerFirstName></label>
+					<input type="text" asp-for="PlayerFirstName" class="form-control"
+						placeholder="Ex. John" />
+				</div>
+				<div class="mb-2">
+					<label asp-for=PlayerLastName></label>
+					<input type="text" asp-for="PlayerLastName" class="form-control"
+						placeholder="Ex. Smith" />
+				</div>
+				<div class="mb-2">
+					<label asp-for=PlayerNumber></label>
+					<input type="text" asp-for="PlayerNumber" class="form-control"
+						placeholder="Ex. 13" />
+				</div>
+				<div class="mb-2">
+					<label asp-for="TeamID" class="form-label">Team</label>
+					<select asp-for="TeamID" class="form-select" asp-items="ViewBag.TeamID"></select>
+					<span asp-validation-for="TeamID" class="text-danger"></span>
+				</div>
+
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-primary" id="Save" type="submit"
+					onclick="Insert();">Save</button>
+				<button class="btn btn-success" style="display:none" id="Update" type="submit"
+					onclick="Update();">Update</button>
+			    <button class="btn btn-danger" data-dismiss="modal"
+					onclick="HideModal();">Close</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/js/playermodaljs.js"></script>
