@@ -18,7 +18,7 @@ namespace WMBA_7_2_.Data
             //context.Database.Migrate();
             try
             {
-                // Add 4 coaches.
+                // Add 8 coaches.
                 if (!context.Coaches.Any())
                 {
                     context.Coaches.AddRange(
@@ -26,55 +26,91 @@ namespace WMBA_7_2_.Data
                      new Coach
                      {
                          CoachMemberID = 7890987,
-                         CoachName = "Coach Whitecap",
+                         CoachName = "Dave Roberts",
                          CoachNumber = 99,
                          CoachPosition = "Head Coach"
-                         //TeamID = context.Teams.FirstOrDefault(t => t.TeamName == "Whitecaps").ID
                      },
 
                         new Coach
                         {
                             CoachMemberID = 5678765,
-                            CoachName = "A/Coach Whitecaps",
+                            CoachName = "Alex Cora",
                             CoachNumber = 88,
                             CoachPosition = "Assistant Coach"
-                            // TeamID = context.Teams.FirstOrDefault(t => t.TeamName == "Whitecaps").ID
+                        },
+                        new Coach
+                        {
+                            CoachMemberID = 7890987,
+                            CoachName = "Aaron Boone",
+                            CoachNumber = 33,
+                            CoachPosition = "Head Coach"
+                        },
+
+                        new Coach
+                        {
+                            CoachMemberID = 5678765,
+                            CoachName = "Terry Francona",
+                            CoachNumber = 44,
+                            CoachPosition = "Assistant Coach"
+                        },
+                     new Coach
+                     {
+                         CoachMemberID = 7890987,
+                         CoachName = "Gabe Kapler",
+                         CoachNumber = null,
+                         CoachPosition = "Head Coach"
+                     },
+
+                        new Coach
+                        {
+                            CoachMemberID = 5678765,
+                            CoachName = "Brian Snitker",
+                            CoachNumber = null,
+                            CoachPosition = "Assistant Coach"
                         },
                      new Coach
                      {
                          CoachMemberID = 4567654,
-                         CoachName = "Coach Banana",
+                         CoachName = "Dusty Baker",
                          CoachNumber = 77,
                          CoachPosition = "Assistant Coach"
-                         // TeamID = context.Teams.FirstOrDefault(t => t.TeamName == "Bananas").ID
                      },
                     new Coach
                     {
                         CoachMemberID = 3456543,
-                        CoachName = "A/Coach Banana",
+                        CoachName = "Craig Counsell",
                         CoachNumber = null,
                         CoachPosition = "Head Coach"
-                        // TeamID = context.Teams.FirstOrDefault(t => t.TeamName == "Bananas").ID
                     });
                     context.SaveChanges();
                 }
-                //Add two Teams
+                //Add 4 Teams
                 if (!context.Teams.Any())
                 {
                     context.Teams.AddRange(
                 new Team
                 {
                     TeamName = "Bananas",
+                    CoachID = 1
+                },
+                new Team
+                {
+                    TeamName = "Dragons",
                     CoachID = 3
                 },
                 new Team
                 {
+                    TeamName = "Bisons",
+                    CoachID = 5
+                },
+                new Team
+                {
                     TeamName = "Whitecaps",
-                    CoachID = 1
+                    CoachID = 7
                 });
 
-                    context.SaveChanges();
-                    // Add Players
+                context.SaveChanges();
+                    // Add 36 Players
                     if (!context.Players.Any())
                 {
                     context.Players.AddRange(
@@ -121,8 +157,8 @@ namespace WMBA_7_2_.Data
                     new Player
                     {
                         PlayerMemberID = 666,
-                        PlayerFirstName = "Gerrit",
-                        PlayerLastName = "Cole",
+                        PlayerFirstName = "Cole",
+                        PlayerLastName = "Gerrit",
                         PlayerNumber = 6,
                         TeamID = 1
                     },
@@ -153,8 +189,8 @@ namespace WMBA_7_2_.Data
                     new Player
                     {
                         PlayerMemberID = 121,
-                        PlayerFirstName = "Babe",
-                        PlayerLastName = "Ruth",
+                        PlayerFirstName = "Juan",
+                        PlayerLastName = "Soto",
                         PlayerNumber = 1,
                         TeamID = 2
                     },
@@ -217,10 +253,154 @@ namespace WMBA_7_2_.Data
                     new Player
                     {
                         PlayerMemberID = 101,
-                        PlayerFirstName = "J.D.",
-                        PlayerLastName = "Martinez",
+                        PlayerFirstName = "Cody",
+                        PlayerLastName = "Bellinger",
                         PlayerNumber = 9,
                         TeamID = 2
+                     },
+                    new Player
+                    {
+                        PlayerMemberID = 123,
+                        PlayerFirstName = "Gerrit",
+                        PlayerLastName = "Cole",
+                        PlayerNumber = 1,
+                        TeamID = 3
+                    },
+                    new Player
+                    {
+                        PlayerMemberID = 234,
+                        PlayerFirstName = "Trea",
+                        PlayerLastName = "Turner",
+                        PlayerNumber = 2,
+                        TeamID = 3
+                    },
+                    new Player
+                    {
+                        PlayerMemberID = 345,
+                        PlayerFirstName = "Max",
+                        PlayerLastName = "Scherzer",
+                        PlayerNumber = 3,
+                        TeamID = 3
+                    },
+                    new Player
+                    {
+                        PlayerMemberID = 456,
+                        PlayerFirstName = "Jacob",
+                        PlayerLastName = "Rendon",
+                        PlayerNumber = 4,
+                        TeamID = 3
+                    },
+                    new Player
+                    {
+                        PlayerMemberID = 567,
+                        PlayerFirstName = "Shohei",
+                        PlayerLastName = "Machado",
+                        PlayerNumber = 5,
+                        TeamID = 3
+                    },
+                    new Player
+                    {
+                        PlayerMemberID = 678,
+                        PlayerFirstName = "Yu",
+                        PlayerLastName = "Cole",
+                        PlayerNumber = 6,
+                        TeamID = 3
+                    },
+                    new Player
+                    {
+                        PlayerMemberID = 789,
+                        PlayerFirstName = "Ozzie",
+                        PlayerLastName = "Freeman",
+                        PlayerNumber = 7,
+                        TeamID = 3
+                    },
+                    new Player
+                    {
+                        PlayerMemberID = 890,
+                        PlayerFirstName = "José",
+                        PlayerLastName = "Bryant",
+                        PlayerNumber = 8,
+                        TeamID = 3
+                    },
+                    new Player
+                    {
+                        PlayerMemberID = 901,
+                        PlayerFirstName = "Rafael",
+                        PlayerLastName = "Harper",
+                        PlayerNumber = 9,
+                        TeamID = 3
+                    },
+                    new Player
+                    {
+                        PlayerMemberID = 109,
+                        PlayerFirstName = "Trevor",
+                        PlayerLastName = "Ruth",
+                        PlayerNumber = 1,
+                        TeamID = 4
+                    },
+                    new Player
+                    {
+                        PlayerMemberID = 998,
+                        PlayerFirstName = "Ronald",
+                        PlayerLastName = "Cruz",
+                        PlayerNumber = 2,
+                        TeamID = 4
+                    },
+                    new Player
+                    {
+                        PlayerMemberID = 987,
+                        PlayerFirstName = "Nolan",
+                        PlayerLastName = "Alonso",
+                        PlayerNumber = 3,
+                        TeamID = 4
+                    },
+                    new Player
+                    {
+                        PlayerMemberID = 876,
+                        PlayerFirstName = "Giancarlo",
+                        PlayerLastName = "Stanton",
+                        PlayerNumber = 4,
+                        TeamID = 4
+                    },
+                    new Player
+                    {
+                        PlayerMemberID = 765,
+                        PlayerFirstName = "Clayton",
+                        PlayerLastName = "Bogaerts",
+                        PlayerNumber = 5,
+                        TeamID = 4
+                    },
+                    new Player
+                    {
+                        PlayerMemberID = 654,
+                        PlayerFirstName = "Xander",
+                        PlayerLastName = "Molina",
+                        PlayerNumber = 6,
+                        TeamID = 4
+                    },
+                    new Player
+                    {
+                        PlayerMemberID = 543,
+                        PlayerFirstName = "Xander",
+                        PlayerLastName = "Bogaerts",
+                        PlayerNumber = 7,
+                        TeamID = 4
+                    },
+                    new Player
+                    {
+                        PlayerMemberID = 432,
+                        PlayerFirstName = "Nelson",
+                        PlayerLastName = "Martinez",
+                        PlayerNumber = 8,
+                        TeamID = 4
+                    },
+                    new Player
+                    {
+                        PlayerMemberID = 321,
+                        PlayerFirstName = "J.F.",
+                        PlayerLastName = "Martinez",
+                        PlayerNumber = 9,
+                        TeamID = 4
                     });
 
                         context.SaveChanges();
