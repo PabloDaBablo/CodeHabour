@@ -33,10 +33,8 @@ namespace WMBA_7_2_.Controllers
                 return NotFound();
             }
 
-            var game = await _context.Games
-                 .Include(f => f.Line_Up)
-                 .AsNoTracking()
-                 .FirstOrDefaultAsync(m => m.ID == id);
+            var game = await _context.Games.FirstOrDefaultAsync(m => m.ID == id);
+            ;
           
             if (game == null)
             {

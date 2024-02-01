@@ -15,5 +15,11 @@ namespace WMBA_7_2_.Models
         public string AwayTeam { get; set; }
         public int LineUpID { get; set; }
         public int GameID { get; set; }
+        public Game Game { get; set; }
+        public Line_Up Line_Up { get; set; }
+
+        ICollection<Game> Games = new HashSet<Game>();
+        ICollection<Line_Up> Line_Ups = new HashSet<Line_Up>();
+
     }
 }
