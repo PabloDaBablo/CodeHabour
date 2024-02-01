@@ -23,7 +23,7 @@
                 <table class="table table-striped table-bordered">
                     <thead>
                         <tr>
-                            <th>@Html.DisplayNameFor(model => model.PlayerMemberID)</th>
+                            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().DivisionID)</th>
                             <th>@Html.DisplayNameFor(model => model.PlayerFirstName)</th>
                             <th>@Html.DisplayNameFor(model => model.PlayerLastName)</th>
                             <th>@Html.DisplayNameFor(model => model.PlayerNumber)</th>
@@ -35,7 +35,7 @@
                         @foreach (var item in Model)
                         {
                             <tr>
-                                <td>@Html.DisplayFor(modelItem => item.PlayerMemberID)</td>
+                                <td>@Html.DisplayFor(modelItem => item.DivisionID)</td>
                                 <td>@Html.DisplayFor(modelItem => item.PlayerFirstName)</td>
                                 <td>@Html.DisplayFor(modelItem => item.PlayerLastName)</td>
                                 <td>@Html.DisplayFor(modelItem => item.PlayerNumber)</td>

@@ -11,7 +11,7 @@ namespace WMBA_7_2_.Models
         [Required(ErrorMessage = "League Type cannot be empty.")]
         public string LeagueType { get; set; }
 
-        public ICollection<Divisions> Divisions { get; set; } = new HashSet<Divisions>();
+        public ICollection<Division> Divisions { get; set; } = new HashSet<Division>();
 
     }
 }

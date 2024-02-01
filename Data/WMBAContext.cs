@@ -9,7 +9,7 @@ namespace WMBA_7_2_.Data
         public WMBAContext(DbContextOptions<WMBAContext> options) : base(options) { }
 
         public DbSet<League> Leagues { get; set; }
-        public DbSet<Divisions> Divisions { get; set; }
+        public DbSet<Division> Divisions { get; set; }
 
         public DbSet<Coach> Coaches { get; set; }
         public DbSet<Game> Games { get; set; }
