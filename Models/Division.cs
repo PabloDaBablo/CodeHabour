@@ -3,14 +3,14 @@ using System.ComponentModel.DataAnnotations;
 
 namespace WMBA_7_2_.Models
 {
-    public class Divisions
+    public class Division
     {
         [Key]
         public int ID { get; set; }
 
         [Display(Name = "Division Age")]
         [Required(ErrorMessage = "Division Age cannot be empty.")]
-        public int DivAge { get; set; }
+        public string DivAge { get; set; }
 
         [Display(Name = "Division Team")]
         [Required(ErrorMessage = "Division Team cannot be empty.")]

@@ -18,6 +18,53 @@ namespace WMBA_7_2_.Data
             //context.Database.Migrate();
             try
             {
+                //Create House Leage
+                if (!context.Leagues.Any())
+                {
+                    context.Leagues.AddRange(
+                        new League
+                        {
+                            LeagueType = "House League"
+                        },
+                    new League
+                        {
+                            LeagueType = "Select"
+                        });
+
+                    context.SaveChanges();
+                }
+                //Create Divisions
+                if (!context.Divisions.Any())
+                {
+                    context.Divisions.AddRange(
+                        new Division
+                        {
+                            DivAge = "U15",
+                            DivisionTeams = "U15 Bananas",
+                            LeagueTypeID = 1
+                        },
+                        new Division
+                        {
+                            DivAge = "U15",
+                            DivisionTeams = "U15 Dragons",
+                            LeagueTypeID = 1
+                        },
+                        new Division
+                        {
+                            DivAge = "U13",
+                            DivisionTeams = "U13 Bisons",
+                            LeagueTypeID = 1
+                        },
+                        new Division
+                        {
+                            DivAge = "U13",
+                            DivisionTeams = "U13 Whitecaps",
+                            LeagueTypeID = 1
+                        });
+                   
+                    context.SaveChanges();
+
+                }
                 // Add 8 coaches.
                 if (!context.Coaches.Any())
                 {
