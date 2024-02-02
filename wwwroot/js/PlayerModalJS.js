@@ -22,7 +22,7 @@ function GetPlayers() {
                 var object = ' ';
                 $.each(response, function (index, item) {
                     object += '<tr>';
-                    object += '<td>' + (item.playerMemberID || '') + '</td>';
+                    object += '<td>' + (item.divAge || '') + '</td>';
                     object += '<td>' + (item.playerFirstName || '') + '</td>'; 
                     object += '<td>' + (item.playerLastName || '') + '</td>'; 
                     object += '<td>' + (item.playerNumber || '') + '</td>'; 
@@ -64,6 +64,7 @@ function Insert() {
     formData.playerLastName = $('#PlayerLastName').val();
     formData.playerNumber = $('#PlayerNumber').val();
     formData.teamID = $('#TeamID').val();
+    formData.divisionID = $('#DivisionID').val();
 
     $.ajax({
         url: '/PlayerModal/Insert',
@@ -99,6 +100,7 @@ function ClearData() {
     $('#PlayerLastName').val('');
     $('#PlayerNumber').val('');
     $('#TeamID').val('');
+    $('#DivisionID').val('');
 };
 
 function Validate() {
@@ -141,6 +143,13 @@ function Validate() {
         isValid = false;
     } else {
         $('#TeamID').css('border-color', 'lightgrey');
+    }
+
+    if ($('#DivisionID').val() == "") {
+        $('#DivisionID').css('border-color', 'Red');
+        isValid = false;
+    } else {
+        $('#DivisionID').css('border-color', 'lightgrey');
     }
 
     return isValid;
@@ -192,6 +201,7 @@ function Edit(id)
                 $('#PlayerLastName').val(response.playerLastName);
                 $('#PlayerNumber').val(response.playerNumber);
                 $('#TeamID').val(response.teamID);
+                $('#DivisionID').val(response.divisionID);
             }
         },
         error: function () {
@@ -214,6 +224,7 @@ function Update() {
     formData.playerLastName = $('#PlayerLastName').val();
     formData.playerNumber = $('#PlayerNumber').val();
     formData.teamID = $('#TeamID').val();
+    formData.divisionID = $('#DivisionID').val();
 
     $.ajax({
         url: '/PlayerModal/Update',

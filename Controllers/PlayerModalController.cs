@@ -20,6 +20,7 @@ namespace WMBA_7_2_.Controllers
         public IActionResult Index()
         {
 
+			ViewData["DivisionID"] = new SelectList(_context.Divisions, "ID", "DivisionTeams");
 			ViewData["TeamID"] = new SelectList(_context.Teams, "ID", "TeamName");
 			return View();
         }
@@ -28,16 +29,20 @@ namespace WMBA_7_2_.Controllers
         public JsonResult GetPlayers()
         {
             var players = _context.Players
-				.Include(p => p.Team).Select(p => new
-            {
-                id = p.ID,
-                p.PlayerMemberID,
-                p.PlayerFirstName,
-                p.PlayerLastName,
-                p.PlayerNumber,
-                p.Team.TeamName
+				.Include(p => p.Team)
+                .Include(p => p.Division)
+                .Select(p => new
+                {
+                    id = p.ID,
+                    p.PlayerMemberID,
+                    p.PlayerFirstName,
+                    p.PlayerLastName,
+                    p.PlayerNumber,
+                    p.Team.TeamName,
+                    p.DivisionID,
+                    p.Division.DivAge
 
-            })
+                })
             .ToList();
                 
             return Json(players);
@@ -63,6 +68,7 @@ namespace WMBA_7_2_.Controllers
 		{
 			var player = _context.Players
 								 .Include(p => p.Team)
+                                 .Include(p => p.Division)
 								 .FirstOrDefault(p => p.ID == id);
 
 			if (player == null)
@@ -77,7 +83,9 @@ namespace WMBA_7_2_.Controllers
 				playerFirstName = player.PlayerFirstName,
 				playerLastName = player.PlayerLastName,
 				playerNumber = player.PlayerNumber,
-				teamID = player.Team?.ID 
+				teamID = player.Team?.ID,
+                divisionID = player.Division?.ID,
+                divAge = player.Division?.DivAge
 			};
 
 			return Json(result);
