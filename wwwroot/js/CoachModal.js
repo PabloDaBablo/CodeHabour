@@ -27,7 +27,7 @@ function GetCoaches() {
                     var teamNames = coach.teams.map(function (team) { return team.teamName; }).join(', ');
                     object += '<td>' + (teamNames || 'No Assigned Team') + '</td>';
 
-                    object += '<td> <a href="#" class="btn btn-primary btn-sm" onclick="Edit(' + coach.id + ')">Edit</a> <a href="#" class="btn btn-danger btn-sm" onclick="Delete(' + coach.id + ')">Delete</a> </td>';
+                    object += '<td> <a href="#" class="btn btn-primary btn-sm" onclick="Edit(' + coach.id + ')">Edit</a></td>';
                     object += '</tr>';
                 });
                 $('#tblBody').html(object);

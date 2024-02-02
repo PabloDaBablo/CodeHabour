@@ -25,30 +25,34 @@ namespace WMBA_7_2_.Controllers
 			return View();
         }
 
-        [HttpGet]
-        public JsonResult GetPlayers()
-        {
-            var players = _context.Players
-				.Include(p => p.Team)
-                .Include(p => p.Division)
-                .Select(p => new
-                {
-                    id = p.ID,
-                    p.PlayerMemberID,
-                    p.PlayerFirstName,
-                    p.PlayerLastName,
-                    p.PlayerNumber,
-                    p.Team.TeamName,
-                    p.DivisionID,
-                    p.Division.DivAge
+		[HttpGet]
+		public JsonResult GetPlayers(int page = 1, int pageSize = 10)
+		{
+			
+			var query = _context.Players
+						.Include(p => p.Team)
+						.Include(p => p.Division)
+						.OrderBy(p => p.ID) 
+						.Skip((page - 1) * pageSize)
+						.Take(pageSize);
 
-                })
-            .ToList();
-                
-            return Json(players);
-        }
+			var players = query.Select(p => new
+			{
+				id = p.ID,
+				p.PlayerMemberID,
+				p.PlayerFirstName,
+				p.PlayerLastName,
+				p.PlayerNumber,
+				TeamName = p.Team.TeamName, 
+				p.DivisionID,
+				DivAge = p.Division.DivAge
+			})
+						.ToList();
 
-        [HttpPost]
+			return Json(players);
+		}
+
+		[HttpPost]
         public JsonResult Insert(Player model)
         {
             if (ModelState.IsValid)

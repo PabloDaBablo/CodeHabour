@@ -47,10 +47,10 @@ $('#btnAdd').click(function () {
 
 function Insert() {
 
-    //var res = Validate();
-    //if (res == false) {
-    //     return false;
-    // }
+    var res = Validate();
+    if (res == false) {
+        return false;
+    }
 
 
     var formData = new Object();
@@ -79,6 +79,7 @@ function Insert() {
 };
 
 function HideModal() {
+    ClearData()
     $('#TeamModal').modal('hide');
 };
 
@@ -87,7 +88,9 @@ function HideDetailsModal() {
 };
 
 
-
+function ClearData() {
+    $('#TeamName').val('');
+};
 
 
 
@@ -123,10 +126,10 @@ function Edit(id) {
 };
 
 function Update() {
-    //var result = Validate();
-    //if (result == false) {
-    //    return false;
-    //}
+    var result = Validate();
+    if (result == false) {
+        return false;
+    }
 
     var formData = new Object();
     formData.id = $('#ID').val();
@@ -201,3 +204,21 @@ function populateTeamDetailsModal(data) {
     $('#TeamDetailsModal').find('.modal-body dd').eq(1).html(data.players.join('<br>')); 
     $('#TeamDetailsModal').find('.modal-body dd').eq(2).text(data.coaches.join(', '));
 }
+
+
+function Validate() {
+    var isValid = true;
+
+    if ($('#TeamName').val() == "") {
+        $('#TeamName').css('border-color', 'Red');
+        isValid = false;
+    } else {
+        $('#TeamName').css('border-color', 'lightgrey');
+    }
+
+    return isValid;
+};
+
+$('#TeamName').change(function () {
+    Validate();
+});

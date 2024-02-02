@@ -27,7 +27,7 @@ function GetPlayers() {
                     object += '<td>' + (item.playerLastName || '') + '</td>'; 
                     object += '<td>' + (item.playerNumber || '') + '</td>'; 
                     object += '<td>' + (item.teamName || '') + '</td>'; 
-                    object += '<td> <a href="#" class="btn btn-primary btn-sm" onclick="Edit(' + item.id + ')">Edit</a> <a href="#" class="btn btn-danger btn-sm" onclick="Delete(' + item.id + ')">Delete</a> </td>';
+                    object += '<td> <a href="#" class="btn btn-primary btn-sm" onclick="Edit(' + item.id + ')">Edit</a></td>';
                     object += '</tr>';
                 });
                 $('#tblBody').html(object);
@@ -40,6 +40,58 @@ function GetPlayers() {
         }
     })
 } 
+
+$(document).ready(function () {
+    var currentPage = 1;
+    var pageSize = 10; 
+
+    function GetPlayers(page) {
+        $.ajax({
+            url: `/PlayerModal/GetPlayers?page=${page}&pageSize=${pageSize}`, 
+            type: 'GET',
+            success: function (response) {
+                updateTable(response);
+                $('#pageIndicator').text(`Page: ${currentPage}`);
+            },
+            error: function (error) {
+                console.error("Error fetching players:", error);
+                alert('Unable to Read Player Data.');
+            }
+        });
+    }
+
+    function updateTable(players) {
+        var tableBody = $('#tblBody');
+        tableBody.empty();
+
+        players.forEach(function (player) {
+            var row = `<tr>
+            <td>${player.divAge || ''}</td>
+            <td>${player.playerFirstName || ''}</td>
+            <td>${player.playerLastName || ''}</td>
+            <td>${player.playerNumber || ''}</td>
+            <td>${player.teamName || ''}</td>
+            <td><a href="#" class="btn btn-primary btn-sm" onclick="Edit(${player.id})">Edit</a> <a href="#" class="btn btn-danger btn-sm" onclick="Delete(${player.id})">Delete</a></td>
+            </tr>`;
+
+            tableBody.append(row);
+        });
+    }
+
+    $('#prevPage').click(function () {
+        if (currentPage > 1) {
+            currentPage--;
+            GetPlayers(currentPage);
+        }
+    });
+
+    $('#nextPage').click(function () {
+        currentPage++; 
+        GetPlayers(currentPage);
+    });
+
+    GetPlayers(currentPage);
+});
 
 $('#btnAdd').click(function () {
     $('#PlayerModal').modal('show');

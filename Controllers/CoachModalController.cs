@@ -88,7 +88,29 @@ namespace WMBA_7_2_.Controllers
 		}
 
 
+		[HttpGet]
+		public JsonResult Edit(int? id)
+		{
+			var coaches = _context.Coaches
+								 .Include(p => p.TeamCoach)
+								 .FirstOrDefault(p => p.ID == id);
 
+			if (coaches == null)
+			{
+				return Json(new { error = "Coach not found." });
+			}
+
+			var result = new
+			{
+				id = coaches.ID,
+				coachMemberID = coaches.CoachMemberID,
+				coachName = coaches.CoachName,
+				coachPosition = coaches.CoachPosition
+
+			};
+
+			return Json(result);
+		}
 
 	}
 }
