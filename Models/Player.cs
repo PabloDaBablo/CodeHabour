@@ -2,6 +2,7 @@
 
 namespace WMBA_7_2_.Models
 {
+
     public class Player
     {
         //for the purposes of the excel i had to make the
