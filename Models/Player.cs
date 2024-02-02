@@ -4,10 +4,12 @@ namespace WMBA_7_2_.Models
 {
     public class Player
     {
+        //for the purposes of the excel i had to make the
+        //playernumber nullable and add the division stuff ~donaven
         public int ID { get; set; }
 
         [Display(Name = "Player Member ID ")]
-        public int PlayerMemberID { get; set; }
+        public string PlayerMemberID { get; set; }
 
         [Display(Name = "First Name")]
         [Required(ErrorMessage = "Player name cannot be empty!")]
@@ -20,12 +22,16 @@ namespace WMBA_7_2_.Models
         public string PlayerLastName { get; set; }
         [Display(Name = "Player Number")]
         [Required(ErrorMessage = "Player number cannot be empty!")]
-        public int PlayerNumber { get; set; }
+        public int? PlayerNumber { get; set; }
 
         [Display(Name = "Stats")]
         public ICollection<Stats> StatsTotal { get; set; } = new HashSet<Stats>();
+        
+        [Display(Name = "Division")]
         public int? DivisionID { get; set; }
-
+        
+        [Display(Name = "Division")]
+        public Division Division { get; set; }
         [Display(Name = "Team")]
         public int? TeamID { get; set; }
 

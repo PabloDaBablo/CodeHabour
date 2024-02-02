@@ -20,7 +20,7 @@ namespace WMBA_7_2_.Controllers
             return View();
         }
 
-        public IActionResult DownloadAppointments()
+        public IActionResult DownloadGames()
         {
             //Get the appointments
             var appts = from tg in _context.Team_Games
@@ -123,38 +123,107 @@ namespace WMBA_7_2_.Controllers
             }
             return NotFound("No data.");
         }
+
         [HttpPost]
         public async Task<IActionResult> InsertFromExcel(IFormFile theExcel)
         {
-             
-        //Note: This is a very basic example and has 
-        //no ERROR HANDLING.  It also assumes that
-        //duplicate values are allowed, both in the 
-        //uploaded data and the DbSet.
-        ExcelPackage excel;
-            using (var memoryStream = new MemoryStream())
+            string feedBack = string.Empty;
+            if (theExcel != null)
             {
-                await theExcel.CopyToAsync(memoryStream);
-                excel = new ExcelPackage(memoryStream);
-            }
-            var workSheet = excel.Workbook.Worksheets[0];
-            var start = workSheet.Dimension.Start;
-            var end = workSheet.Dimension.End;
-
-            //Start a new list to hold imported objects
-            List<Team> teams = new List<Team>();
-
-            for (int row = start.Row; row <= end.Row; row++)
-            {
-                  // Row by row...
-                Team a = new Team
+                string mimeType = theExcel.ContentType;
+                long fileLength = theExcel.Length;
+                if (!(mimeType == "" || fileLength == 0))//Looks like we have a file!!!
                 {
-                    TeamName = workSheet.Cells[row, 7].Text
-                };
-                teams.Add(a);
+                    if (mimeType.Contains("excel") || mimeType.Contains("spreadsheet"))
+                    {
+                        ExcelPackage excel;
+                        using (var memoryStream = new MemoryStream())
+                        {
+                            await theExcel.CopyToAsync(memoryStream);
+                            excel = new ExcelPackage(memoryStream);
+                        }
+                        var workSheet = excel.Workbook.Worksheets[0];
+                        var start = workSheet.Dimension.Start;
+                        var end = workSheet.Dimension.End;
+                        int successCount = 0;
+                        int errorCount = 0;
+                        if (workSheet.Cells[1, 1].Text == "Name" &&
+                            workSheet.Cells[1, 2].Text == "Standard Charge")
+                        {
+                            for (int row = start.Row + 1; row <= end.Row; row++)
+                            {
+                                Player p = new Player();
+                                try
+                                {
+                                    // Row by row...
+                                    p.PlayerFirstName = workSheet.Cells[row, 2].Text;
+                                    p.PlayerLastName = workSheet.Cells[row, 3].Text;
+                                    p.PlayerMemberID = workSheet.Cells[row, 4].Text;
+                                    p.PlayerNumber = null;
+                                    p.Division.DivAge = workSheet.Cells[row, 6].Text;
+                                    p.Division.DivisionTeams = workSheet.Cells[row, 8].Text;
+                                    _context.Players.Add(p);
+                                    _context.SaveChanges();
+                                    successCount++;
+                                }
+                                catch (DbUpdateException dex)
+                                {
+                                    errorCount++;
+                                    if (dex.GetBaseException().Message.Contains("UNIQUE constraint failed"))
+                                    {
+                                        feedBack += "Error: Record " + p.PlayerFullName + " was rejected as a duplicate."
+                                                + "<br />";
+                                    }
+                                    else
+                                    {
+                                        feedBack += "Error: Record " + p.PlayerFullName + " caused an error."
+                                                + "<br />";
+                                    }
+                                    //Here is the trick to using SaveChanges in a loop.  You must remove the 
+                                    //offending object from the cue or it will keep raising the same error.
+                                    _context.Remove(p);
+                                }
+                                catch (Exception ex)
+                                {
+                                    errorCount++;
+                                    if (ex.GetBaseException().Message.Contains("correct format"))
+                                    {
+                                        feedBack += "Error: Record " + p.PlayerFullName + " was rejected becuase the standard charge was not in the correct format."
+                                                + "<br />";
+                                    }
+                                    else
+                                    {
+                                        feedBack += "Error: Record " + p.PlayerFullName + " caused and error."
+                                                + "<br />";
+                                    }
+                                }
+                            }
+                            feedBack += "Finished Importing " + (successCount + errorCount).ToString() +
+                                " Records with " + successCount.ToString() + " inserted and " +
+                                errorCount.ToString() + " rejected";
+                        }
+                        else
+                        {
+                            feedBack = "Error: You may have selected the wrong file to upload.<br /> Remember, you must have the headings 'Name' and 'Standard Charge' in the first two cells of the first row.";
+                        }
+                    }
+                    else
+                    {
+                        feedBack = "Error: That file is not an Excel spreadsheet.";
+                    }
+                }
+                else
+                {
+                    feedBack = "Error:  file appears to be empty";
+                }
             }
-            _context.Teams.AddRange(teams);
-            _context.SaveChanges();
+            else
+            {
+                feedBack = "Error: No file uploaded";
+            }
+
+            TempData["Feedback"] = feedBack + "<br /><br />";
+
             //Note that we are assuming that you are using the Preferred Approach to Lookup Values
             //And the custom LookupsController
             return Redirect(ViewData["returnURL"].ToString());
