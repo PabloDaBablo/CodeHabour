@@ -1,7 +1,7 @@
 
 
 .top-bar {
-    background-color: #0E138A;
+    background-color: #15244A;
     width: auto;
     height: 50px;
 }
@@ -59,6 +59,24 @@ header {
     justify-content: center;
 }
 
+.custom-btn {
+    display: block;
+    padding: 10px 20px;
+    margin: 0 auto;
+    margin-bottom: 30px;
+    background-color: #15244A;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+    width: 80%;
+}
+
+    .custom-btn:hover {
+        background-color: #15244A;
+    }
+
 .page-container {
     display: flex;
     flex-direction: column;
@@ -70,11 +88,51 @@ header {
 }
 
 .footer {
-    background-color: #0E138A;
-    color: snow;
+    background-color: #15244A;
+    color: white;
     text-align: center;
     padding: 10px 0;
 }
 
+.navbar-nav-desktop {
+    display: none;
+}
 
+.navbar-toggler {
+    display: none;
+}
 
+.navbar-nav-desktop {
+    display: none;
+}
+
+@media (min-width: 769px) {
+    .navbar-nav-desktop {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: nowrap;
+    }
+
+    .desktop-btn {
+        display: inline-block;
+        margin: 5px;
+        width: auto; 
+        margin-bottom: 0; 
+    }
+
+    .navbar-toggler {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .navbar-toggler {
+        display: flex;
+    }
+
+    .navbar-nav-desktop {
+        display: none;
+    }
+}
