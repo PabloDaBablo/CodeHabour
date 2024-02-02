@@ -459,6 +459,12 @@ namespace WMBA_7_2_.Data
                 Debug.WriteLine(ex.GetBaseException().Message);
             }
         }
+
+        //Fields for each division
+
+        // 9u         : Chippawa Park Diamond, Maple Park Diamond #1, Maple Park Diamond #2
+        // 11u and 13u: Memorial Park Diamond #2, Memorial Park Diamond #3
+        // 15u and 18u: Burger Park Diamond, Welland Jackfish Stadium
     }
 }
 
