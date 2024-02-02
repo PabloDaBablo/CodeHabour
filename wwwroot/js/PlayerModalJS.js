@@ -22,12 +22,12 @@ function GetPlayers() {
                 var object = ' ';
                 $.each(response, function (index, item) {
                     object += '<tr>';
-                    object += '<td>' + (item.playerMemberID || '') + '</td>';
+                    object += '<td>' + (item.divAge || '') + '</td>';
                     object += '<td>' + (item.playerFirstName || '') + '</td>'; 
                     object += '<td>' + (item.playerLastName || '') + '</td>'; 
                     object += '<td>' + (item.playerNumber || '') + '</td>'; 
                     object += '<td>' + (item.teamName || '') + '</td>'; 
-                    object += '<td> <a href="#" class="btn btn-primary btn-sm" onclick="Edit(' + item.id + ')">Edit</a> <a href="#" class="btn btn-danger btn-sm" onclick="Delete(' + item.id + ')">Delete</a> </td>';
+                    object += '<td> <a href="#" class="btn btn-primary btn-sm" onclick="Edit(' + item.id + ')">Edit</a></td>';
                     object += '</tr>';
                 });
                 $('#tblBody').html(object);
@@ -40,6 +40,58 @@ function GetPlayers() {
         }
     })
 } 
+
+$(document).ready(function () {
+    var currentPage = 1;
+    var pageSize = 10; 
+
+    function GetPlayers(page) {
+        $.ajax({
+            url: `/PlayerModal/GetPlayers?page=${page}&pageSize=${pageSize}`, 
+            type: 'GET',
+            success: function (response) {
+                updateTable(response);
+                $('#pageIndicator').text(`Page: ${currentPage}`);
+            },
+            error: function (error) {
+                console.error("Error fetching players:", error);
+                alert('Unable to Read Player Data.');
+            }
+        });
+    }
+
+    function updateTable(players) {
+        var tableBody = $('#tblBody');
+        tableBody.empty();
+
+        players.forEach(function (player) {
+            var row = `<tr>
+            <td>${player.divAge || ''}</td>
+            <td>${player.playerFirstName || ''}</td>
+            <td>${player.playerLastName || ''}</td>
+            <td>${player.playerNumber || ''}</td>
+            <td>${player.teamName || ''}</td>
+            <td><a href="#" class="btn btn-primary btn-sm" onclick="Edit(${player.id})">Edit</a> <a href="#" class="btn btn-danger btn-sm" onclick="Delete(${player.id})">Delete</a></td>
+            </tr>`;
+
+            tableBody.append(row);
+        });
+    }
+
+    $('#prevPage').click(function () {
+        if (currentPage > 1) {
+            currentPage--;
+            GetPlayers(currentPage);
+        }
+    });
+
+    $('#nextPage').click(function () {
+        currentPage++; 
+        GetPlayers(currentPage);
+    });
+
+    GetPlayers(currentPage);
+});
 
 $('#btnAdd').click(function () {
     $('#PlayerModal').modal('show');
@@ -64,6 +116,7 @@ function Insert() {
     formData.playerLastName = $('#PlayerLastName').val();
     formData.playerNumber = $('#PlayerNumber').val();
     formData.teamID = $('#TeamID').val();
+    formData.divisionID = $('#DivisionID').val();
 
     $.ajax({
         url: '/PlayerModal/Insert',
@@ -99,6 +152,7 @@ function ClearData() {
     $('#PlayerLastName').val('');
     $('#PlayerNumber').val('');
     $('#TeamID').val('');
+    $('#DivisionID').val('');
 };
 
 function Validate() {
@@ -141,6 +195,13 @@ function Validate() {
         isValid = false;
     } else {
         $('#TeamID').css('border-color', 'lightgrey');
+    }
+
+    if ($('#DivisionID').val() == "") {
+        $('#DivisionID').css('border-color', 'Red');
+        isValid = false;
+    } else {
+        $('#DivisionID').css('border-color', 'lightgrey');
     }
 
     return isValid;
@@ -192,6 +253,7 @@ function Edit(id)
                 $('#PlayerLastName').val(response.playerLastName);
                 $('#PlayerNumber').val(response.playerNumber);
                 $('#TeamID').val(response.teamID);
+                $('#DivisionID').val(response.divisionID);
             }
         },
         error: function () {
@@ -214,6 +276,7 @@ function Update() {
     formData.playerLastName = $('#PlayerLastName').val();
     formData.playerNumber = $('#PlayerNumber').val();
     formData.teamID = $('#TeamID').val();
+    formData.divisionID = $('#DivisionID').val();
 
     $.ajax({
         url: '/PlayerModal/Update',

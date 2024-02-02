@@ -37,7 +37,17 @@ namespace WMBA_7_2_.Data
             modelBuilder.Entity<Team_Coach>()
                 .HasKey(tc => new { tc.CoachID, tc.TeamID});
 
-            modelBuilder.Entity<Player>()
+			modelBuilder.Entity<Team_Coach>()
+		        .HasOne(tc => tc.Team)
+		        .WithMany(t => t.TeamCoaches)
+		        .HasForeignKey(tc => tc.TeamID);
+
+			modelBuilder.Entity<Team_Coach>()
+				.HasOne(tc => tc.Coach)
+				.WithMany(c => c.TeamCoach)
+				.HasForeignKey(tc => tc.CoachID);
+
+			modelBuilder.Entity<Player>()
                 .HasOne(p => p.Team)
                 .WithMany( t => t.Players)
                 .HasForeignKey( p => p.TeamID)

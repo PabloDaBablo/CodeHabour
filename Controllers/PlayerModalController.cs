@@ -20,30 +20,39 @@ namespace WMBA_7_2_.Controllers
         public IActionResult Index()
         {
 
+			ViewData["DivisionID"] = new SelectList(_context.Divisions, "ID", "DivisionTeams");
 			ViewData["TeamID"] = new SelectList(_context.Teams, "ID", "TeamName");
 			return View();
         }
 
-        [HttpGet]
-        public JsonResult GetPlayers()
-        {
-            var players = _context.Players
-				.Include(p => p.Team).Select(p => new
-            {
-                id = p.ID,
-                p.PlayerMemberID,
-                p.PlayerFirstName,
-                p.PlayerLastName,
-                p.PlayerNumber,
-                p.Team.TeamName
+		[HttpGet]
+		public JsonResult GetPlayers(int page = 1, int pageSize = 10)
+		{
+			
+			var query = _context.Players
+						.Include(p => p.Team)
+						.Include(p => p.Division)
+						.OrderBy(p => p.ID) 
+						.Skip((page - 1) * pageSize)
+						.Take(pageSize);
 
-            })
-            .ToList();
-                
-            return Json(players);
-        }
+			var players = query.Select(p => new
+			{
+				id = p.ID,
+				p.PlayerMemberID,
+				p.PlayerFirstName,
+				p.PlayerLastName,
+				p.PlayerNumber,
+				TeamName = p.Team.TeamName, 
+				p.DivisionID,
+				DivAge = p.Division.DivAge
+			})
+						.ToList();
 
-        [HttpPost]
+			return Json(players);
+		}
+
+		[HttpPost]
         public JsonResult Insert(Player model)
         {
             if (ModelState.IsValid)
@@ -63,6 +72,7 @@ namespace WMBA_7_2_.Controllers
 		{
 			var player = _context.Players
 								 .Include(p => p.Team)
+                                 .Include(p => p.Division)
 								 .FirstOrDefault(p => p.ID == id);
 
 			if (player == null)
@@ -77,7 +87,9 @@ namespace WMBA_7_2_.Controllers
 				playerFirstName = player.PlayerFirstName,
 				playerLastName = player.PlayerLastName,
 				playerNumber = player.PlayerNumber,
-				teamID = player.Team?.ID 
+				teamID = player.Team?.ID,
+                divisionID = player.Division?.ID,
+                divAge = player.Division?.DivAge
 			};
 
 			return Json(result);

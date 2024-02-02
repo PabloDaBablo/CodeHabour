@@ -9,7 +9,7 @@ namespace WMBA_7_2_.Models
 
         [Display(Name = "Coach Member ID")]//not sure if this is required or not, but ill leave it in a comment the code
         //[Required(ErrorMessage = "Coach Member ID Required.)] also not sure if its a string or int lol
-        public int CoachMemberID { get; set; }
+        public string CoachMemberID { get; set; }
 
         [Display(Name = "Coach Name")]
         [Required(ErrorMessage = "Coach Name cannot be empty.")]
@@ -25,7 +25,7 @@ namespace WMBA_7_2_.Models
         [StringLength(75, ErrorMessage = "Coach position cannot be longer than 75 characters!")]
         public string CoachPosition { get; set; }
 
-        [Display(Name = "Coach")]
+        [Display(Name = "Team")]
         public ICollection<Team_Coach> TeamCoach { get; set; } = new HashSet<Team_Coach>();
 
 
