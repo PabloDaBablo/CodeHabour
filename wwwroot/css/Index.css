@@ -21,24 +21,6 @@
     align-items: center;
 }
 
-.custom-btn {
-    display: block;
-    padding: 10px 20px;
-    margin: 0 auto; 
-    margin-bottom: 30px; 
-    background-color: #0E138A;
-    color: white;
-    text-align: center;
-    text-decoration: none;
-    border-radius: 5px;
-    transition: background-color 0.3s;
-    width: 80%;
-}
-
-    .custom-btn:hover {
-        background-color: #0056b3;
-    }
-
 @media (max-width: 768px) {
     @media (max-width: 768px) {/*Got rid of column, column-container styling since it was interfering with button position.*/
 
