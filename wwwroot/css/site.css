@@ -111,10 +111,16 @@ header {
     display: none;
 }
 
-.nav-link-spacing {/*Spacing for navbar desktop links*/
-    padding-left: 10px; 
+.nav-link-spacing { /*Spacing for navbar desktop links*/
+    padding-left: 10px;
     padding-right: 10px;
+    font: bold;
 }
+
+.nav-link-spacing:hover,
+.nav-link-spacing:focus {
+    text-shadow: 0.5px 0 currentColor, -0.5px 0 currentColor, 0 0.5px currentColor, 0 -0.5px currentColor; /* Simulate boldness */
+    }
 
 @media (min-width: 769px) {
     .navbar-nav-desktop {
