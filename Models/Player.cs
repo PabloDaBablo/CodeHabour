@@ -21,6 +21,7 @@ namespace WMBA_7_2_.Models
         [Required(ErrorMessage = "Player name cannot be empty!")]
         [StringLength(75, ErrorMessage = "Player name cannot be longer than 75 characters!")]
         public string PlayerLastName { get; set; }
+
         [Display(Name = "Player Number")]
         [Required(ErrorMessage = "Player number cannot be empty!")]
         public int? PlayerNumber { get; set; }
