@@ -7,6 +7,7 @@ using OfficeOpenXml;
 using WMBA_7_2_.Data;
 using OfficeOpenXml.Style;
 using System.Drawing;
+using WMBA_7_2_.ViewModels;
 
 namespace WMBA_7_2_.Controllers
 {
@@ -147,88 +148,109 @@ namespace WMBA_7_2_.Controllers
                         var end = workSheet.Dimension.End;
                         int successCount = 0;
                         int errorCount = 0;
-                        if (workSheet.Cells[1, 1].Text == "Name" &&
-                            workSheet.Cells[1, 2].Text == "Standard Charge")
+                        if (workSheet.Cells[1, 2].Text == "First Name" &&
+                            workSheet.Cells[1, 3].Text == "Last Name" &&
+                            workSheet.Cells[1, 4].Text == "Member ID" &&
+                            workSheet.Cells[1, 6].Text == "Division" &&
+                            workSheet.Cells[1, 8].Text == "Team")
+
                         {
+
+                            List<ImportReportVM> reports = new List<ImportReportVM>();
                             for (int row = start.Row + 1; row <= end.Row; row++)
                             {
-                                Player p = new Player();
-                                try
-                                {
-                                    // Row by row...
-                                    p.PlayerFirstName = workSheet.Cells[row, 2].Text;
-                                    p.PlayerLastName = workSheet.Cells[row, 3].Text;
-                                    p.PlayerMemberID = workSheet.Cells[row, 4].Text;
-                                    p.PlayerNumber = null;
-                                    p.Division.DivAge = workSheet.Cells[row, 6].Text;
-                                    p.Division.DivisionTeams = workSheet.Cells[row, 8].Text;
-                                    _context.Players.Add(p);
-                                    _context.SaveChanges();
-                                    successCount++;
-                                }
-                                catch (DbUpdateException dex)
-                                {
-                                    errorCount++;
-                                    if (dex.GetBaseException().Message.Contains("UNIQUE constraint failed"))
-                                    {
-                                        feedBack += "Error: Record " + p.PlayerFullName + " was rejected as a duplicate."
-                                                + "<br />";
-                                    }
-                                    else
-                                    {
-                                        feedBack += "Error: Record " + p.PlayerFullName + " caused an error."
-                                                + "<br />";
-                                    }
-                                    //Here is the trick to using SaveChanges in a loop.  You must remove the 
-                                    //offending object from the cue or it will keep raising the same error.
-                                    _context.Remove(p);
-                                }
-                                catch (Exception ex)
-                                {
-                                    errorCount++;
-                                    if (ex.GetBaseException().Message.Contains("correct format"))
-                                    {
-                                        feedBack += "Error: Record " + p.PlayerFullName + " was rejected becuase the standard charge was not in the correct format."
-                                                + "<br />";
-                                    }
-                                    else
-                                    {
-                                        feedBack += "Error: Record " + p.PlayerFullName + " caused and error."
-                                                + "<br />";
-                                    }
-                                }
+
+                                ImportReportVM r = new ImportReportVM();
+                                r.FirstName = workSheet.Cells[row, 2].Text;
+                                r.LastName = workSheet.Cells[row, 3].Text;
+                                r.MemberID = workSheet.Cells[row, 4].Text;
+                                r.Division = workSheet.Cells[row, 6].Text;
+                                r.Team = workSheet.Cells[row, 8].Text;
+                                reports.Add(r);
                             }
-                            feedBack += "Finished Importing " + (successCount + errorCount).ToString() +
-                                " Records with " + successCount.ToString() + " inserted and " +
-                                errorCount.ToString() + " rejected";
                         }
-                        else
-                        {
-                            feedBack = "Error: You may have selected the wrong file to upload.<br /> Remember, you must have the headings 'Name' and 'Standard Charge' in the first two cells of the first row.";
+                                //                    Player p = new Player();
+                                //                    try
+                                //                    {
+                                //                        // Row by row...
+                                //                        p.PlayerFirstName = workSheet.Cells[row, 2].Text;
+                                //                        p.PlayerLastName = workSheet.Cells[row, 3].Text;
+                                //                        p.PlayerMemberID = workSheet.Cells[row, 4].Text;
+                                //                        p.PlayerNumber = null;
+                                //                        p.Division.DivAge = workSheet.Cells[row, 6].Text;
+                                //                        p.Division.DivisionTeams = workSheet.Cells[row, 8].Text;
+                                //                        _context.Players.Add(p);
+                                //                        _context.SaveChanges();
+                                //                        successCount++;
+                                //                    }
+                                //                    catch (DbUpdateException dex)
+                                //                    {
+                                //                        errorCount++;
+                                //                        if (dex.GetBaseException().Message.Contains("UNIQUE constraint failed"))
+                                //                        {
+                                //                            feedBack += "Error: Record " + p.PlayerFullName + " was rejected as a duplicate."
+                                //                                    + "<br />";
+                                //                        }
+                                //                        else
+                                //                        {
+                                //                            feedBack += "Error: Record " + p.PlayerFullName + " caused an error."
+                                //                                    + "<br />";
+                                //                        }
+                                //                        //Here is the trick to using SaveChanges in a loop.  You must remove the 
+                                //                        //offending object from the cue or it will keep raising the same error.
+                                //                        _context.Remove(p);
+                                //                    }
+                                //                    catch (Exception ex)
+                                //                    {
+                                //                        errorCount++;
+                                //                        if (ex.GetBaseException().Message.Contains("correct format"))
+                                //                        {
+                                //                            feedBack += "Error: Record " + p.PlayerFullName + " was rejected becuase the standard charge was not in the correct format."
+                                //                                    + "<br />";
+                                //                        }
+                                //                        else
+                                //                        {
+                                //                            feedBack += "Error: Record " + p.PlayerFullName + " caused and error."
+                                //                                    + "<br />";
+                                //                        }
+                                //                    }
+                                //                }
+                                //                feedBack += "Finished Importing " + (successCount + errorCount).ToString() +
+                                //                    " Records with " + successCount.ToString() + " inserted and " +
+                                //                    errorCount.ToString() + " rejected";
+                                //            }
+                                //            else
+                                //            {
+                                //                feedBack = "Error: You may have selected the wrong file to upload.<br /> Remember, you must have the headings 'Name' and 'Standard Charge' in the first two cells of the first row.";
+                                //            }
+                                //        }
+                                //        else
+                                //        {
+                                //            feedBack = "Error: That file is not an Excel spreadsheet.";
+                                //        }
+                                //    }
+                                //    else
+                                //    {
+                                //        feedBack = "Error:  file appears to be empty";
+                                //    }
+                                //}
+                                //else
+                                //{
+                                //    feedBack = "Error: No file uploaded";
+                                //}
+
+                            }
                         }
                     }
-                    else
-                    {
-                        feedBack = "Error: That file is not an Excel spreadsheet.";
-                    }
-                }
-                else
-                {
-                    feedBack = "Error:  file appears to be empty";
+                                TempData["Feedback"] = feedBack + "<br /><br />";
+
+                                ////Note that we are assuming that you are using the Preferred Approach to Lookup Values
+                                ////And the custom LookupsController
+                                return Redirect(ViewData["returnURL"].ToString());
                 }
             }
-            else
-            {
-                feedBack = "Error: No file uploaded";
-            }
-
-            TempData["Feedback"] = feedBack + "<br /><br />";
-
-            //Note that we are assuming that you are using the Preferred Approach to Lookup Values
-            //And the custom LookupsController
-            return Redirect(ViewData["returnURL"].ToString());
         }
-    }
-}
+    
+
 
 	
