@@ -20,16 +20,17 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <!-- Desktop Navigation -->
-                <div class="navbar-nav-desktop">
-                        <button class="custom-btn desktop-btn" onclick="location.href='@Url.Action("Index", "Home")'">Home</button>
-                        <button class="custom-btn desktop-btn" onclick="location.href='@Url.Action("Index", "PlayerModal")'">Players</button>
-                        <button class="custom-btn desktop-btn" onclick="location.href='@Url.Action("Index", "Team")'">Team</button>
-                        <button class="custom-btn desktop-btn" onclick="location.href='@Url.Action("Index", "Game")'">Game</button>
-                        <button class="custom-btn desktop-btn" onclick="location.href='@Url.Action("Index", "Schedule")'">Schedule</button>
-                        <button class="custom-btn desktop-btn" onclick="location.href='@Url.Action("Index", "ScoreSheet")'">Score Sheet</button>
-                        <button class="custom-btn desktop-btn" onclick="location.href='@Url.Action("Index", "Report")'">Excel Data</button>
-                        <button class="custom-btn desktop-btn" onclick="location.href='@Url.Action("Index", "TeamModal")'">Teams</button>
-                </div>
+                @* <div class="navbar-nav-desktop">
+                <button class="custom-btn desktop-btn" onclick="location.href='@Url.Action("Index", "Home")'">Home</button>
+                <button class="custom-btn desktop-btn" onclick="location.href='@Url.Action("Index", "PlayerModal")'">Players</button>
+                <button class="custom-btn desktop-btn" onclick="location.href='@Url.Action("Index", "Team")'">Team</button>
+                <button class="custom-btn desktop-btn" onclick="location.href='@Url.Action("Index", "Game")'">Game</button>
+                <button class="custom-btn desktop-btn" onclick="location.href='@Url.Action("Index", "Schedule")'">Schedule</button>
+                <button class="custom-btn desktop-btn" onclick="location.href='@Url.Action("Index", "ScoreSheet")'">Score Sheet</button>
+                <button class="custom-btn desktop-btn" onclick="location.href='@Url.Action("Index", "Report")'">Excel Data</button>
+                <button class="custom-btn desktop-btn" onclick="location.href='@Url.Action("Index", "TeamModal")'">Teams</button>
+                </div> *@
+
                 <!-- Offcanvas Menu for Mobile -->
                 <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasMenu" aria-labelledby="offcanvasMenuLabel">
                     <div class="offcanvas-header">
@@ -44,8 +45,7 @@
                             <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Team")">Team</a></li>
                             <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Game")">Game</a></li>
                             <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Schedule")">Schedule</a></li>
-                            <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "ScoreSheet")">Score Sheet</a></li>
-                            <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Report")">Excel Data</a></li>
+                            <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Report")">Data</a></li>
                             <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "TeamModal")">Teams</a></li>
                         </ul>
                     </div>
@@ -53,6 +53,15 @@
             </nav>
         </header>
         <div class="top-bar">
+            <ul class="navbar-nav-desktop">
+                <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Home")">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "PlayerModal")">Players</a></li>
+                <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Team")">Team</a></li>
+                <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Game")">Game</a></li>
+                <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Schedule")">Schedule</a></li>
+                <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Report")">Data</a></li>
+                <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "TeamModal")">Teams</a></li>
+            </ul>
         </div>
         <div class="container">
             <main role="main" class="pb-3">
