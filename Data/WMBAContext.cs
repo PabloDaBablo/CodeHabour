@@ -53,6 +53,8 @@ namespace WMBA_7_2_.Data
                 .HasForeignKey( p => p.TeamID)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<Player>()
+                .HasIndex(p => p.PlayerNumber).IsUnique();
         }
 
     }
