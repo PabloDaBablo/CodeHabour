@@ -7,7 +7,7 @@
     color: #ffffff;
     row-gap: 0;
     text-align: left;
-
+    line-height: 50px;
 }
 
 html {
@@ -99,9 +99,8 @@ header {
 }
 
 .navbar-nav-desktop {
-    display: none;
-    padding: 5px;
-    margin: 0 auto;
+    list-style-type: none;
+    padding-left: 0;
 }
 
 .navbar-toggler {
@@ -110,6 +109,11 @@ header {
 
 .navbar-nav-desktop {
     display: none;
+}
+
+.nav-link-spacing {/*Spacing for navbar desktop links*/
+    padding-left: 10px; 
+    padding-right: 10px;
 }
 
 @media (min-width: 769px) {
