@@ -57,6 +57,7 @@ namespace WMBA_7_2_.Controllers
 					CoachName = viewModel.CoachName,
 					CoachNumber = viewModel.CoachNumber,
 					CoachPosition = viewModel.CoachPosition,
+
 				};
 
 				if (viewModel.ID > 0)
@@ -93,6 +94,7 @@ namespace WMBA_7_2_.Controllers
 		{
 			var coaches = _context.Coaches
 								 .Include(p => p.TeamCoach)
+									.ThenInclude(p => p.Coach)
 								 .FirstOrDefault(p => p.ID == id);
 
 			if (coaches == null)
@@ -105,11 +107,25 @@ namespace WMBA_7_2_.Controllers
 				id = coaches.ID,
 				coachMemberID = coaches.CoachMemberID,
 				coachName = coaches.CoachName,
-				coachPosition = coaches.CoachPosition
+				coachPosition = coaches.CoachPosition,
+				teamName = coaches.TeamCoach.FirstOrDefault().Team.TeamName
 
 			};
 
 			return Json(result);
+		}
+
+		[HttpPost]
+		public JsonResult Update(Coach model)
+		{
+			if (ModelState.IsValid)
+			{
+				_context.Coaches.Update(model);
+				_context.SaveChanges();
+
+				return Json("Player updated successfully.");
+			}
+			return Json("Model validation failed.");
 		}
 
 	}
