@@ -4,6 +4,10 @@
     background-color: #15244A;
     width: auto;
     height: 50px;
+    color: #ffffff;
+    row-gap: 0;
+    text-align: left;
+    line-height: 50px;
 }
 
 html {
@@ -95,7 +99,8 @@ header {
 }
 
 .navbar-nav-desktop {
-    display: none;
+    list-style-type: none;
+    padding-left: 0;
 }
 
 .navbar-toggler {
@@ -105,6 +110,17 @@ header {
 .navbar-nav-desktop {
     display: none;
 }
+
+.nav-link-spacing { /*Spacing for navbar desktop links*/
+    padding-left: 10px;
+    padding-right: 10px;
+    font: bold;
+}
+
+.nav-link-spacing:hover,
+.nav-link-spacing:focus {
+    text-shadow: 0.5px 0 currentColor, -0.5px 0 currentColor, 0 0.5px currentColor, 0 -0.5px currentColor; /* Simulate boldness */
+    }
 
 @media (min-width: 769px) {
     .navbar-nav-desktop {
