@@ -61,6 +61,10 @@ namespace WMBA_7_2_.Data
 
             modelBuilder.Entity<Coach>()
                 .HasIndex(p => p.CoachMemberID).IsUnique();
+
+			modelBuilder.Entity<Player>()
+	            .HasIndex(p => new { p.PlayerNumber, p.TeamID })
+	            .IsUnique();
 		}
 
     }
