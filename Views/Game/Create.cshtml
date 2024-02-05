@@ -3,28 +3,51 @@
 @{
     ViewData["Title"] = "Create";
 }
+<head>
 
-<h1>Create</h1>
-
-<h4>Game</h4>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/site.css" asp-append-version="true" />
+</head>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-lg-10">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="ScheduleID" class="control-label"></label>
-                <select asp-for="ScheduleID" class ="form-control" asp-items="ViewBag.ScheduleID"></select>
+                <label asp-for="GameDate" class="control-label"></label>
+                <input asp-for="GameDate" class="form-control" />
+                <span asp-validation-for="GameDate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <label asp-for="GameTime" class="control-label"></label>
+                <input asp-for="GameTime" class="form-control" />
+                <span asp-validation-for="GameTime" class="text-danger"></span>
+            </div>
+            @* <div class="form-group">
+                <label asp-for="Team_Games.FirstOrDefault().HomeTeam" class="control-label"></label>
+                <input asp-for="Team_Games.FirstOrDefault().HomeTeam" class="form-control" />
+                <span asp-validation-for="Team_Games.FirstOrDefault().HomeTeam" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Team_Games.FirstOrDefault().AwayTeam" class="control-label"></label>
+                <input asp-for="Team_Games.FirstOrDefault().AwayTeam" class="form-control" />
+                <span asp-validation-for="Team_Games.FirstOrDefault().AwayTeam" class="text-danger"></span>
+            </div> *@
+            <div class="form-group">
+                <label asp-for="GameLocation" class="control-label"></label>
+                <input asp-for="GameLocation" class="form-control" />
+                <span asp-validation-for="GameLocation" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Add to Schedule" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Back to Schedule</a>
 </div>
 
 @section Scripts {

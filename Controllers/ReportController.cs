@@ -8,6 +8,7 @@ using WMBA_7_2_.Data;
 using OfficeOpenXml.Style;
 using System.Drawing;
 using WMBA_7_2_.ViewModels;
+using OfficeOpenXml.Table;
 
 namespace WMBA_7_2_.Controllers
 {
@@ -28,8 +29,7 @@ namespace WMBA_7_2_.Controllers
                         .Include(tg => tg.Game)
                         select new
                         {
-                            HomeTeam = tg.HomeTeam,
-                            AwayTeam = tg.AwayTeam
+                           
                         };
             //How many rows?
             int numRows = appts.Count();
@@ -124,9 +124,8 @@ namespace WMBA_7_2_.Controllers
             }
             return NotFound("No data.");
         }
-
         [HttpPost]
-        public async Task<IActionResult> InsertFromExcel(IFormFile theExcel)
+        public async Task<IActionResult> ImportFromExcel(IFormFile theExcel)
         {
             string feedBack = string.Empty;
             if (theExcel != null)
@@ -144,105 +143,98 @@ namespace WMBA_7_2_.Controllers
                             excel = new ExcelPackage(memoryStream);
                         }
                         var workSheet = excel.Workbook.Worksheets[0];
-                        var start = workSheet.Dimension.Start;
-                        var end = workSheet.Dimension.End;
-                        int successCount = 0;
-                        int errorCount = 0;
-                        if (workSheet.Cells[1, 2].Text == "First Name" &&
-                            workSheet.Cells[1, 3].Text == "Last Name" &&
-                            workSheet.Cells[1, 4].Text == "Member ID" &&
-                            workSheet.Cells[1, 6].Text == "Division" &&
-                            workSheet.Cells[1, 8].Text == "Team")
 
-                        {
-                            for (int row = start.Row + 1; row <= end.Row; row++)
-                            {
+                        await ReadImportedData(workSheet, feedBack);
+                    }
+                    else if (mimeType.Contains("text/csv"))
+                    {
+                        var format = new ExcelTextFormat();
+                        format.Delimiter = ',';
+                        bool firstRowIsHeader = true;
 
-                                ImportReportVM r = new ImportReportVM();
-                                r.FirstName = workSheet.Cells[row, 2].Text;
-                                r.LastName = workSheet.Cells[row, 3].Text;
-                                r.MemberID = workSheet.Cells[row, 4].Text;
-                                r.Division = workSheet.Cells[row, 6].Text;
-                                r.Team = workSheet.Cells[row, 8].Text;
-                                reports.Add(r);
-                            }
-                        }
-                                //                    Player p = new Player();
-                                //                    try
-                                //                    {
-                                //                        // Row by row...
-                                //                        p.PlayerFirstName = workSheet.Cells[row, 2].Text;
-                                //                        p.PlayerLastName = workSheet.Cells[row, 3].Text;
-                                //                        p.PlayerMemberID = workSheet.Cells[row, 4].Text;
-                                //                        p.PlayerNumber = null;
-                                //                        p.Division.DivAge = workSheet.Cells[row, 6].Text;
-                                //                        p.Division.DivisionTeams = workSheet.Cells[row, 8].Text;
-                                //                        _context.Players.Add(p);
-                                //                        _context.SaveChanges();
-                                //                        successCount++;
-                                //                    }
-                                //                    catch (DbUpdateException dex)
-                                //                    {
-                                //                        errorCount++;
-                                //                        if (dex.GetBaseException().Message.Contains("UNIQUE constraint failed"))
-                                //                        {
-                                //                            feedBack += "Error: Record " + p.PlayerFullName + " was rejected as a duplicate."
-                                //                                    + "<br />";
-                                //                        }
-                                //                        else
-                                //                        {
-                                //                            feedBack += "Error: Record " + p.PlayerFullName + " caused an error."
-                                //                                    + "<br />";
-                                //                        }
-                                //                        //Here is the trick to using SaveChanges in a loop.  You must remove the 
-                                //                        //offending object from the cue or it will keep raising the same error.
-                                //                        _context.Remove(p);
-                                //                    }
-                                //                    catch (Exception ex)
-                                //                    {
-                                //                        errorCount++;
-                                //                        if (ex.GetBaseException().Message.Contains("correct format"))
-                                //                        {
-                                //                            feedBack += "Error: Record " + p.PlayerFullName + " was rejected becuase the standard charge was not in the correct format."
-                                //                                    + "<br />";
-                                //                        }
-                                //                        else
-                                //                        {
-                                //                            feedBack += "Error: Record " + p.PlayerFullName + " caused and error."
-                                //                                    + "<br />";
-                                //                        }
-                                //                    }
-                                //                }
-                                //                feedBack += "Finished Importing " + (successCount + errorCount).ToString() +
-                                //                    " Records with " + successCount.ToString() + " inserted and " +
-                                //                    errorCount.ToString() + " rejected";
-                                //            }
-                                //            else
-                                //            {
-                                //                feedBack = "Error: You may have selected the wrong file to upload.<br /> Remember, you must have the headings 'Name' and 'Standard Charge' in the first two cells of the first row.";
-                                //            }
-                                //        }
-                                //        else
-                                //        {
-                                //            feedBack = "Error: That file is not an Excel spreadsheet.";
-                                //        }
-                                //    }
-                                //    else
-                                //    {
-                                //        feedBack = "Error:  file appears to be empty";
-                                //    }
-                                //}
-                                //else
-                                //{
-                                //    feedBack = "Error: No file uploaded";
-                                //}
+                        using var reader = new System.IO.StreamReader(theExcel.OpenReadStream());
 
-                            }
-                        }
+                        using ExcelPackage package = new ExcelPackage();
+                        var result = reader.ReadToEnd();
+                        ExcelWorksheet workSheet = package.Workbook.Worksheets.Add("Imported Report Data");
+
+                        workSheet.Cells["A1"].LoadFromText(result, format, TableStyles.None, firstRowIsHeader);
+
+                        await ReadImportedData(workSheet, feedBack);
+                    }
+                    else
+                    {
+                        feedBack = "Error: That file is not an Excel spreadsheet.";
                     }
                 }
+                else
+                {
+                    feedBack = "Error:  file appears to be empty";
+                }
+            }
+            else
+            {
+                feedBack = "Error: No file uploaded";
+            }
+
+            TempData["Feedback"] = feedBack + "<br /><br />";
+
+            //Note that we are assuming that you are using the Preferred Approach to Lookup Values
+            //And the custom LookupsController
+            return Redirect(ViewData["returnURL"].ToString());
+        }
+
+
+        private async Task ReadImportedData(ExcelWorksheet workSheet, string feedBack)
+        {
+            //Prepare the colleciton of imported data
+            List<ImportReport> imported = new();
+
+            var start = workSheet.Dimension.Start;
+            var end = workSheet.Dimension.End;
+
+            //Test some of the heading cells to help confirm this is the right kind of file.
+            if (workSheet.Cells[1, 2].Text == "First Name" &&
+                workSheet.Cells[1, 3].Text == "Last Name" &&
+                workSheet.Cells[1, 4].Text == "Member ID" &&
+                workSheet.Cells[1, 6].Text == "Division" &&
+                workSheet.Cells[1, 8].Text == "Team"
+                )
+            {
+                for (int row = start.Row + 1; row <= end.Row; row++)
+                {
+                    ImportReport ir = new ImportReport
+                    {
+                        ID = workSheet.Cells[row, 1].Text,
+                        First_Name = workSheet.Cells[row, 2].Text,
+                        Last_Name = workSheet.Cells[row, 3].Text,
+                        Member_ID = workSheet.Cells[row, 4].Text,
+                        Season = workSheet.Cells[row, 5].Text,
+                        Division = workSheet.Cells[row, 6].Text,
+                        Club = workSheet.Cells[row, 7].Text,
+                        Team = workSheet.Cells[row, 8].Text
+                    };
+                    imported.Add(ir);
+                }
+                //Great! you have read in the data so now do domething with it.
+                //You probably want to check that the team exists or add it if it does not.
+                //For the player you would again check if they are in the system, add them if required
+                //and assign them to the team.
+                //Find out from your client ifyou need to remove old team assignments.
+                //
+                //You will get a warning about using an await for this to be async but that
+                //will come when you start saving data to the database.
+            }
+       
+            else
+            {
+                feedBack = "Error: You may have selected the wrong file to upload.";
             }
         }
+
+        }
+}
+        
     
 
 

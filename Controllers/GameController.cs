@@ -22,7 +22,12 @@ namespace WMBA_7_2_.Controllers
         // GET: Game
         public async Task<IActionResult> Index()
         {
-              return View(await _context.Games.ToListAsync());
+            var games = await _context.Games
+             .Include(g => g.Team_Games)
+             .AsNoTracking()
+             .ToListAsync();
+
+            return View(games);
         }
 
         // GET: Game/Details/5
@@ -33,9 +38,8 @@ namespace WMBA_7_2_.Controllers
                 return NotFound();
             }
 
-            var game = await _context.Games.FirstOrDefaultAsync(m => m.ID == id);
-            ;
-          
+            var game = await _context.Games
+                .FirstOrDefaultAsync(m => m.ID == id);
             if (game == null)
             {
                 return NotFound();
@@ -55,7 +59,7 @@ namespace WMBA_7_2_.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,ScheduleID")] Game game)
+        public async Task<IActionResult> Create([Bind("ID,GameDate,GameTime,GameSeason,GameLocation")] Game game)
         {
             if (ModelState.IsValid)
             {
@@ -87,7 +91,7 @@ namespace WMBA_7_2_.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,ScheduleID")] Game game)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,GameDate,GameTime,GameSeason,GameLocation")] Game game)
         {
             if (id != game.ID)
             {
@@ -142,7 +146,7 @@ namespace WMBA_7_2_.Controllers
         {
             if (_context.Games == null)
             {
-                return Problem("Entity set 'WMBAContext.Games'  is null.");
+                return Problem("Entity set 'WMBAContext.Schedules'  is null.");
             }
             var game = await _context.Games.FindAsync(id);
             if (game != null)

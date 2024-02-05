@@ -10,14 +10,12 @@ namespace WMBA_7_2_.Data
 
         public DbSet<League> Leagues { get; set; }
         public DbSet<Division> Divisions { get; set; }
-
         public DbSet<Coach> Coaches { get; set; }
-        public DbSet<Game> Games { get; set; }
         public DbSet<Line_Up>Line_Ups { get; set; }
         public DbSet<Line_Up_Player> Line_Up_Players { get; set; }
         public DbSet<Player> Players { get; set; }
         public DbSet<PlayerPosition> PlayerPositions { get; set; }
-        public DbSet<Schedule> Schedules { get; set; }
+        public DbSet<Game> Games { get; set; }
         public DbSet<Security> Security { get; set; }
         public DbSet<SecurityRole>SecurityRoles { get; set; }
         public DbSet<Stats> Stats { get; set; }
@@ -26,10 +24,6 @@ namespace WMBA_7_2_.Data
         public DbSet<Team_Game> Team_Games { get; set; }
         public DbSet<TeamStats> Team_Stats { get; set; }
        
-
-
-
-
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -59,9 +53,9 @@ namespace WMBA_7_2_.Data
             modelBuilder.Entity<Coach>()
                 .HasIndex(p => p.CoachMemberID).IsUnique();
 
-			modelBuilder.Entity<Player>()
-	            .HasIndex(p => new { p.PlayerNumber, p.TeamID }) //this should work instead, yes
-	            .IsUnique();
+			//modelBuilder.Entity<Player>()
+	  //          .HasIndex(p => new { p.PlayerNumber, p.TeamID }) //this should work instead, yes
+	  //          .IsUnique();
 		}
 
     }
