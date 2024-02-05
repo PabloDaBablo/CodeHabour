@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Numerics;
 using WMBA_7_2_.Models;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace WMBA_7_2_.Data
 {
@@ -77,29 +78,28 @@ namespace WMBA_7_2_.Data
                          CoachNumber = 99,
                          CoachPosition = "Head Coach"
                      },
+                    new Coach
+                    {
+                        CoachMemberID = "5678765",
+                        CoachName = "Alex Cora",
+                        CoachNumber = 88,
+                        CoachPosition = "Assistant Coach"
+                    },
+                    new Coach
+                    {
+                        CoachMemberID = "4984484",
+                        CoachName = "Aaron Boone",
+                        CoachNumber = 33,
+                        CoachPosition = "Head Coach"
+                    },
 
-                        new Coach
-                        {
-                            CoachMemberID = "5678765",
-                            CoachName = "Alex Cora",
-                            CoachNumber = 88,
-                            CoachPosition = "Assistant Coach"
-                        },
-                        new Coach
-                        {
-                            CoachMemberID = "4984484",
-                            CoachName = "Aaron Boone",
-                            CoachNumber = 33,
-                            CoachPosition = "Head Coach"
-                        },
-
-                        new Coach
-                        {
-                            CoachMemberID = "567876",
-                            CoachName = "Terry Francona",
-                            CoachNumber = 44,
-                            CoachPosition = "Assistant Coach"
-                        },
+                    new Coach
+                    {
+                        CoachMemberID = "567876",
+                        CoachName = "Terry Francona",
+                        CoachNumber = 44,
+                        CoachPosition = "Assistant Coach"
+                    },
                      new Coach
                      {
                          CoachMemberID = "49810293",
@@ -155,10 +155,10 @@ namespace WMBA_7_2_.Data
                     TeamName = "Whitecaps",
                     CoachID = 7
                 });
-
                 context.SaveChanges();
-                    // Add 36 Players
-                    if (!context.Players.Any())
+
+                // Add 36 Players
+                if (!context.Players.Any())
                 {
                     context.Players.AddRange(
                     new Player
@@ -560,8 +560,91 @@ namespace WMBA_7_2_.Data
 
 				}
 
+                //Create Schedules Data
+                if (!context.Schedules.Any())
+                {
+                    context.Schedules.AddRange(
+                    new Schedule
+                    {
+                        ScheduleDate = new DateTime(2023, 05, 12),
+                        ScheduleTime = new TimeSpan(10, 30, 0),
+                        ScheduleSeason = "2023",
+                        ScheduleLocation = "Chippawa"
+                    },
+                    new Schedule
+                    {
+                        ScheduleDate = new DateTime(2023, 05, 12),
+                        ScheduleTime = new TimeSpan(13, 30, 0),
+                        ScheduleSeason = "2023",
+                        ScheduleLocation = "Stoney Creek"
+                    },
+                    new Schedule
+                    {
+                        ScheduleDate = new DateTime(2023, 05, 13),
+                        ScheduleTime = new TimeSpan(9, 30, 0),
+                        ScheduleSeason = "2023",
+                        ScheduleLocation = "Welland"
+                    },
+                    new Schedule
+                    {
+                        ScheduleDate = new DateTime(2023, 05, 13),
+                        ScheduleTime = new TimeSpan(12, 00, 0),
+                        ScheduleSeason = "2023",
+                        ScheduleLocation = "Niagara Falls"
+                    },
+                    new Schedule
+                    {
+                        ScheduleDate = new DateTime(2023, 05, 14),
+                        ScheduleTime = new TimeSpan(9, 00, 0),
+                        ScheduleSeason = "2023",
+                        ScheduleLocation = "St. Catharines"
+                    },
+                    new Schedule
+                    {
+                        ScheduleDate = new DateTime(2023, 05, 15),
+                        ScheduleTime = new TimeSpan(11, 30, 0),
+                        ScheduleSeason = "2023",
+                        ScheduleLocation = "Grimsby"
+                    }, 
+                    new Schedule
+                    {
+                        ScheduleDate = new DateTime(2023, 05, 16),
+                        ScheduleTime = new TimeSpan(10, 30, 0),
+                        ScheduleSeason = "2023",
+                        ScheduleLocation = "Pelham"
+                    });
+                    context.SaveChanges();
+                }
 
-			}
+                //Create Game Data
+                if (!context.Games.Any())
+                {
+                    context.Games.AddRange(
+                        new Game
+                        {
+                            ScheduleID = 1
+                        },
+                        new Game
+                        {
+                            ScheduleID = 2
+                        },
+                        new Game
+                        {
+                            ScheduleID = 3
+                        },
+                        new Game
+                        {
+                            ScheduleID = 4
+                        },
+                        new Game
+                        {
+                            ScheduleID = 5
+                        }
+                        );
+                    context.SaveChanges();
+
+                }
+            }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.GetBaseException().Message);

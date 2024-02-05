@@ -14,7 +14,7 @@ namespace WMBA_7_2_.Models
         [Display(Name = "Time")]
         [DataType(DataType.Time)]
         [Required(ErrorMessage = "Time cannot be empty!")]
-        public DateTime ScheduleTime { get; set; }
+        public TimeSpan ScheduleTime { get; set; } //changed this field from datetime to timespan for the scheduleTime
 
         [Display(Name = "Season")]
         [Required(ErrorMessage = "Season cannot be empty!")]
