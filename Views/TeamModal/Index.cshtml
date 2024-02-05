@@ -39,9 +39,9 @@
 			<div class="modal-body">
 				<input type="hidden" asp-for="ID" value="0" />
 				<div class="mb-2">
-					<label asp-for=TeamName ></label>
-					<input type="text" asp-for="TeamName" class="form-control"
-						   placeholder="Ex. Bananas" />
+					<label for="TeamName">Team Name</label>
+					<input type="text" id="TeamName" class="form-control" placeholder="Ex. Bananas">
+					<div id="TeamNameError" class="invalid-feedback" style="display:none;"></div>
 				</div>
 			</div>
 			<div class="modal-footer">

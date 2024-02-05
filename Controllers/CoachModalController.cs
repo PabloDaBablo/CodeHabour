@@ -28,32 +28,26 @@ namespace WMBA_7_2_.Controllers
 		[HttpGet]
 		public JsonResult GetCoaches()
 		{
-			try
-			{
-				var coaches = _context.Coaches
-					.Include(c => c.TeamCoach)
-						.ThenInclude(tc => tc.Team)
-					.Select(c => new
-					{
-						id = c.ID,
-						CoachMemberID = c.CoachMemberID,
-						CoachName = c.CoachName,
-						CoachNumber = c.CoachNumber,
-						CoachPosition = c.CoachPosition,
-						Teams = c.TeamCoach.Select(tc => new { tc.TeamID, tc.Team.TeamName }).ToList()
-					})
-					.ToList();
+			var coaches = _context.Coaches
+				.Include(c => c.TeamCoach)
+					.ThenInclude(tc => tc.Team)
+				.Select(c => new
+				{
+					id = c.ID,
+					CoachMemberID = c.CoachMemberID,
+					CoachName = c.CoachName,
+					CoachNumber = c.CoachNumber,
+					CoachPosition = c.CoachPosition,
+					Teams = c.TeamCoach.Select(tc => new { tc.TeamID, tc.Team.TeamName }).ToList()
 
-				return Json(coaches);
-			}
-			catch (Exception ex)
-			{
-				return Json(new { error = "An error occurred while processing your request. Please try again later." });
-			}
+				})
+				.ToList();
+
+			return Json(coaches);
 		}
 
 		[HttpPost]
-		public JsonResult Insert([FromBody] CoachViewModel viewModel)
+		public JsonResult Insert([FromBody]CoachViewModel viewModel)
 		{
 			try
 			{
@@ -66,6 +60,7 @@ namespace WMBA_7_2_.Controllers
 						CoachName = viewModel.CoachName,
 						CoachNumber = viewModel.CoachNumber,
 						CoachPosition = viewModel.CoachPosition,
+
 					};
 
 					if (viewModel.ID > 0)
@@ -97,7 +92,7 @@ namespace WMBA_7_2_.Controllers
 			}
 			catch (Exception ex)
 			{
-				return Json(new { error = "An error occurred while processing your request. Please try again later." });
+				return Json(new { error = "An error occurred while processing your request." });
 			}
 		}
 
@@ -105,95 +100,75 @@ namespace WMBA_7_2_.Controllers
 		[HttpGet]
 		public JsonResult Edit(int? id)
 		{
-			try
+			var coaches = _context.Coaches
+								 .Include(p => p.TeamCoach)
+									.ThenInclude(tc => tc.Team) 
+								 .FirstOrDefault(p => p.ID == id);
+
+			if (coaches == null)
 			{
-				var coaches = _context.Coaches
-									 .Include(p => p.TeamCoach)
-										.ThenInclude(tc => tc.Team)
-									 .FirstOrDefault(p => p.ID == id);
-
-				if (coaches == null)
-				{
-					return Json(new { error = "Coach not found." });
-				}
-
-
-				var teams = coaches.TeamCoach.Select(tc => new { tc.TeamID, tc.Team.TeamName }).ToList();
-
-				var result = new
-				{
-					id = coaches.ID,
-					coachMemberID = coaches.CoachMemberID,
-					coachName = coaches.CoachName,
-					coachNumber = coaches.CoachNumber,
-					coachPosition = coaches.CoachPosition,
-					teams = teams
-				};
-
-				return Json(result);
+				return Json(new { error = "Coach not found." });
 			}
-			catch (Exception ex)
+
+			
+			var teams = coaches.TeamCoach.Select(tc => new { tc.TeamID, tc.Team.TeamName }).ToList();
+
+			var result = new
 			{
+				id = coaches.ID,
+				coachMemberID = coaches.CoachMemberID,
+				coachName = coaches.CoachName,
+				coachNumber = coaches.CoachNumber,
+				coachPosition = coaches.CoachPosition,
+				teams = teams 
+			};
 
-				return Json(new { error = "An error occurred while processing your request." });
-			}
+			return Json(result);
 		}
 
 		[HttpPost]
-		public async Task<JsonResult> Update([FromBody] CoachViewModel viewModel)
+		public JsonResult Update([FromBody] CoachViewModel viewModel)
 		{
-			if (viewModel.ID <= 0)
+			if (ModelState.IsValid)
 			{
-				return Json("Invalid coach ID.");
-			}
+				var coachToUpdate = _context.Coaches
+					.Include(c => c.TeamCoach)
+					.FirstOrDefault(c => c.ID == viewModel.ID);
 
-			var coachToUpdate = await _context.Coaches
-				.Include(c => c.TeamCoach)
-				.FirstOrDefaultAsync(c => c.ID == viewModel.ID);
-
-			if (coachToUpdate == null)
-			{
-				return Json("Coach not found.");
-			}
-
-			if (await TryUpdateModelAsync<Coach>(
-					coachToUpdate,
-					"",
-					c => c.CoachMemberID, c => c.CoachName, c => c.CoachNumber, c => c.CoachPosition))
-			{
-				try
+				if (coachToUpdate == null)
 				{
-					var existingTeamIds = coachToUpdate.TeamCoach.Select(tc => tc.TeamID).ToList();
-					var newTeamIds = viewModel.SelectedTeamIds.Except(existingTeamIds).ToList();
-					var removedTeamIds = existingTeamIds.Except(viewModel.SelectedTeamIds).ToList();
-
-					foreach (var newTeamId in newTeamIds)
-					{
-						coachToUpdate.TeamCoach.Add(new Team_Coach { TeamID = newTeamId });
-					}
-
-					foreach (var removedTeamId in removedTeamIds)
-					{
-						var toRemove = coachToUpdate.TeamCoach.FirstOrDefault(tc => tc.TeamID == removedTeamId);
-						if (toRemove != null)
-						{
-							coachToUpdate.TeamCoach.Remove(toRemove);
-						}
-					}
-
-					await _context.SaveChangesAsync();
-					return Json("Coach updated successfully.");
+					return Json("Coach not found.");
 				}
-				catch (DbUpdateException)
+
+				coachToUpdate.CoachMemberID = viewModel.CoachMemberID;
+				coachToUpdate.CoachName = viewModel.CoachName;
+				coachToUpdate.CoachNumber = viewModel.CoachNumber;
+				coachToUpdate.CoachPosition = viewModel.CoachPosition;
+
+
+				var existingTeamIds = coachToUpdate.TeamCoach.Select(tc => tc.TeamID).ToList();
+				var newTeamIds = viewModel.SelectedTeamIds.Except(existingTeamIds).ToList();
+				var removedTeamIds = existingTeamIds.Except(viewModel.SelectedTeamIds).ToList();
+
+				foreach (var newTeamId in newTeamIds)
 				{
-					
-					return Json("Unable to save changes. Try again, and if the problem persists, see your system administrator.");
+					coachToUpdate.TeamCoach.Add(new Team_Coach { TeamID = newTeamId });
 				}
+
+				foreach (var removedTeamId in removedTeamIds)
+				{
+					var toRemove = coachToUpdate.TeamCoach.FirstOrDefault(tc => tc.TeamID == removedTeamId);
+					if (toRemove != null)
+					{
+						coachToUpdate.TeamCoach.Remove(toRemove);
+					}
+				}
+
+				_context.SaveChanges();
+				return Json("Coach updated successfully.");
 			}
-			else
-			{
-				return Json("Model validation failed.");
-			}
+
+			return Json("Model validation failed.");
 		}
 		/*public JsonResult Delete(int id)
 		{
@@ -211,7 +186,7 @@ namespace WMBA_7_2_.Controllers
 		*/ //bugged at the moment, not sure if teachers
 		   // want a delete option for coaches since they dont want one for players
 
-
+		
 
 	}
 }
