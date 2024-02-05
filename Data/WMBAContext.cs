@@ -52,16 +52,15 @@ namespace WMBA_7_2_.Data
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Player>()
-                .HasIndex(p => new { p.PlayerNumber, p.TeamID })
-                .IsUnique();
+                .HasIndex(p => p.PlayerMemberID).IsUnique(); //changed this from player number to player member id since playerNumber can be the same, but playerMemberID cannot.
 
-            modelBuilder.Entity<Team_Game>()
-                .HasOne(tg => tg.Game)
-                .WithMany(tg => tg.Team_Games)
-                .HasForeignKey(tg => tg.GameID);
+            modelBuilder.Entity<Coach>()
+                .HasIndex(p => p.CoachMemberID).IsUnique();
 
-                
-        }
+			modelBuilder.Entity<Player>()
+	            .HasIndex(p => new { p.PlayerNumber, p.TeamID }) //this should work instead, yes
+	            .IsUnique();
+		}
 
     }
 }

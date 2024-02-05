@@ -26,100 +26,167 @@ namespace WMBA_7_2_.Controllers
         }
 
 		[HttpGet]
-		public JsonResult GetPlayers(int page = 1, int pageSize = 10)
-		{
-			
-			var query = _context.Players
-						.Include(p => p.Team)
-						.Include(p => p.Division)
-						.OrderBy(p => p.ID) 
-						.Skip((page - 1) * pageSize)
-						.Take(pageSize);
+        public JsonResult GetPlayers(int page = 1, int pageSize = 10, string sortColumn = "divAge", string sortDirection = "asc")
+        {
+            try
+            {
+                var query = _context.Players
+                    .Include(p => p.Team)
+                    .Include(p => p.Division)
+                    .AsQueryable();
 
-			var players = query.Select(p => new
-			{
-				id = p.ID,
-				p.PlayerMemberID,
-				p.PlayerFirstName,
-				p.PlayerLastName,
-				p.PlayerNumber,
-				TeamName = p.Team.TeamName, 
-				p.DivisionID,
-				DivAge = p.Division.DivAge
-			})
-						.ToList();
+                if (sortColumn == "teamName")
+                {
+                    query = sortDirection == "asc" ? query.OrderBy(p => p.Team.TeamName) : query.OrderByDescending(p => p.Team.TeamName);
+                }
+                else if (sortColumn == "divAge")
+                {
+                    query = sortDirection == "asc" ? query.OrderBy(p => p.Division.DivAge) : query.OrderByDescending(p => p.Division.DivAge);
+                }
 
-			return Json(players);
-		}
+                var totalRecords = query.Count();
+                var totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
+
+                var players = query
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize)
+                    .Select(p => new
+                    {
+                        id = p.ID,
+                        p.PlayerMemberID,
+                        p.PlayerFirstName,
+                        p.PlayerLastName,
+                        p.PlayerNumber,
+                        TeamName = p.Team.TeamName,
+                        p.DivisionID,
+                        DivAge = p.Division.DivAge,
+                        p.IsActive
+                    })
+                .ToList();
+
+                return Json(new { players, totalPages });
+            }
+            catch (Exception ex)
+            {
+				return Json(new { error = "An error occurred while processing your request." });
+			}
+        }
 
 		[HttpPost]
         public JsonResult Insert(Player model)
         {
-            if (ModelState.IsValid)
+            try
             {
-                _context.Players
-                    .Add(model);
-                _context.SaveChanges();
+                if (ModelState.IsValid)
+                {
+                    _context.Players
+                        .Add(model);
+                    _context.SaveChanges();
 
 
-				return Json("Player saved successfully.");
+                    return Json("Player saved successfully.");
+                }
+                return Json("Model validation failed.");
             }
-            return Json("Model validation failed.");
+            catch (Exception ex)
+            {
+				return Json(new { error = "An error occurred while processing your request." });
+			}
         }
 
 		[HttpGet]
 		public JsonResult Edit(int? id)
 		{
-			var player = _context.Players
-								 .Include(p => p.Team)
-                                 .Include(p => p.Division)
-								 .FirstOrDefault(p => p.ID == id);
+            try
+            {
+                var player = _context.Players
+                                     .Include(p => p.Team)
+                                     .Include(p => p.Division)
+                                     .FirstOrDefault(p => p.ID == id);
 
-			if (player == null)
-			{
-				return Json(new { error = "Player not found." });
-			}
+                if (player == null)
+                {
+                    return Json(new { error = "Player not found." });
+                }
 
-			var result = new
-			{
-				id = player.ID,
-				playerMemberID = player.PlayerMemberID,
-				playerFirstName = player.PlayerFirstName,
-				playerLastName = player.PlayerLastName,
-				playerNumber = player.PlayerNumber,
-				teamID = player.Team?.ID,
-                divisionID = player.Division?.ID,
-                divAge = player.Division?.DivAge
-			};
+                var result = new
+                {
+                    id = player.ID,
+                    playerMemberID = player.PlayerMemberID,
+                    playerFirstName = player.PlayerFirstName,
+                    playerLastName = player.PlayerLastName,
+                    playerNumber = player.PlayerNumber,
+                    teamID = player.Team?.ID,
+                    divisionID = player.Division?.ID,
+                    divAge = player.Division?.DivAge
+                };
 
-			return Json(result);
+                return Json(result);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { error = "An error occurred while processing your request." });
+            }
 		}
 
 		[HttpPost]
 		public JsonResult Update(Player model)
 		{
-            if (ModelState.IsValid)
+            try
             {
-                _context.Players.Update(model);
-                _context.SaveChanges();
 
-                return Json("Player updated successfully."); 
+                if (ModelState.IsValid)
+                {
+                    _context.Players.Update(model);
+                    _context.SaveChanges();
+
+                    return Json("Player updated successfully.");
+                }
+                return Json("Model validation failed.");
             }
-            return Json("Model validation failed.");
+			catch (Exception ex)
+            {
+				return Json(new { error = "An error occurred while processing your request." });
+			}
         }
 
         [HttpPost]
         public JsonResult Delete(int id)
         {
-            var player = _context.Players.Find(id);
-
-            if(player != null)
+            try
             {
-                _context.Players.Remove(player);
-                _context.SaveChanges();
-                return Json("Player deleted successfully.");
+                var player = _context.Players.Find(id);
+
+                if (player != null)
+                {
+                    _context.Players.Remove(player);
+                    _context.SaveChanges();
+                    return Json("Player deleted successfully.");
+                }
+                return Json("Player not found.");
+            }
+			catch (Exception ex)
+            {
+				return Json(new { error = "An error occurred while processing your request." });
 			}
-            return Json("Player not found.");
         }
+
+		public class PlayerStatusUpdateModel
+		{
+			public int Id { get; set; }
+		}
+
+		[HttpPost]
+		public IActionResult ToggleStatus([FromBody] PlayerStatusUpdateModel model)
+		{
+			var player = _context.Players.FirstOrDefault(p => p.ID == model.Id);
+			if (player != null)
+			{
+				player.IsActive = !player.IsActive;
+				_context.SaveChanges();
+				return Json(new { success = true, isActive = player.IsActive });
+			}
+			return Json(new { success = false });
+		}
 	}
 }

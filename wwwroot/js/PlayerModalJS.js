@@ -1,82 +1,44 @@
-﻿$(document).ready(function () {
-    GetPlayers();
-});
+﻿var currentSortColumn = 'divAge';
+var currentSortDirection = 'asc';
+var currentPage = 1;
+var pageSize = 10;
+var totalPages = 0;
 
-/* Read Data */
-function GetPlayers() {
+function GetPlayers(page) {
     $.ajax({
-        url:'/PlayerModal/GetPlayers',
-        type:'get',
-        dataType:'json',
-        contentType: 'application/json;charset=utf-8',
+        url: `/PlayerModal/GetPlayers?page=${page}&pageSize=${pageSize}&sortColumn=${currentSortColumn}&sortDirection=${currentSortDirection}`,
+        type: 'GET',
         success: function (response) {
-            if (response == null || response == undefined || response.length == 0) {
-                var object = ' ';
-                object += '<tr>';
-                object += '<td colspan="5">' + 'Players not found' + '</td>';
-                object += '</tr>';
-                $('#tblBody').html(object);//doesnt work at the moment
-
-            }
-            else {
-                var object = ' ';
-                $.each(response, function (index, item) {
-                    object += '<tr>';
-                    object += '<td>' + (item.divAge || '') + '</td>';
-                    object += '<td>' + (item.playerFirstName || '') + '</td>'; 
-                    object += '<td>' + (item.playerLastName || '') + '</td>'; 
-                    object += '<td>' + (item.playerNumber || '') + '</td>'; 
-                    object += '<td>' + (item.teamName || '') + '</td>'; 
-                    object += '<td> <a href="#" class="btn btn-primary btn-sm" onclick="Edit(' + item.id + ')">Edit</a></td>';
-                    object += '</tr>';
-                });
-                $('#tblBody').html(object);
-
-            }
-
+            updateTable(response.players);
+            totalPages = response.totalPages;
+            updatePaginationControls();
         },
-        error: function () {
-            alert('Unable to Read Player Data.');
+        error: function (error) {
+            console.error("Error fetching players: ", error);
+            alert('Unable to load player data.');
         }
-    })
-} 
+    });
+}
+
+function sortData(sortColumn) {
+    if (currentSortColumn === sortColumn) {
+        currentSortDirection = currentSortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+        currentSortColumn = sortColumn;
+        currentSortDirection = 'asc';
+    }
+    GetPlayers(currentPage);
+}
+
 
 $(document).ready(function () {
-    var currentPage = 1;
-    var pageSize = 10; 
+    GetPlayers(currentPage);
 
-    function GetPlayers(page) {
-        $.ajax({
-            url: `/PlayerModal/GetPlayers?page=${page}&pageSize=${pageSize}`, 
-            type: 'GET',
-            success: function (response) {
-                updateTable(response);
-                $('#pageIndicator').text(`Page: ${currentPage}`);
-            },
-            error: function (error) {
-                console.error("Error fetching players:", error);
-                alert('Unable to Read Player Data.');
-            }
-        });
-    }
-
-    function updateTable(players) {
-        var tableBody = $('#tblBody');
-        tableBody.empty();
-
-        players.forEach(function (player) {
-            var row = `<tr>
-            <td>${player.divAge || ''}</td>
-            <td>${player.playerFirstName || ''}</td>
-            <td>${player.playerLastName || ''}</td>
-            <td>${player.playerNumber || ''}</td>
-            <td>${player.teamName || ''}</td>
-            <td><a href="#" class="btn btn-primary btn-sm" onclick="Edit(${player.id})">Edit</a> <a href="#" class="btn btn-danger btn-sm" onclick="Delete(${player.id})">Delete</a></td>
-            </tr>`;
-
-            tableBody.append(row);
-        });
-    }
+    $(document).on('click', '.sortable', function () {
+        var sortColumn = $(this).data('sort');
+        console.log("Sorting by: " + sortColumn);
+        sortData(sortColumn);
+    });
 
     $('#prevPage').click(function () {
         if (currentPage > 1) {
@@ -86,17 +48,18 @@ $(document).ready(function () {
     });
 
     $('#nextPage').click(function () {
-        currentPage++; 
-        GetPlayers(currentPage);
+        if (currentPage < totalPages) {
+            currentPage++;
+            GetPlayers(currentPage);
+        }
     });
-
-    GetPlayers(currentPage);
 });
+
 
 $('#btnAdd').click(function () {
     $('#PlayerModal').modal('show');
     $('#modalTitle').text('Add Player');
-    $('#Update').css('display', 'none'); 
+    $('#Update').css('display', 'none');
     $('#Save').css('display', 'block');
 })
 
@@ -226,10 +189,9 @@ $('#TeamID').change(function () {
 
 
 /* Edit Data */
-function Edit(id)
-{
+function Edit(id) {
     $.ajax({
-        url:'/PlayerModal/Edit?id=' + id,
+        url: '/PlayerModal/Edit?id=' + id,
         type: 'get',
         contentType: 'application/json;charset=utf-8',
         datatype: 'json',
@@ -323,4 +285,76 @@ function Delete(id) {
         })
     }
 };
- 
+$(document).on('click', '.toggle-status', function () {
+    var button = $(this);
+    var playerId = button.data('id');
+
+    $.ajax({
+        url: '/PlayerModal/ToggleStatus',
+        type: 'POST',
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify({ id: playerId }),
+        success: function (response) {
+            if (response.isActive) {
+                button.text('Active').removeClass('btn-secondary btn-danger').addClass('btn-success');
+            } else {
+                button.text('Inactive').removeClass('btn-success').addClass('btn-secondary btn-danger');
+            }
+
+        },
+        error: function (xhr, status, error) {
+            console.error("Error toggling status: ", error);
+            alert('Error toggling player status.');
+        }
+    });
+});
+
+
+
+function updateTable(players) {
+    var $tableBody = $('#tblBody');
+    $tableBody.empty();
+
+    players.forEach(function (player) {
+        var activeStatusClass = player.isActive ? 'btn-success' : 'btn-secondary';
+        var activeStatusText = player.isActive ? 'Active' : 'Inactive';
+        var row = `
+                <tr>
+                    <td>${player.divAge}</td>
+                    <td>${player.playerFirstName}</td>
+                    <td>${player.playerLastName}</td>
+                    <td>${player.playerNumber}</td>
+                    <td>${player.teamName}</td>
+                    <td>
+                        <button class="btn ${activeStatusClass} toggle-status" data-id="${player.id}">${activeStatusText}</button>
+                    </td>
+                    <td>
+                        <button class="btn btn-primary btn-sm edit" data-id="${player.id}">Edit</button>
+                    </td>
+                </tr>
+            `;
+        $tableBody.append(row);
+    });
+}
+
+
+function updatePaginationControls() {
+    $('#pageIndicator').text(`Page: ${currentPage} of ${totalPages}`);
+    $('#prevPage').prop('disabled', currentPage <= 1);
+    $('#nextPage').prop('disabled', currentPage >= totalPages);
+};
+
+
+document.addEventListener('DOMContentLoaded', (event) => {
+    document.querySelectorAll('.sortable').forEach(header => {
+        header.addEventListener('click', function () {
+            console.log("Clicked on header");
+        });
+    });
+});
+
+$(document).on('click', '.edit', function () {
+    var id = $(this).data('id');
+    Edit(id);
+});
+

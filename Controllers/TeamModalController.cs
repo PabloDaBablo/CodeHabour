@@ -26,106 +26,148 @@ namespace WMBA_7_2_.Controllers
 
 		public JsonResult GetTeams()
 		{
-			var teams = _context.Teams
-				.Include(t => t.Players)
-				.Include(t => t.TeamCoaches)
-					.ThenInclude(tc => tc.Coach)
-				.Select(t => new
-				{
-					id = t.ID,
-					t.TeamName,
-					Players = t.Players.Select(p => p.PlayerFullName),
-					Coaches = t.TeamCoaches.Select(tc => new { tc.CoachID, tc.Coach.CoachName })
-				})
-				.ToList();
+			try
+			{
+				var teams = _context.Teams
+					.Include(t => t.Players)
+					.Include(t => t.TeamCoaches)
+						.ThenInclude(tc => tc.Coach)
+					.Select(t => new
+					{
+						id = t.ID,
+						t.TeamName,
+						Players = t.Players.Select(p => p.PlayerFullName),
+						Coaches = t.TeamCoaches.Select(tc => new { tc.CoachID, tc.Coach.CoachName })
+					})
+					.ToList();
 
-			return Json(teams);
+				return Json(teams);
+			}
+			catch (Exception ex)
+			{
+				return Json(new { error = "An error occurred while processing your request. Please try again later." });
+			}
 		}
 
 		public JsonResult Insert(Team model)
 		{
-			if (ModelState.IsValid)
+			try
 			{
-				_context.Teams
-					.Add(model);
-				_context.SaveChanges();
+				if (ModelState.IsValid)
+				{
+					_context.Teams
+						.Add(model);
+					_context.SaveChanges();
 
-				return Json("Team saved successfully.");
+					return Json("Team saved successfully.");
+				}
+				return Json("Model validation failed.");
 			}
-			return Json("Model validation failed.");
+			catch (Exception ex)
+			{
+				return Json(new { error = "An error occurred while processing your request." });
+			}
 		}
 
 		[HttpGet]
 		public JsonResult Edit(int? id)
 		{
-			var teams = _context.Teams
-								 .Include(p => p.Players)
-								 .Include(p => p.TeamCoaches)
-								 .FirstOrDefault(p => p.ID == id);
-
-			if (teams == null)
+			try
 			{
-				return Json(new { error = "Team not found." });
+				var teams = _context.Teams
+									 .Include(p => p.Players)
+									 .Include(p => p.TeamCoaches)
+									 .FirstOrDefault(p => p.ID == id);
+
+				if (teams == null)
+				{
+					return Json(new { error = "Team not found." });
+				}
+
+				var result = new
+				{
+					id = teams.ID,
+					teamName = teams.TeamName
+				};
+
+				return Json(result);
 			}
-
-			var result = new
+			catch (Exception ex)
 			{
-				id = teams.ID,
-				teamName = teams.TeamName
-			};
-
-			return Json(result);
+				return Json(new { error = "An error occurred while processing your request." });
+			}
 		}
 
 		[HttpPost]
 		public JsonResult Update(Team model)
 		{
-			if (ModelState.IsValid)
+			try
 			{
-				_context.Teams.Update(model);
-				_context.SaveChanges();
+				if (ModelState.IsValid)
+				{
+					_context.Teams.Update(model);
+					_context.SaveChanges();
 
-				return Json("Team updated successfully.");
+					return Json("Team updated successfully.");
+				}
+				return Json("Model validation failed.");
 			}
-			return Json("Model validation failed.");
+			catch (Exception ex)
+			{
+				return Json(new { error = "An error occurred while processing your request." });
+			}
 		}
 
 		[HttpPost]
 		public JsonResult Delete(int id)
 		{
-			var team = _context.Teams.Find(id);
-
-			if (team != null)
+			try
 			{
-				_context.Teams.Remove(team);
-				_context.SaveChanges();
-				return Json("Team deleted successfully.");
+				var team = _context.Teams.Find(id);
+
+				if (team != null)
+				{
+					_context.Teams.Remove(team);
+					_context.SaveChanges();
+					return Json("Team deleted successfully.");
+				}
+				return Json("Team not found.");
 			}
-			return Json("Team not found.");
+			catch (Exception ex)
+			{
+				return Json(new { error = "An error occurred while processing your request." });
+			}
 		}
 
 		[HttpGet]
 		public async Task<IActionResult> Details(int id)
 		{
-			var team = await _context.Teams
-									 .Include(t => t.Players)
-									 .Include(t => t.TeamCoaches)
-										 .ThenInclude(tc => tc.Coach)
-									 .FirstOrDefaultAsync(t => t.ID == id);
-
-			if (team == null)
+			try
 			{
-				return NotFound();
+				var team = await _context.Teams
+										 .Include(t => t.Players)
+										 .Include(t => t.TeamCoaches)
+											 .ThenInclude(tc => tc.Coach)
+										 .FirstOrDefaultAsync(t => t.ID == id);
+
+				if (team == null)
+				{
+					return NotFound();
+				}
+
+				var result = new
+				{
+					teamName = team.TeamName,
+					players = team.Players.Select(p => p.PlayerFirstName + " " + p.PlayerLastName),
+					coaches = team.TeamCoaches.Select(tc => tc.Coach.CoachName)
+				};
+
+				return Json(result);
 			}
-
-			var result = new
+			catch (Exception ex)
 			{
-				teamName = team.TeamName,
-				players = team.Players.Select(p => p.PlayerFirstName + " " + p.PlayerLastName),
-				coaches = team.TeamCoaches.Select(tc => tc.Coach.CoachName)
-			};
-
-			return Json(result);
+				return Json(new { error = "An error occurred while processing your request." });
+			}
 		}
 
 	}

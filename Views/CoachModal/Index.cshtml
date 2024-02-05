@@ -11,9 +11,13 @@
 
 <h3>@ViewData["Title"]</h3>
 <hr />
-<div>
-	<button class="btn btn-primary mb-2" id="btnAdd">Add Player</button>
+
+<div class="d-flex align-items-center">
+	<button class="btn btn-primary mb-2 mr-2" id="btnAdd">Add Coach</button>
+	<button class="btn btn-danger mb-2" style="margin-left: 5px;"onclick="window.history.back();">Go Back</button>
 </div>
+
+
 <div class="container">
 	<table class="table table-striped table-bordered table-responsive table-hover">
 		<thead>
@@ -42,21 +46,26 @@
 					<label asp-for=CoachMemberID></label>
 					<input type="text" asp-for="CoachMemberID" class="form-control"
 						   placeholder="Ex.  1234ASD" />
+					<span asp-validation-for="CoachMemberID" class="text-danger"></span>
+
 				</div>
 				<div class="mb-2">
 					<label asp-for=CoachName></label>
 					<input type="text" asp-for="CoachName" class="form-control"
 						   placeholder="Ex. John Doe" />
+					<span asp-validation-for="CoachName" class="text-danger"></span>
 				</div>
 				<div class="mb-2">
 					<label asp-for=CoachNumber></label>
 					<input type="text" asp-for="CoachNumber" class="form-control"
 						   placeholder="Ex. 99" />
+					<span asp-validation-for="CoachNumber" class="text-danger"></span>
 				</div>
 				<div class="mb-2">
 					<label asp-for=CoachPosition></label>
 					<input type="text" asp-for="CoachPosition" class="form-control"
 						   placeholder="Ex. Head Coach" />
+					<span asp-validation-for="CoachPosition" class="text-danger"></span>
 				</div>
 				<div class="mb-2">
 					<label asp-for="TeamCoach" class="form-label">Team</label>
@@ -81,6 +90,9 @@
 			</div>
 		</div>
 	</div>
-</div>
+</div<
+<a href="~/lib/jquery/dist/jquery.min.map">~/lib/jquery/dist/jquery.min.map</a>
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script src="~/lib/jquery/dist/.min.js"></script>
 <script src="~/js/coachmodal.js"></script>

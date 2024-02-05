@@ -26,7 +26,7 @@ function GetTeams() {
                         return coach.coachName;
                     }).join(', ');
                     object += '<td>' + coachNames + '</td>';
-                    object += '<td> <a href="#" class="btn btn-primary btn-sm" onclick="Edit(' + item.id + ')">Edit</a> <a href="#" class="btn btn-danger btn-sm" onclick="Delete(' + item.id + ')">Delete</a>  <a href="#" class="btn btn-secondary btn-sm" onclick="Details(' + item.id + ')">Details</a></td>';
+                    object += '<td> <a href="#" class="btn btn-primary btn-sm" onclick="Edit(' + item.id + ')">Edit</a> <a href="#" class="btn btn-secondary btn-sm" onclick="Details(' + item.id + ')">Details</a></td>';
                     object += '</tr>';
                 });
                 $('#tblBody').html(object);
