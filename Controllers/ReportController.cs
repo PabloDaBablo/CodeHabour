@@ -155,8 +155,6 @@ namespace WMBA_7_2_.Controllers
                             workSheet.Cells[1, 8].Text == "Team")
 
                         {
-
-                            List<ImportReportVM> reports = new List<ImportReportVM>();
                             for (int row = start.Row + 1; row <= end.Row; row++)
                             {
 
@@ -242,11 +240,6 @@ namespace WMBA_7_2_.Controllers
                             }
                         }
                     }
-                                TempData["Feedback"] = feedBack + "<br /><br />";
-
-                                ////Note that we are assuming that you are using the Preferred Approach to Lookup Values
-                                ////And the custom LookupsController
-                                return Redirect(ViewData["returnURL"].ToString());
                 }
             }
         }
