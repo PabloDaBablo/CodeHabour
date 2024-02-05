@@ -14,7 +14,8 @@
 <h4>WMBA 2024 Season Schedule</h4>
 
 <p>
-    <a asp-action="Create">Add a Game</a>
+    <a class="btn btn-primary" asp-action="Create">Add a Game</a>
+    @* <a asp-action="Create">Add a Game</a> *@
 </p>
 <table class="table">
     <thead>
@@ -57,9 +58,10 @@
                     @Html.DisplayFor(modelItem => item.GameLocation)
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.ID">Reschedule</a> |
-                    <a asp-action="Details" asp-route-id="@item.ID">Scoresheet</a> |
-                    <a asp-action="Delete" asp-route-id="@item.ID">Cancel Game</a>
+                    @* <a asp-action="Edit" asp-route-id="@item.ID">Reschedule</a> *@
+                    <a class="btn btn-primary" asp-action="Edit" asp-route-id="@item.ID">Reschedule</a>
+                    <a class="btn btn-secondary" asp-action="Details" asp-route-id="@item.ID">Scoresheet</a>
+                    @* <a asp-action="Details" asp-route-id="@item.ID">Scoresheet</a> *@
                 </td>
             </tr>
         }
