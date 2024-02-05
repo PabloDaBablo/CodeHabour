@@ -13,9 +13,9 @@ namespace WMBA_7_2_.Data
         {
             WMBAContext context = applicationBuilder.ApplicationServices.CreateScope()
                  .ServiceProvider.GetRequiredService<WMBAContext>();
-            
-            //context.Database.EnsureDeleted();
-            //context.Database.EnsureCreated();
+
+            context.Database.EnsureDeleted();
+            context.Database.EnsureCreated();
             //context.Database.Migrate();
             try
             {
@@ -28,9 +28,9 @@ namespace WMBA_7_2_.Data
                             LeagueType = "House League"
                         },
                     new League
-                        {
-                            LeagueType = "Select"
-                        });
+                    {
+                        LeagueType = "Select"
+                    });
 
                     context.SaveChanges();
                 }
@@ -62,7 +62,7 @@ namespace WMBA_7_2_.Data
                             DivisionTeams = "U13 Whitecaps",
                             LeagueTypeID = 1
                         });
-                   
+
                     context.SaveChanges();
 
                 }
@@ -155,410 +155,410 @@ namespace WMBA_7_2_.Data
                     TeamName = "Whitecaps",
                     CoachID = 7
                 });
-                context.SaveChanges();
+                    context.SaveChanges();
+                    if (!context.Team_Coaches.Any())
+                    {
+                        context.Team_Coaches.AddRange(
+                            new Team_Coach
+                            {
+                                TeamID = 1,
+                                CoachID = 1
+                            },
+                            new Team_Coach
+                            {
+                                TeamID = 1,
+                                CoachID = 2
+                            },
+                            new Team_Coach
+                            {
+                                TeamID = 2,
+                                CoachID = 3
+                            },
+                            new Team_Coach
+                            {
+                                TeamID = 2,
+                                CoachID = 4
+                            },
+                            new Team_Coach
+                            {
+                                TeamID = 3,
+                                CoachID = 5
+                            }
+                            );
+                        context.SaveChanges();
 
-                // Add 36 Players
-                if (!context.Players.Any())
-                {
-                    context.Players.AddRange(
-                    new Player
+                    }
+                    // Add 36 Players
+                    if (!context.Players.Any())
                     {
-                        PlayerMemberID = "111",
-                        PlayerFirstName = "Mike",
-                        PlayerLastName = "Trout",
-                        PlayerNumber = 1,
-                        TeamID = 1,
-						DivisionID = 1,
-                        IsActive = true
-					},
-                    new Player
-                    {
-                        PlayerMemberID = "222",
-                        PlayerFirstName = "Mookie",
-                        PlayerLastName = "Betts",
-                        PlayerNumber = 2,
-                        TeamID = 1,
-						DivisionID = 1,
-						IsActive = true
-					},
-                    new Player
-                    {
-                        PlayerMemberID = "333",
-                        PlayerFirstName = "Fernando",
-                        PlayerLastName = "Tatis",
-                        PlayerNumber = 3,
-                        TeamID = 1,
-						DivisionID = 1,
-						IsActive = true
+                        context.Players.AddRange(
+                        new Player
+                        {
+                            PlayerMemberID = "111",
+                            PlayerFirstName = "Mike",
+                            PlayerLastName = "Trout",
+                            PlayerNumber = 1,
+                            TeamID = 1,
+                            DivisionID = 1,
+                            IsActive = true
+                        },
+                        new Player
+                        {
+                            PlayerMemberID = "222",
+                            PlayerFirstName = "Mookie",
+                            PlayerLastName = "Betts",
+                            PlayerNumber = 2,
+                            TeamID = 1,
+                            DivisionID = 1,
+                            IsActive = true
+                        },
+                        new Player
+                        {
+                            PlayerMemberID = "333",
+                            PlayerFirstName = "Fernando",
+                            PlayerLastName = "Tatis",
+                            PlayerNumber = 3,
+                            TeamID = 1,
+                            DivisionID = 1,
+                            IsActive = true
 
-					},
-                    new Player
-                    {
-                        PlayerMemberID = "444",
-                        PlayerFirstName = "Jacob",
-                        PlayerLastName = "deGrom",
-                        PlayerNumber = 4,
-                        TeamID = 1,
-						DivisionID = 1,
-						IsActive = true
-					},
-                    new Player
-                    {
-                        PlayerMemberID = "555",
-                        PlayerFirstName = "Shohei",
-                        PlayerLastName = "Ohtani",
-                        PlayerNumber = 5,
-                        TeamID = 1,
-						DivisionID = 1,
-						IsActive = true
-					},
-                    new Player
-                    {
-                        PlayerMemberID = "666",
-                        PlayerFirstName = "Cole",
-                        PlayerLastName = "Gerrit",
-                        PlayerNumber = 6,
-                        TeamID = 1,
-						DivisionID = 1,
-						IsActive = true
-					},
-                    new Player
-                    {
-                        PlayerMemberID = "777",
-                        PlayerFirstName = "Freddie",
-                        PlayerLastName = "Freeman",
-                        PlayerNumber = 7,
-                        TeamID = 1,
-						DivisionID = 1,
-						IsActive = true
-					},
-                    new Player
-                    {
-                        PlayerMemberID = "888",
-                        PlayerFirstName = "José",
-                        PlayerLastName = "Ramírez",
-                        PlayerNumber = 8,
-                        TeamID = 1,
-						DivisionID = 1,
-						IsActive = true
-					},
-                    new Player
-                    {
-                        PlayerMemberID = "999",
-                        PlayerFirstName = "Bryce",
-                        PlayerLastName = "Harper",
-                        PlayerNumber = 9,
-                        TeamID = 1,
-						DivisionID = 1,
-						IsActive = true
-					},
-                    new Player
-                    {
-                        PlayerMemberID = "121",
-                        PlayerFirstName = "Juan",
-                        PlayerLastName = "Soto",
-                        PlayerNumber = 10,
-                        TeamID = 2,
-						DivisionID = 2,
-						IsActive = true
-					},
-                    new Player
-                    {
-                        PlayerMemberID = "131",
-                        PlayerFirstName = "Ronald",
-                        PlayerLastName = "Acuña Jr.",
-                        PlayerNumber = 11,
-                        TeamID = 2,
-						DivisionID = 2,
-						IsActive = true
-					},
-                    new Player
-                    {
-                        PlayerMemberID = "141",
-                        PlayerFirstName = "Nolan",
-                        PlayerLastName = "Arenado",
-                        PlayerNumber = 12,
-                        TeamID = 2,
-						DivisionID = 2,
-						IsActive = true
-					},
-                    new Player
-                    {
-                        PlayerMemberID = "151",
-                        PlayerFirstName = "Giancarlo",
-                        PlayerLastName = "Stanton",
-                        PlayerNumber = 13,
-                        TeamID = 2,
-						DivisionID = 2,
-						IsActive = true
-					},
-                    new Player
-                    {
-                        PlayerMemberID = "161",
-                        PlayerFirstName = "Clayton",
-                        PlayerLastName = "Kershaw",
-                        PlayerNumber = 14,
-                        TeamID = 2,
-						DivisionID = 2,
-						IsActive = true
-					},
-                    new Player
-                    {
-                        PlayerMemberID = "171",
-                        PlayerFirstName = "Yadier",
-                        PlayerLastName = "Molina",
-                        PlayerNumber = 15,
-                        TeamID = 2,
-						DivisionID = 2,
-						IsActive = true
-					},
-                    new Player
-                    {
-                        PlayerMemberID = "181",
-                        PlayerFirstName = "Xander",
-                        PlayerLastName = "Bogaerts",
-                        PlayerNumber = 16,
-                        TeamID = 2,
-						DivisionID = 2,
-						IsActive = true
-					},
-                    new Player
-                    {
-                        PlayerMemberID = "191",
-                        PlayerFirstName = "Francisco",
-                        PlayerLastName = "Ruth",
-                        PlayerNumber = 17,
-                        TeamID = 2,
-						DivisionID = 2,
-						IsActive = true
-					},
-                    new Player
-                    {
-                        PlayerMemberID = "101",
-                        PlayerFirstName = "Cody",
-                        PlayerLastName = "Bellinger",
-                        PlayerNumber = 18,
-                        TeamID = 2,
-						DivisionID = 2,
-						IsActive = true
-					},
-                    new Player
-                    {
-                        PlayerMemberID = "123",
-                        PlayerFirstName = "Gerrit",
-                        PlayerLastName = "Cole",
-                        PlayerNumber = 19,
-                        TeamID = 3,
-						DivisionID = 3,
-						IsActive = true
-					},
-                    new Player
-                    {
-                        PlayerMemberID = "234",
-                        PlayerFirstName = "Trea",
-                        PlayerLastName = "Turner",
-                        PlayerNumber = 20,
-                        TeamID = 3,
-						DivisionID = 3,
-						IsActive = true
-					},
-                    new Player
-                    {
-                        PlayerMemberID = "345",
-                        PlayerFirstName = "Max",
-                        PlayerLastName = "Scherzer",
-                        PlayerNumber = 21,
-                        TeamID = 3,
-						DivisionID = 3,
-						IsActive = true
-					},
-                    new Player
-                    {
-                        PlayerMemberID = "456",
-                        PlayerFirstName = "Jacob",
-                        PlayerLastName = "Rendon",
-                        PlayerNumber = 22,
-                        TeamID = 3,
-						DivisionID = 3,
-						IsActive = true
-					},
-                    new Player
-                    {
-                        PlayerMemberID = "567",
-                        PlayerFirstName = "Shohei",
-                        PlayerLastName = "Machado",
-                        PlayerNumber = 23,
-                        TeamID = 3,
-						DivisionID = 3,
-						IsActive = true
-					},
-                    new Player
-                    {
-                        PlayerMemberID = "678",
-                        PlayerFirstName = "Yu",
-                        PlayerLastName = "Cole",
-                        PlayerNumber = 24,
-                        TeamID = 3,
-						DivisionID = 3,
-						IsActive = true
-					},
-                    new Player
-                    {
-                        PlayerMemberID = "789",
-                        PlayerFirstName = "Ozzie",
-                        PlayerLastName = "Freeman",
-                        PlayerNumber = 25,
-                        TeamID = 3,
-						DivisionID = 3,
-						IsActive = true
-					},
-                    new Player
-                    {
-                        PlayerMemberID = "890",
-                        PlayerFirstName = "José",
-                        PlayerLastName = "Bryant",
-                        PlayerNumber = 26,
-                        TeamID = 3,
-						DivisionID = 3,
-						IsActive = true
-					},
-                    new Player
-                    {
-                        PlayerMemberID = "901",
-                        PlayerFirstName = "Rafael",
-                        PlayerLastName = "Harper",
-                        PlayerNumber = 27,
-                        TeamID = 3,
-						DivisionID = 3,
-						IsActive = true
-					},
-                    new Player
-                    {
-                        PlayerMemberID = "109",
-                        PlayerFirstName = "Trevor",
-                        PlayerLastName = "Ruth",
-                        PlayerNumber = 28,
-                        TeamID = 4,
-						DivisionID = 4,
-						IsActive = true
-					},
-                    new Player
-                    {
-                        PlayerMemberID = "998",
-                        PlayerFirstName = "Ronald",
-                        PlayerLastName = "Cruz",
-                        PlayerNumber = 29,
-                        TeamID = 4,
-						DivisionID = 4,
-						IsActive = true
-					},
-                    new Player
-                    {
-                        PlayerMemberID = "987",
-                        PlayerFirstName = "Nolan",
-                        PlayerLastName = "Alonso",
-                        PlayerNumber = 30,
-                        TeamID = 4,
-						DivisionID = 4,
-						IsActive = true
-					},
-                    new Player
-                    {
-                        PlayerMemberID = "876",
-                        PlayerFirstName = "Giancarlo",
-                        PlayerLastName = "Stanton",
-                        PlayerNumber = 31,
-                        TeamID = 4,
-						DivisionID = 4,
-						IsActive = true
-					},
-                    new Player
-                    {
-                        PlayerMemberID = "765",
-                        PlayerFirstName = "Clayton",
-                        PlayerLastName = "Bogaerts",
-                        PlayerNumber = 32,
-                        TeamID = 4,
-						DivisionID = 4,
-						IsActive = true
-					},
-                    new Player
-                    {
-                        PlayerMemberID = "654",
-                        PlayerFirstName = "Xander",
-                        PlayerLastName = "Molina",
-                        PlayerNumber = 33,
-                        TeamID = 4,
-						DivisionID = 4,
-						IsActive = true
-					},
-                    new Player
-                    {
-                        PlayerMemberID = "543",
-                        PlayerFirstName = "Xander",
-                        PlayerLastName = "Bogaerts",
-                        PlayerNumber = 34,
-                        TeamID = 4,
-						DivisionID = 4,
-						IsActive = true
-					},
-                    new Player
-                    {
-                        PlayerMemberID = "432",
-                        PlayerFirstName = "Nelson",
-                        PlayerLastName = "Martinez",
-                        PlayerNumber = 35,
-                        TeamID = 4,
-						DivisionID = 4,
-						IsActive = true
-					},
-                    new Player
-                    {
-                        PlayerMemberID = "321",
-                        PlayerFirstName = "J.F.",
-                        PlayerLastName = "Martinez",
-                        PlayerNumber = 36,
-                        TeamID = 4,
-                        DivisionID = 4,
-						IsActive = true
-					});
+                        },
+                        new Player
+                        {
+                            PlayerMemberID = "444",
+                            PlayerFirstName = "Jacob",
+                            PlayerLastName = "deGrom",
+                            PlayerNumber = 4,
+                            TeamID = 1,
+                            DivisionID = 1,
+                            IsActive = true
+                        },
+                        new Player
+                        {
+                            PlayerMemberID = "555",
+                            PlayerFirstName = "Shohei",
+                            PlayerLastName = "Ohtani",
+                            PlayerNumber = 5,
+                            TeamID = 1,
+                            DivisionID = 1,
+                            IsActive = true
+                        },
+                        new Player
+                        {
+                            PlayerMemberID = "666",
+                            PlayerFirstName = "Cole",
+                            PlayerLastName = "Gerrit",
+                            PlayerNumber = 6,
+                            TeamID = 1,
+                            DivisionID = 1,
+                            IsActive = true
+                        },
+                        new Player
+                        {
+                            PlayerMemberID = "777",
+                            PlayerFirstName = "Freddie",
+                            PlayerLastName = "Freeman",
+                            PlayerNumber = 7,
+                            TeamID = 1,
+                            DivisionID = 1,
+                            IsActive = true
+                        },
+                        new Player
+                        {
+                            PlayerMemberID = "888",
+                            PlayerFirstName = "José",
+                            PlayerLastName = "Ramírez",
+                            PlayerNumber = 8,
+                            TeamID = 1,
+                            DivisionID = 1,
+                            IsActive = true
+                        },
+                        new Player
+                        {
+                            PlayerMemberID = "999",
+                            PlayerFirstName = "Bryce",
+                            PlayerLastName = "Harper",
+                            PlayerNumber = 9,
+                            TeamID = 1,
+                            DivisionID = 1,
+                            IsActive = true
+                        },
+                        new Player
+                        {
+                            PlayerMemberID = "121",
+                            PlayerFirstName = "Juan",
+                            PlayerLastName = "Soto",
+                            PlayerNumber = 10,
+                            TeamID = 2,
+                            DivisionID = 2,
+                            IsActive = true
+                        },
+                        new Player
+                        {
+                            PlayerMemberID = "131",
+                            PlayerFirstName = "Ronald",
+                            PlayerLastName = "Acuña Jr.",
+                            PlayerNumber = 11,
+                            TeamID = 2,
+                            DivisionID = 2,
+                            IsActive = true
+                        },
+                        new Player
+                        {
+                            PlayerMemberID = "141",
+                            PlayerFirstName = "Nolan",
+                            PlayerLastName = "Arenado",
+                            PlayerNumber = 12,
+                            TeamID = 2,
+                            DivisionID = 2,
+                            IsActive = true
+                        },
+                        new Player
+                        {
+                            PlayerMemberID = "151",
+                            PlayerFirstName = "Giancarlo",
+                            PlayerLastName = "Stanton",
+                            PlayerNumber = 13,
+                            TeamID = 2,
+                            DivisionID = 2,
+                            IsActive = true
+                        },
+                        new Player
+                        {
+                            PlayerMemberID = "161",
+                            PlayerFirstName = "Clayton",
+                            PlayerLastName = "Kershaw",
+                            PlayerNumber = 14,
+                            TeamID = 2,
+                            DivisionID = 2,
+                            IsActive = true
+                        },
+                        new Player
+                        {
+                            PlayerMemberID = "171",
+                            PlayerFirstName = "Yadier",
+                            PlayerLastName = "Molina",
+                            PlayerNumber = 15,
+                            TeamID = 2,
+                            DivisionID = 2,
+                            IsActive = true
+                        },
+                        new Player
+                        {
+                            PlayerMemberID = "181",
+                            PlayerFirstName = "Xander",
+                            PlayerLastName = "Bogaerts",
+                            PlayerNumber = 16,
+                            TeamID = 2,
+                            DivisionID = 2,
+                            IsActive = true
+                        },
+                        new Player
+                        {
+                            PlayerMemberID = "191",
+                            PlayerFirstName = "Francisco",
+                            PlayerLastName = "Ruth",
+                            PlayerNumber = 17,
+                            TeamID = 2,
+                            DivisionID = 2,
+                            IsActive = true
+                        },
+                        new Player
+                        {
+                            PlayerMemberID = "101",
+                            PlayerFirstName = "Cody",
+                            PlayerLastName = "Bellinger",
+                            PlayerNumber = 18,
+                            TeamID = 2,
+                            DivisionID = 2,
+                            IsActive = true
+                        },
+                        new Player
+                        {
+                            PlayerMemberID = "123",
+                            PlayerFirstName = "Gerrit",
+                            PlayerLastName = "Cole",
+                            PlayerNumber = 19,
+                            TeamID = 3,
+                            DivisionID = 3,
+                            IsActive = true
+                        },
+                        new Player
+                        {
+                            PlayerMemberID = "234",
+                            PlayerFirstName = "Trea",
+                            PlayerLastName = "Turner",
+                            PlayerNumber = 20,
+                            TeamID = 3,
+                            DivisionID = 3,
+                            IsActive = true
+                        },
+                        new Player
+                        {
+                            PlayerMemberID = "345",
+                            PlayerFirstName = "Max",
+                            PlayerLastName = "Scherzer",
+                            PlayerNumber = 21,
+                            TeamID = 3,
+                            DivisionID = 3,
+                            IsActive = true
+                        },
+                        new Player
+                        {
+                            PlayerMemberID = "456",
+                            PlayerFirstName = "Jacob",
+                            PlayerLastName = "Rendon",
+                            PlayerNumber = 22,
+                            TeamID = 3,
+                            DivisionID = 3,
+                            IsActive = true
+                        },
+                        new Player
+                        {
+                            PlayerMemberID = "567",
+                            PlayerFirstName = "Shohei",
+                            PlayerLastName = "Machado",
+                            PlayerNumber = 23,
+                            TeamID = 3,
+                            DivisionID = 3,
+                            IsActive = true
+                        },
+                        new Player
+                        {
+                            PlayerMemberID = "678",
+                            PlayerFirstName = "Yu",
+                            PlayerLastName = "Cole",
+                            PlayerNumber = 24,
+                            TeamID = 3,
+                            DivisionID = 3,
+                            IsActive = true
+                        },
+                        new Player
+                        {
+                            PlayerMemberID = "789",
+                            PlayerFirstName = "Ozzie",
+                            PlayerLastName = "Freeman",
+                            PlayerNumber = 25,
+                            TeamID = 3,
+                            DivisionID = 3,
+                            IsActive = true
+                        },
+                        new Player
+                        {
+                            PlayerMemberID = "890",
+                            PlayerFirstName = "José",
+                            PlayerLastName = "Bryant",
+                            PlayerNumber = 26,
+                            TeamID = 3,
+                            DivisionID = 3,
+                            IsActive = true
+                        },
+                        new Player
+                        {
+                            PlayerMemberID = "901",
+                            PlayerFirstName = "Rafael",
+                            PlayerLastName = "Harper",
+                            PlayerNumber = 27,
+                            TeamID = 3,
+                            DivisionID = 3,
+                            IsActive = true
+                        },
+                        new Player
+                        {
+                            PlayerMemberID = "109",
+                            PlayerFirstName = "Trevor",
+                            PlayerLastName = "Ruth",
+                            PlayerNumber = 28,
+                            TeamID = 4,
+                            DivisionID = 4,
+                            IsActive = true
+                        },
+                        new Player
+                        {
+                            PlayerMemberID = "998",
+                            PlayerFirstName = "Ronald",
+                            PlayerLastName = "Cruz",
+                            PlayerNumber = 29,
+                            TeamID = 4,
+                            DivisionID = 4,
+                            IsActive = true
+                        },
+                        new Player
+                        {
+                            PlayerMemberID = "987",
+                            PlayerFirstName = "Nolan",
+                            PlayerLastName = "Alonso",
+                            PlayerNumber = 30,
+                            TeamID = 4,
+                            DivisionID = 4,
+                            IsActive = true
+                        },
+                        new Player
+                        {
+                            PlayerMemberID = "876",
+                            PlayerFirstName = "Giancarlo",
+                            PlayerLastName = "Stanton",
+                            PlayerNumber = 31,
+                            TeamID = 4,
+                            DivisionID = 4,
+                            IsActive = true
+                        },
+                        new Player
+                        {
+                            PlayerMemberID = "765",
+                            PlayerFirstName = "Clayton",
+                            PlayerLastName = "Bogaerts",
+                            PlayerNumber = 32,
+                            TeamID = 4,
+                            DivisionID = 4,
+                            IsActive = true
+                        },
+                        new Player
+                        {
+                            PlayerMemberID = "654",
+                            PlayerFirstName = "Xander",
+                            PlayerLastName = "Molina",
+                            PlayerNumber = 33,
+                            TeamID = 4,
+                            DivisionID = 4,
+                            IsActive = true
+                        },
+                        new Player
+                        {
+                            PlayerMemberID = "543",
+                            PlayerFirstName = "Xander",
+                            PlayerLastName = "Bogaerts",
+                            PlayerNumber = 34,
+                            TeamID = 4,
+                            DivisionID = 4,
+                            IsActive = true
+                        },
+                        new Player
+                        {
+                            PlayerMemberID = "432",
+                            PlayerFirstName = "Nelson",
+                            PlayerLastName = "Martinez",
+                            PlayerNumber = 35,
+                            TeamID = 4,
+                            DivisionID = 4,
+                            IsActive = true
+                        },
+                        new Player
+                        {
+                            PlayerMemberID = "321",
+                            PlayerFirstName = "J.F.",
+                            PlayerLastName = "Martinez",
+                            PlayerNumber = 36,
+                            TeamID = 4,
+                            DivisionID = 4,
+                            IsActive = true
+                        });
 
                         context.SaveChanges();
                     }
-				}
+                }
 
-				if (!context.Team_Coaches.Any())
-				{
-                    context.Team_Coaches.AddRange(
-                        new Team_Coach
-                        {
-                            TeamID = 1,
-                            CoachID = 1
-                        },
-                        new Team_Coach
-                        {
-                            TeamID = 1,
-                            CoachID = 2
-                        },
-						new Team_Coach
-						{
-							TeamID = 2,
-							CoachID = 3
-						},
-						new Team_Coach
-						{
-							TeamID = 2,
-							CoachID = 4
-						},
-						new Team_Coach
-						{
-							TeamID = 3,
-							CoachID = 5
-						}
-						);
-					context.SaveChanges();
-
-				}
+            
 
 
 
@@ -605,9 +605,11 @@ namespace WMBA_7_2_.Data
                             AwayTeam = "Whitecaps"
 
                         }
+                        );
+                    context.SaveChanges();
 
-
-			}
+                }
+            }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.GetBaseException().Message);

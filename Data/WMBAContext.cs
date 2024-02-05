@@ -25,10 +25,6 @@ namespace WMBA_7_2_.Data
         public DbSet<TeamStats> Team_Stats { get; set; }
        
 
-
-
-
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
@@ -57,9 +53,9 @@ namespace WMBA_7_2_.Data
             modelBuilder.Entity<Coach>()
                 .HasIndex(p => p.CoachMemberID).IsUnique();
 
-			modelBuilder.Entity<Player>()
-	            .HasIndex(p => new { p.PlayerNumber, p.TeamID }) //this should work instead, yes
-	            .IsUnique();
+			//modelBuilder.Entity<Player>()
+	  //          .HasIndex(p => new { p.PlayerNumber, p.TeamID }) //this should work instead, yes
+	  //          .IsUnique();
 		}
 
     }

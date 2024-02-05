@@ -42,6 +42,9 @@ namespace WMBA_7_2_.Data.WMBAMigrations
 
                     b.HasKey("ID");
 
+                    b.HasIndex("CoachMemberID")
+                        .IsUnique();
+
                     b.ToTable("Coaches");
                 });
 
@@ -193,12 +196,6 @@ namespace WMBA_7_2_.Data.WMBAMigrations
                     b.HasKey("ID");
 
                     b.HasIndex("DivisionID");
-
-                    b.HasIndex("PlayerMemberID")
-                        .IsUnique();
-
-                    b.HasIndex("PlayerNumber")
-                        .IsUnique();
 
                     b.HasIndex("TeamID");
 
