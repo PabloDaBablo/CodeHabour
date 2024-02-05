@@ -39,6 +39,7 @@ namespace WMBA_7_2_.Controllers
 					CoachNumber = c.CoachNumber,
 					CoachPosition = c.CoachPosition,
 					Teams = c.TeamCoach.Select(tc => new { tc.TeamID, tc.Team.TeamName }).ToList()
+
 				})
 				.ToList();
 
@@ -94,7 +95,7 @@ namespace WMBA_7_2_.Controllers
 		{
 			var coaches = _context.Coaches
 								 .Include(p => p.TeamCoach)
-									.ThenInclude(p => p.Coach)
+									.ThenInclude(tc => tc.Team) 
 								 .FirstOrDefault(p => p.ID == id);
 
 			if (coaches == null)
@@ -102,31 +103,83 @@ namespace WMBA_7_2_.Controllers
 				return Json(new { error = "Coach not found." });
 			}
 
+			
+			var teams = coaches.TeamCoach.Select(tc => new { tc.TeamID, tc.Team.TeamName }).ToList();
+
 			var result = new
 			{
 				id = coaches.ID,
 				coachMemberID = coaches.CoachMemberID,
 				coachName = coaches.CoachName,
+				coachNumber = coaches.CoachNumber,
 				coachPosition = coaches.CoachPosition,
-				teamName = coaches.TeamCoach.FirstOrDefault().Team.TeamName
-
+				teams = teams 
 			};
 
 			return Json(result);
 		}
 
 		[HttpPost]
-		public JsonResult Update(Coach model)
+		public JsonResult Update([FromBody] CoachViewModel viewModel)
 		{
 			if (ModelState.IsValid)
 			{
-				_context.Coaches.Update(model);
-				_context.SaveChanges();
+				var coachToUpdate = _context.Coaches
+					.Include(c => c.TeamCoach)
+					.FirstOrDefault(c => c.ID == viewModel.ID);
 
-				return Json("Player updated successfully.");
+				if (coachToUpdate == null)
+				{
+					return Json("Coach not found.");
+				}
+
+				coachToUpdate.CoachMemberID = viewModel.CoachMemberID;
+				coachToUpdate.CoachName = viewModel.CoachName;
+				coachToUpdate.CoachNumber = viewModel.CoachNumber;
+				coachToUpdate.CoachPosition = viewModel.CoachPosition;
+
+
+				var existingTeamIds = coachToUpdate.TeamCoach.Select(tc => tc.TeamID).ToList();
+				var newTeamIds = viewModel.SelectedTeamIds.Except(existingTeamIds).ToList();
+				var removedTeamIds = existingTeamIds.Except(viewModel.SelectedTeamIds).ToList();
+
+				foreach (var newTeamId in newTeamIds)
+				{
+					coachToUpdate.TeamCoach.Add(new Team_Coach { TeamID = newTeamId });
+				}
+
+				foreach (var removedTeamId in removedTeamIds)
+				{
+					var toRemove = coachToUpdate.TeamCoach.FirstOrDefault(tc => tc.TeamID == removedTeamId);
+					if (toRemove != null)
+					{
+						coachToUpdate.TeamCoach.Remove(toRemove);
+					}
+				}
+
+				_context.SaveChanges();
+				return Json("Coach updated successfully.");
 			}
+
 			return Json("Model validation failed.");
 		}
+		/*public JsonResult Delete(int id)
+		{
+			var coaches = _context.Coaches.Find(id);
+
+			if (coaches != null)
+			{
+				_context.Coaches.Remove(coaches);
+				_context.SaveChanges();
+				return Json("Coach deleted successfully.");
+			}
+			return Json("Coach not found.");
+		}
+
+		*/ //bugged at the moment, not sure if teachers
+		   // want a delete option for coaches since they dont want one for players
+
+		
 
 	}
 }

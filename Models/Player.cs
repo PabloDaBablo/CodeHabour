@@ -43,5 +43,8 @@ namespace WMBA_7_2_.Models
 
         [Display(Name = "Full Name")]
         public string PlayerFullName => $"{PlayerFirstName} {PlayerLastName}";
+
+        [Display(Name = "Status")]
+        public bool IsActive { get; set; }
     }
 }

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WMBA_7_2_.Data;
 
@@ -10,9 +11,11 @@ using WMBA_7_2_.Data;
 namespace WMBA_7_2_.Data.WMBAMigrations
 {
     [DbContext(typeof(WMBAContext))]
-    partial class WMBAContextModelSnapshot : ModelSnapshot
+    [Migration("20240203030113_nullableCoachNum")]
+    partial class nullableCoachNum
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.15");
@@ -24,7 +27,6 @@ namespace WMBA_7_2_.Data.WMBAMigrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("CoachMemberID")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("CoachName")
@@ -147,9 +149,6 @@ namespace WMBA_7_2_.Data.WMBAMigrations
                     b.Property<int?>("DivisionID")
                         .HasColumnType("INTEGER");
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("PlayerFirstName")
                         .IsRequired()
                         .HasMaxLength(75)
@@ -172,12 +171,6 @@ namespace WMBA_7_2_.Data.WMBAMigrations
                     b.HasKey("ID");
 
                     b.HasIndex("DivisionID");
-
-                    b.HasIndex("PlayerMemberID")
-                        .IsUnique();
-
-                    b.HasIndex("PlayerNumber")
-                        .IsUnique();
 
                     b.HasIndex("TeamID");
 

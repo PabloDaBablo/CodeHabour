@@ -54,8 +54,14 @@ namespace WMBA_7_2_.Data
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Player>()
-                .HasIndex(p => p.PlayerNumber).IsUnique();
-        }
+                .HasIndex(p => p.PlayerMemberID).IsUnique();//changed this from player number to player member id since playerNumber can be the same, but playerMemberID cannot.
+
+			modelBuilder.Entity<Player>()
+				.HasIndex(p => p.PlayerNumber).IsUnique();
+
+            modelBuilder.Entity<Coach>()
+                .HasIndex(p => p.CoachMemberID).IsUnique();
+		}
 
     }
 }
