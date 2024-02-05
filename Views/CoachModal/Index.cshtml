@@ -47,6 +47,7 @@
 					<input type="text" asp-for="CoachMemberID" class="form-control"
 						   placeholder="Ex.  1234ASD" />
 					<span asp-validation-for="CoachMemberID" class="text-danger"></span>
+					<div id="CoachMemberIDError" class="invalid-feedback"></div>
 
 				</div>
 				<div class="mb-2">
@@ -54,18 +55,21 @@
 					<input type="text" asp-for="CoachName" class="form-control"
 						   placeholder="Ex. John Doe" />
 					<span asp-validation-for="CoachName" class="text-danger"></span>
+					<div id="CoachNameError" class="invalid-feedback"></div>
 				</div>
 				<div class="mb-2">
 					<label asp-for=CoachNumber></label>
 					<input type="text" asp-for="CoachNumber" class="form-control"
 						   placeholder="Ex. 99" />
 					<span asp-validation-for="CoachNumber" class="text-danger"></span>
+					<div id="CoachNumberError" class="invalid-feedback"></div>
 				</div>
 				<div class="mb-2">
 					<label asp-for=CoachPosition></label>
 					<input type="text" asp-for="CoachPosition" class="form-control"
 						   placeholder="Ex. Head Coach" />
 					<span asp-validation-for="CoachPosition" class="text-danger"></span>
+					<div id="CoachPositionError" class="invalid-feedback"></div>
 				</div>
 				<div class="mb-2">
 					<label asp-for="TeamCoach" class="form-label">Team</label>

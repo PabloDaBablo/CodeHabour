@@ -40,6 +40,7 @@ function GetCoaches() {
 }
 
 $('#btnAdd').click(function () {
+    resetValidationStates();
     $('#CoachModal').modal('show');
     $('#modalTitle').text('Add Player');
     $('#Update').css('display', 'none');
@@ -48,10 +49,12 @@ $('#btnAdd').click(function () {
 
 function Insert() {
 
-    var res = Validate();
-    if (res == false) {
-        return false;
+    if (!validateCoachForm()) {
+        console.log("Validation failed.");
+        return;
     }
+
+    
 
     var formData = {
         id: $('#ID').val(),
@@ -120,9 +123,9 @@ function Edit(id) {
 
 
 function Update() {
-    var result = Validate();
-    if (result == false) {
-        return false;
+    if (!validateCoachForm()) {
+        console.log("Validation failed.");
+        return;
     }
     var selectedTeamIds = $('#TeamCoach').val().map(Number);
 
@@ -131,7 +134,7 @@ function Update() {
     formData.id = $('#ID').val(),
     formData.coachMemberID = $('#CoachMemberID').val(),
     formData.coachName = $('#CoachName').val(),
-    formData.coachNumber = $('#CoachNumber').val() || null,
+    formData.coachNumber = $('#CoachNumber').val() ? parseInt($('#CoachNumber').val(), 10) : null,
     formData.coachPosition = $('#CoachPosition').val()
     formData.SelectedTeamIds = selectedTeamIds;
 
@@ -250,3 +253,71 @@ function ClearData() {
     $('#TeamCoach').val('');
 };
 
+function validateCoachForm() {
+    let isValid = true;
+    const regexAlphaNumeric = /^[a-zA-Z0-9]+$/;
+    const regexAlphaSpaces = /^[a-zA-Z\s]+$/;
+    const regexNumericRange = /^(?:[0-9]|[1-9][0-9])$/;
+
+    validateField('CoachMemberID', regexAlphaNumeric, 'Coach Member ID should contain letters and numbers only.');
+
+    validateField('CoachName', regexAlphaSpaces, 'Coach Name should contain only letters and spaces.');
+
+    validateField('CoachNumber', regexNumericRange, 'Coach Number must be between 0-99.');
+
+    validateField('CoachPosition', regexAlphaSpaces, 'Coach Position should contain only letters and spaces.');
+
+    function validateField(fieldId, regex, errorMessage) {
+        if (!regex.test($(`#${fieldId}`).val())) {
+            showError(fieldId, errorMessage);
+            isValid = false;
+        } else {
+            clearError(fieldId);
+        }
+    }
+
+    return isValid;
+}
+
+function showError(fieldId, message) {
+    $(`#${fieldId}`).addClass('is-invalid');
+    $(`#${fieldId}Error`).text(message).show();
+}
+
+function clearError(fieldId) {
+    $(`#${fieldId}`).removeClass('is-invalid');
+    $(`#${fieldId}Error`).hide();
+}
+
+
+function resetValidationStates() {
+    clearError('CoachMemberID');
+    clearError('CoachName');
+    clearError('CoachNumber');
+    clearError('CoachPosition');
+}
+
+$('#CoachModal').on('hidden.bs.modal', function () {
+    resetValidationStates(); 
+});
+function showError(fieldId, message) {
+    $(`#${fieldId}`).addClass('is-invalid');
+    $(`#${fieldId}Error`).text(message).show();
+}
+
+function clearError(fieldId) {
+    $(`#${fieldId}`).removeClass('is-invalid');
+    $(`#${fieldId}Error`).hide();
+}
+
+function resetValidationStates() {
+    clearError('CoachMemberID');
+    clearError('CoachName');
+    clearError('CoachNumber');
+    clearError('CoachPosition');
+}
+$('#Save').click(function () {
+    if (validateCoachForm()) {
+        Insert();
+    }
+});

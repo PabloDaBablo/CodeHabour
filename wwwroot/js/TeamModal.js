@@ -1,5 +1,16 @@
 ﻿$(document).ready(function () {
     GetTeams();
+
+    $('#Save').off('click.insert').on('click.insert', function (e) {
+        e.preventDefault();
+        Insert();
+    });
+
+    $('#Update').click(function () {
+        if (Validate()) {
+            Update();
+        }
+    });
 });
 
 /* Read Data */
@@ -45,38 +56,45 @@ $('#btnAdd').click(function () {
     $('#Save').css('display', 'block');
 });
 
+let insertInProgress = false;
 function Insert() {
 
-    var res = Validate();
-    if (res == false) {
-        return false;
+    if (!Validate()) {
+        return;
     }
 
+    var formData = {
+        teamName: $('#TeamName').val(),
+        coachID: $('#CoachID').val(),
+    };
 
-    var formData = new Object();
-    formData.teamName = $('#TeamName').val();
-    formData.coachID = $('#CoachID').val();
+    if (insertInProgress) {
+        console.log("Insert already in progress.");
+        return;
+    }
+
+    insertInProgress = true;
+    console.log('Insert function started');
 
     $.ajax({
         url: '/TeamModal/Insert',
         data: formData,
         type: 'post',
         success: function (response) {
-            if (response == null || response == undefined || response.length == 0) {
-                alert('Unable to Add Team Data.');
-            }
-            else {
-                HideModal()
-                GetTeams();
-                alert(response)
-            }
+            HideModal();
+            GetTeams();
+            alert('Team added successfully');
         },
         error: function () {
             alert('Unable to Add Team Data.');
         }
-    })
+    }).always(function () { 
+        insertInProgress = false; 
+        console.log('Insert function ended');
+    });
+}
 
-};
+
 
 function HideModal() {
     ClearData()
@@ -90,6 +108,7 @@ function HideDetailsModal() {
 
 function ClearData() {
     $('#TeamName').val('');
+    ClearValidationError('TeamName');
 };
 
 
@@ -208,17 +227,35 @@ function populateTeamDetailsModal(data) {
 
 function Validate() {
     var isValid = true;
+    var teamName = $('#TeamName').val();
+    var nameRegex = /^[a-zA-Z\s]+$/; 
 
-    if ($('#TeamName').val() == "") {
-        $('#TeamName').css('border-color', 'Red');
+    if (teamName == "") {
+        ShowValidationError('TeamName', "Team name is required");
+        isValid = false;
+    } else if (!nameRegex.test(teamName)) {
+        ShowValidationError('TeamName', "Team name must contain only letters and spaces");
         isValid = false;
     } else {
-        $('#TeamName').css('border-color', 'lightgrey');
+        ClearValidationError('TeamName');
     }
 
     return isValid;
-};
+}
 
-$('#TeamName').change(function () {
-    Validate();
-});
+function ShowValidationError(fieldId, message) {
+    $(`#${fieldId}`).addClass('is-invalid');
+    $(`#${fieldId}Error`).text(message).show();
+}
+
+function ClearValidationError(fieldId) {
+    $(`#${fieldId}`).removeClass('is-invalid');
+    $(`#${fieldId}Error`).hide();
+}
+
+function ClearData() {
+    $('#TeamName').val('');
+    ClearValidationError('TeamName');
+}
+
+
