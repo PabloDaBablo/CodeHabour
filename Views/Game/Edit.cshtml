@@ -4,7 +4,12 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
+<head>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/site.css" asp-append-version="true" />
+</head>
 
 <h4>Game</h4>
 <hr />
@@ -14,9 +19,24 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="ID" />
             <div class="form-group">
-                <label asp-for="ScheduleID" class="control-label"></label>
-                <select asp-for="ScheduleID" class="form-control" asp-items="ViewBag.ScheduleID"></select>
-                <span asp-validation-for="ScheduleID" class="text-danger"></span>
+                <label asp-for="GameDate" class="control-label"></label>
+                <input asp-for="GameDate" class="form-control" />
+                <span asp-validation-for="GameDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GameTime" class="control-label"></label>
+                <input asp-for="GameTime" class="form-control" />
+                <span asp-validation-for="GameTime" class="text-danger"></span>
+            </div>
+            @* <div class="form-group">
+                <label asp-for="GameSeason" class="control-label"></label>
+                <input asp-for="GameSeason" class="form-control" />
+                <span asp-validation-for="GameSeason" class="text-danger"></span>
+            </div> *@
+            <div class="form-group">
+                <label asp-for="GameLocation" class="control-label"></label>
+                <input asp-for="GameLocation" class="form-control" />
+                <span asp-validation-for="GameLocation" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
@@ -26,7 +46,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Back to Schedule</a>
 </div>
 
 @section Scripts {

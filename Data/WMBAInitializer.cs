@@ -13,8 +13,8 @@ namespace WMBA_7_2_.Data
             WMBAContext context = applicationBuilder.ApplicationServices.CreateScope()
                  .ServiceProvider.GetRequiredService<WMBAContext>();
             
-            context.Database.EnsureDeleted();
-            context.Database.EnsureCreated();
+            //context.Database.EnsureDeleted();
+            //context.Database.EnsureCreated();
             //context.Database.Migrate();
             try
             {
@@ -524,7 +524,81 @@ namespace WMBA_7_2_.Data
 				}
 
 
-			}
+
+                if (!context.Games.Any())
+                {
+                    context.Games.AddRange(
+                        new Game
+                        {
+                            GameDate = DateTime.Now,
+                            GameTime = DateTime.Now,
+                            GameSeason = "2024",
+                            GameLocation = "Memorial Park Diamond #2",
+                            HomeTeam = "Bananas",
+                            AwayTeam = "Dragons"
+
+                        },
+                        new Game
+                        {
+                            GameDate = DateTime.Now,
+                            GameTime = DateTime.Now,
+                            GameSeason = "2024",
+                            GameLocation = "Burger Park Diamond",
+                            HomeTeam = "Whitecaps",
+                            AwayTeam = "Bisons"
+
+                        },
+                        new Game
+                        {
+                            GameDate = DateTime.Now,
+                            GameTime = DateTime.Now,
+                            GameSeason = "2024",
+                            GameLocation = "Memorial Park Diamond #3",
+                            HomeTeam = "Dragons",
+                            AwayTeam = "Bananas"
+
+                        },
+                        new Game
+                        {
+                            GameDate = DateTime.Now,
+                            GameTime = DateTime.Now,
+                            GameSeason = "2024",
+                            GameLocation = "Welland Jackfish Stadium",
+                            HomeTeam = "Bisons",
+                            AwayTeam = "Whitecaps"
+
+                        }
+
+                        ); ;
+                    context.SaveChanges();
+                }
+
+
+                if (!context.Team_Games.Any())
+                {
+                    context.Team_Games.AddRange(
+                        new Team_Game
+                        {
+                            TeamID = 1,
+                            GameID = 1,
+                        },
+                        new Team_Game
+                        {
+                            GameID = 2,
+                        },
+                        new Team_Game
+                        {
+                            GameID = 3,
+                        },
+                        new Team_Game
+                        {
+                            GameID = 4,
+                        }
+                        );
+                    context.SaveChanges();
+                }
+
+            }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.GetBaseException().Message);

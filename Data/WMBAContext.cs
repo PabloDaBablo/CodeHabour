@@ -10,14 +10,12 @@ namespace WMBA_7_2_.Data
 
         public DbSet<League> Leagues { get; set; }
         public DbSet<Division> Divisions { get; set; }
-
         public DbSet<Coach> Coaches { get; set; }
-        public DbSet<Game> Games { get; set; }
         public DbSet<Line_Up>Line_Ups { get; set; }
         public DbSet<Line_Up_Player> Line_Up_Players { get; set; }
         public DbSet<Player> Players { get; set; }
         public DbSet<PlayerPosition> PlayerPositions { get; set; }
-        public DbSet<Schedule> Schedules { get; set; }
+        public DbSet<Game> Games { get; set; }
         public DbSet<Security> Security { get; set; }
         public DbSet<SecurityRole>SecurityRoles { get; set; }
         public DbSet<Stats> Stats { get; set; }
@@ -54,7 +52,15 @@ namespace WMBA_7_2_.Data
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Player>()
-                .HasIndex(p => p.PlayerNumber).IsUnique();
+                .HasIndex(p => new { p.PlayerNumber, p.TeamID })
+                .IsUnique();
+
+            modelBuilder.Entity<Team_Game>()
+                .HasOne(tg => tg.Game)
+                .WithMany(tg => tg.Team_Games)
+                .HasForeignKey(tg => tg.GameID);
+
+                
         }
 
     }

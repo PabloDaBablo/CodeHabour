@@ -27,14 +27,4 @@
     <PackageReference Include="X.PagedList.Mvc.Core" Version="8.4.7" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Data\WMBAMigrations\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="WMBADatabase.db">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>
