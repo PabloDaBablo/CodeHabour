@@ -49,24 +49,24 @@
 			<div class="modal-body">
 				<input type="hidden" asp-for="ID" value="0" />
 				<div class="mb-2">
-					<label asp-for=PlayerMemberID></label>
-					<input type="text" asp-for="PlayerMemberID" class="form-control"
-						placeholder="Ex. 13442334" />
+					<label asp-for="PlayerMemberID" class="form-label">Player Member ID</label>
+					<input type="text" id="PlayerMemberID" class="form-control" placeholder="Ex. 13442334" />
+					<span id="PlayerMemberIDError" class="text-danger"></span>
 				</div>
 				<div class="mb-2">
-					<label asp-for=PlayerFirstName></label>
-					<input type="text" asp-for="PlayerFirstName" class="form-control"
-						placeholder="Ex. John" />
+					<label asp-for="PlayerFirstName" class="form-label">First Name</label>
+					<input type="text" id="PlayerFirstName" class="form-control" placeholder="Ex. John" />
+					<span id="PlayerFirstNameError" class="text-danger"></span>
 				</div>
 				<div class="mb-2">
-					<label asp-for=PlayerLastName></label>
-					<input type="text" asp-for="PlayerLastName" class="form-control"
-						placeholder="Ex. Smith" />
+					<label asp-for="PlayerLastName" class="form-label">Last Name</label>
+					<input type="text" id="PlayerLastName" class="form-control" placeholder="Ex. Smith" />
+					<span id="PlayerLastNameError" class="text-danger"></span>
 				</div>
 				<div class="mb-2">
-					<label asp-for=PlayerNumber></label>
-					<input type="text" asp-for="PlayerNumber" class="form-control"
-						placeholder="Ex. 13" />
+					<label asp-for="PlayerNumber" class="form-label">Player Number</label>
+					<input type="text" id="PlayerNumber" class="form-control" placeholder="Ex. 13" />
+					<span id="PlayerNumberError" class="text-danger"></span>
 				</div>
 				<div class="mb-2">
 					<label asp-for="TeamID" class="form-label">Team</label>

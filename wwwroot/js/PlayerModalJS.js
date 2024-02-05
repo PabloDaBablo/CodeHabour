@@ -53,6 +53,29 @@ $(document).ready(function () {
             GetPlayers(currentPage);
         }
     });
+
+    $('#Save').off('click').on('click', function (e) {
+        e.preventDefault();
+        if (validateAllFields()) {
+            Insert();
+        }
+    });
+    $('#PlayerModal').on('hidden.bs.modal', function () {
+        clearAllValidationErrorMessages();
+    });
+
+    function clearAllValidationErrorMessages() {
+        const inputIds = ['PlayerMemberID', 'PlayerFirstName', 'PlayerLastName', 'PlayerNumber'];
+
+        inputIds.forEach(function (inputId) {
+            clearValidationError(inputId);
+        });
+    }
+
+    function clearValidationError(inputId) {
+        $(`#${inputId}`).removeClass('is-invalid');
+        $(`#${inputId}Error`).text('');
+    }
 });
 
 
@@ -65,12 +88,6 @@ $('#btnAdd').click(function () {
 
 /* Insert Data */
 function Insert() {
-
-    var res = Validate();
-    if (res == false) {
-        return false;
-    }
-
 
     var formData = new Object();
     formData.id = $('#ID').val();
@@ -118,75 +135,6 @@ function ClearData() {
     $('#DivisionID').val('');
 };
 
-function Validate() {
-    var isValid = true;
-
-    if ($('#PlayerMemberID').val().trim() == "") {
-        $('#PlayerMemberID').css('border-color', 'Red');
-        isValid = false;
-    }
-    else {
-        $('PlayerMemberID').css('border-color', 'lightgrey');
-    }
-
-    if ($('#PlayerFirstName').val().trim() == "") {
-        $('#PlayerFirstName').css('border-color', 'Red');
-        isValid = false;
-    }
-    else {
-        $('#PlayerFirstName').css('border-color', 'lightgrey');
-    }
-
-    if ($('#PlayerLastName').val().trim() == "") {
-        $('#PlayerLastName').css('border-color', 'Red');
-        isValid = false;
-    }
-    else {
-        $('#PlayerLastName').css('border-color', 'lightgrey');
-    }
-
-    if ($('#PlayerNumber').val().trim() == "") {
-        $('#PlayerNumber').css('border-color', 'Red');
-        isValid = false;
-    }
-    else {
-        $('#PlayerNumber').css('border-color', 'lightgrey');
-    }
-
-    if ($('#TeamID').val() == "") {
-        $('#TeamID').css('border-color', 'Red');
-        isValid = false;
-    } else {
-        $('#TeamID').css('border-color', 'lightgrey');
-    }
-
-    if ($('#DivisionID').val() == "") {
-        $('#DivisionID').css('border-color', 'Red');
-        isValid = false;
-    } else {
-        $('#DivisionID').css('border-color', 'lightgrey');
-    }
-
-    return isValid;
-};
-
-$('#PlayerMemberID').change(function () {
-    Validate();
-});
-$('#PlayerFirstName').change(function () {
-    Validate();
-});
-$('#PlayerLastName').change(function () {
-    Validate();
-});
-$('#PlayerNumber').change(function () {
-    Validate();
-});
-$('#TeamID').change(function () {
-    Validate();
-});
-
-
 
 /* Edit Data */
 function Edit(id) {
@@ -226,10 +174,6 @@ function Edit(id) {
 
 /* Update Data */
 function Update() {
-    var result = Validate();
-    if (result == false) {
-        return false;
-    }
 
     var formData = new Object();
     formData.id = $('#ID').val();
@@ -358,3 +302,52 @@ $(document).on('click', '.edit', function () {
     Edit(id);
 });
 
+function showValidationError(inputId, message) {
+    $(`#${inputId}`).addClass('is-invalid');
+    $(`#${inputId}Error`).text(message);
+}
+
+function clearValidationError(inputId) {
+    $(`#${inputId}`).removeClass('is-invalid');
+    $(`#${inputId}Error`).text('');
+}
+
+function validatePlayerMemberID(value) {
+    var regex = /^[a-zA-Z0-9]+$/;
+    if (!regex.test(value)) {
+        showValidationError('PlayerMemberID', 'MemberID should only contain letters and numbers.');
+        return false;
+    }
+    clearValidationError('PlayerMemberID');
+    return true;
+}
+
+function validateName(value, fieldName) {
+    var regex = /^[a-zA-Z\s]+$/;
+    if (!regex.test(value)) {
+        showValidationError(fieldName, `First or Last name should only contain letters and spaces.`);
+        return false;
+    }
+    clearValidationError(fieldName);
+    return true;
+}
+
+function validatePlayerNumber(value) {
+    var number = parseInt(value, 10);
+    if (isNaN(number) || number < 0 || number > 99) {
+        showValidationError('PlayerNumber', 'Player number should be an integer between 0 and 99.');
+        return false;
+    }
+    clearValidationError('PlayerNumber');
+    return true;
+}
+
+function validateAllFields() {
+    var isValid = true;
+    isValid &= validatePlayerMemberID($('#PlayerMemberID').val());
+    isValid &= validateName($('#PlayerFirstName').val(), 'PlayerFirstName');
+    isValid &= validateName($('#PlayerLastName').val(), 'PlayerLastName');
+    isValid &= validatePlayerNumber($('#PlayerNumber').val());
+
+    return isValid === 1; 
+}
