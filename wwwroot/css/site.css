@@ -91,6 +91,11 @@ header {
     flex: 1;
 }
 
+.form-group.required .control-label:before {
+    content: "*";
+    color: red;
+}
+
 .footer {
     background-color: #15244A;
     color: white;

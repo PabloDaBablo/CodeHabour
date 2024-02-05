@@ -569,7 +569,7 @@ namespace WMBA_7_2_.Data
                         {
                             GameDate = DateTime.Now,
                             GameTime = DateTime.Now,
-                            GameSeason = "2024",
+                            //GameSeason = "2024",
                             GameLocation = "Memorial Park Diamond #2",
                             HomeTeam = "Bananas",
                             AwayTeam = "Dragons"
@@ -579,7 +579,7 @@ namespace WMBA_7_2_.Data
                         {
                             GameDate = DateTime.Now,
                             GameTime = DateTime.Now,
-                            GameSeason = "2024",
+                            //GameSeason = "2024",
                             GameLocation = "Burger Park Diamond",
                             HomeTeam = "Whitecaps",
                             AwayTeam = "Bisons"
@@ -589,7 +589,7 @@ namespace WMBA_7_2_.Data
                         {
                             GameDate = DateTime.Now,
                             GameTime = DateTime.Now,
-                            GameSeason = "2024",
+                           // GameSeason = "2024",
                             GameLocation = "Memorial Park Diamond #3",
                             HomeTeam = "Dragons",
                             AwayTeam = "Bananas"
@@ -599,7 +599,7 @@ namespace WMBA_7_2_.Data
                         {
                             GameDate = DateTime.Now,
                             GameTime = DateTime.Now,
-                            GameSeason = "2024",
+                            //GameSeason = "2024",
                             GameLocation = "Welland Jackfish Stadium",
                             HomeTeam = "Bisons",
                             AwayTeam = "Whitecaps"
