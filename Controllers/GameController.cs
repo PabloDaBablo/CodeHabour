@@ -24,6 +24,7 @@ namespace WMBA_7_2_.Controllers
         {
             var games = await _context.Games
              .Include(g => g.Team_Games)
+             .Include(g => g.Line_Ups)
              .AsNoTracking()
              .ToListAsync();
 
@@ -38,14 +39,18 @@ namespace WMBA_7_2_.Controllers
                 return NotFound();
             }
 
-            var game = await _context.Games
-                .FirstOrDefaultAsync(m => m.ID == id);
-            if (game == null)
+            var games = await _context.Games
+            .Include(g => g.Team_Games)
+            .Include(g => g.Line_Ups)
+            .AsNoTracking()
+            .ToListAsync();
+
+            if (games == null)
             {
                 return NotFound();
             }
 
-            return View(game);
+            return View(games);
         }
 
         // GET: Game/Create
@@ -59,7 +64,7 @@ namespace WMBA_7_2_.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,GameDate,GameTime,GameSeason,GameLocation")] Game game)
+        public async Task<IActionResult> Create([Bind("ID,GameDate,GameTime,HomeTeam,AwayTeam,GameLocation")] Game game)
         {
             if (ModelState.IsValid)
             {
@@ -91,7 +96,7 @@ namespace WMBA_7_2_.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,GameDate,GameTime,GameSeason,GameLocation")] Game game)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,GameDate,GameTime,HomeTeam,AwayTeam,GameLocation")] Game game)
         {
             if (id != game.ID)
             {

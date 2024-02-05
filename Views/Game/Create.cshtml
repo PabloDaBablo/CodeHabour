@@ -9,9 +9,11 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/css/site.css" asp-append-version="true" />
 </head>
+<h4>Schedule a Game</h4>
+*Required Field
 <hr />
 <div class="row">
-    <div class="col-lg-10">
+    <div class="form-group required">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
@@ -34,6 +36,11 @@
                 <input asp-for="AwayTeam" class="form-control" />
                 <span asp-validation-for="AwayTeam" class="text-danger"></span>
             </div>
+            @* <div class="form-group">
+                <label asp-for="GameSeason" class="control-label"></label>
+                <input asp-for="GameSeason" class="form-control" />
+                <span asp-validation-for="GameSeason" class="text-danger"></span>
+            </div> *@
             <div class="form-group">
                 <label asp-for="GameLocation" class="control-label"></label>
                 <input asp-for="GameLocation" class="form-control" />
