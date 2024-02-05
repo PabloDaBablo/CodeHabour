@@ -296,9 +296,9 @@ $(document).on('click', '.toggle-status', function () {
         data: JSON.stringify({ id: playerId }),
         success: function (response) {
             if (response.isActive) {
-                button.text('Active').removeClass('btn-secondary btn-warning').addClass('btn-success');
+                button.text('Active').removeClass('btn-secondary btn-danger').addClass('btn-success');
             } else {
-                button.text('Inactive').removeClass('btn-success').addClass('btn-secondary btn-warning');
+                button.text('Inactive').removeClass('btn-success').addClass('btn-secondary btn-danger');
             }
 
         },
