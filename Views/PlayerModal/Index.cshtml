@@ -18,11 +18,12 @@
 	<table class="table table-striped table-bordered table-responsive table-hover">
 		<thead>
 			<tr>
-				<th>@Html.DisplayNameFor(model => model.DivisionID)</th>
+				<th class="sortable" data-sort="divAge">Division &#x2191;&#x2193;</th>
 				<th>@Html.DisplayNameFor(model => model.PlayerFirstName)</th>
 				<th>@Html.DisplayNameFor(model => model.PlayerLastName)</th>
 				<th>@Html.DisplayNameFor(model => model.PlayerNumber)</th>
-				<th>@Html.DisplayNameFor(model => model.Team.TeamName)</th>
+				<th class="sortable" data-sort="teamName">Team Name &#x2191;&#x2193;</th>
+				<th>Status</th>
 				<th>Action</th>
 			</tr>
 		</thead>
@@ -92,3 +93,15 @@
 
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/js/playermodaljs.js"></script>
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var sortableHeaders = document.querySelectorAll('.sortable');
+		sortableHeaders.forEach(function (header) {
+			header.addEventListener('click', function () {
+				var sortColumn = this.getAttribute('data-sort');
+				console.log('Sorting by:', sortColumn);
+				// Call your sort function here
+			});
+		});
+	});
+</script>
