@@ -2,7 +2,7 @@
 
 namespace WMBA_7_2_.Models
 {
-    public class Game
+    public class Game : IValidatableObject
     {
         public int ID { get; set; }
 
@@ -37,5 +37,32 @@ namespace WMBA_7_2_.Models
         public string AwayTeam { get; set; }
         public ICollection<Team_Game> Team_Games { get; set; } = new HashSet<Team_Game>();
         public ICollection<Line_Up> Line_Ups { get; set; } = new HashSet<Line_Up>();
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            //Games can't be played in the past
+            if (GameDate < DateTime.Now)
+            {
+                yield return new ValidationResult("Games must occur in the future", new[] { "GameDate" });
+            }
+            //Games are played during the day???
+            if(GameTime.TimeOfDay < TimeSpan.FromHours(9) || GameTime.TimeOfDay >= TimeSpan.FromHours(20))
+            {
+                yield return new ValidationResult("Event must be scheduled after 9 am and before 8 pm.", new[] { "GameTime" });
+            }
+            //Games are played at an approved field
+            //if (GameLocation != "Chippawa Park Diamond" || GameLocation != "Maple Park Diamond #1" || GameLocation != "Maple Park Diamond #2"
+            //    || GameLocation != "Memorial Park Diamond #2" || GameLocation != "Burger Park Diamond" || GameLocation != "Memorial Park Diamond #3"
+            //    || GameLocation != "Welland Jackfish Stadium")
+            //{
+            //    yield return new ValidationResult("Games must be scheduled at an appropriate field.", new[] { "GameLocation" });
+            //}
+            //Home team and Visiting team can't play against each other
+
+            if (HomeTeam == AwayTeam)
+            {
+                yield return new ValidationResult("Home and Visitor must be different teams", new[] { "HomeTeam","AwayTeam" });
+            }
+        }
     }
 }
