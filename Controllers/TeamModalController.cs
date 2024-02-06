@@ -20,6 +20,7 @@ namespace WMBA_7_2_.Controllers
         {
 
 			ViewData["CoachID"] = new SelectList(_context.Coaches, "ID", "CoachName");
+			ViewData["DivisionID"] = new SelectList(_context.Divisions, "ID", "DivisionTeams");
 
 			return View();
         }
@@ -32,10 +33,12 @@ namespace WMBA_7_2_.Controllers
 					.Include(t => t.Players)
 					.Include(t => t.TeamCoaches)
 						.ThenInclude(tc => tc.Coach)
+					.Include(t => t.Division)
 					.Select(t => new
 					{
 						id = t.ID,
 						t.TeamName,
+						Division = t.Division.DivAge,
 						Players = t.Players.Select(p => p.PlayerFullName),
 						Coaches = t.TeamCoaches.Select(tc => new { tc.CoachID, tc.Coach.CoachName })
 					})
@@ -77,6 +80,7 @@ namespace WMBA_7_2_.Controllers
 				var teams = _context.Teams
 									 .Include(p => p.Players)
 									 .Include(p => p.TeamCoaches)
+									 .Include(p => p.Division)
 									 .FirstOrDefault(p => p.ID == id);
 
 				if (teams == null)
@@ -105,10 +109,19 @@ namespace WMBA_7_2_.Controllers
 			{
 				if (ModelState.IsValid)
 				{
-					_context.Teams.Update(model);
-					_context.SaveChanges();
-
-					return Json("Team updated successfully.");
+					var existingTeam = _context.Teams.Find(model.ID);
+					if (existingTeam != null)
+					{
+						existingTeam.TeamName = model.TeamName;
+						existingTeam.DivisionID = model.DivisionID;
+						_context.Update(existingTeam);
+						_context.SaveChanges();
+						return Json("Team updated successfully.");
+					}
+					else
+					{
+						return Json("Team not found.");
+					}
 				}
 				return Json("Model validation failed.");
 			}

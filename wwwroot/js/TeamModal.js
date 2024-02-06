@@ -31,6 +31,7 @@ function GetTeams() {
                 var object = '';
                 $.each(response, function (index, item) {
                     object += '<tr>';
+                    object += '<td>' + (item.division || '') + '</td>';
                     object += '<td>' + (item.teamName || '') + '</td>';
 
                     var coachNames = item.coaches.map(function (coach) {
@@ -153,6 +154,7 @@ function Update() {
     var formData = new Object();
     formData.id = $('#ID').val();
     formData.teamName = $('#TeamName').val();
+
 
     $.ajax({
         url: '/TeamModal/Update',

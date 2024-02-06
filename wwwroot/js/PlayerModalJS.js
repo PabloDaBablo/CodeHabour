@@ -5,9 +5,31 @@ var pageSize = 10;
 var totalPages = 0;
 
 function GetPlayers(page) {
+    var divisionSearch = $('#divisionSearch').val();
+    var firstNameSearch = $('#firstNameSearch').val();
+    var lastNameSearch = $('#lastNameSearch').val();
+    var numberSearch = $('#numberSearch').val();
+    var teamId = $('#teamId').val(); 
+
+    
+    var data = {
+        page: page,
+        pageSize: pageSize,
+        sortColumn: currentSortColumn,
+        sortDirection: currentSortDirection,
+        divisionSearch: divisionSearch,
+        firstNameSearch: firstNameSearch,
+        lastNameSearch: lastNameSearch,
+        numberSearch: numberSearch,
+        teamId: teamId 
+    };
+
+    console.log(data);
+
     $.ajax({
-        url: `/PlayerModal/GetPlayers?page=${page}&pageSize=${pageSize}&sortColumn=${currentSortColumn}&sortDirection=${currentSortDirection}`,
+        url: '/PlayerModal/GetPlayers',
         type: 'GET',
+        data: data, 
         success: function (response) {
             updateTable(response.players);
             totalPages = response.totalPages;
@@ -18,16 +40,6 @@ function GetPlayers(page) {
             alert('Unable to load player data.');
         }
     });
-}
-
-function sortData(sortColumn) {
-    if (currentSortColumn === sortColumn) {
-        currentSortDirection = currentSortDirection === 'asc' ? 'desc' : 'asc';
-    } else {
-        currentSortColumn = sortColumn;
-        currentSortDirection = 'asc';
-    }
-    GetPlayers(currentPage);
 }
 
 
@@ -76,6 +88,11 @@ $(document).ready(function () {
         $(`#${inputId}`).removeClass('is-invalid');
         $(`#${inputId}Error`).text('');
     }
+
+    $("#filterButton").click(function (e) {
+        e.preventDefault(); 
+        GetPlayers(1);
+    });
 });
 
 
@@ -351,3 +368,5 @@ function validateAllFields() {
 
     return isValid === 1; 
 }
+
+

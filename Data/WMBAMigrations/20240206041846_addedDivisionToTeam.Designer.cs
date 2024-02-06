@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WMBA_7_2_.Data;
 
@@ -10,9 +11,11 @@ using WMBA_7_2_.Data;
 namespace WMBA_7_2_.Data.WMBAMigrations
 {
     [DbContext(typeof(WMBAContext))]
-    partial class WMBAContextModelSnapshot : ModelSnapshot
+    [Migration("20240206041846_addedDivisionToTeam")]
+    partial class addedDivisionToTeam
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.15");
@@ -302,7 +305,7 @@ namespace WMBA_7_2_.Data.WMBAMigrations
                     b.Property<int?>("CoachID")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("DivisionID")
+                    b.Property<int>("DivisionID")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("TeamName")
@@ -471,7 +474,9 @@ namespace WMBA_7_2_.Data.WMBAMigrations
 
                     b.HasOne("WMBA_7_2_.Models.Division", "Division")
                         .WithMany("Teams")
-                        .HasForeignKey("DivisionID");
+                        .HasForeignKey("DivisionID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Coach");
 
