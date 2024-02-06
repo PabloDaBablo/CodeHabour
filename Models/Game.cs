@@ -48,7 +48,7 @@ namespace WMBA_7_2_.Models
             //Games are played during the day???
             if(GameTime.TimeOfDay < TimeSpan.FromHours(9) || GameTime.TimeOfDay >= TimeSpan.FromHours(20))
             {
-                yield return new ValidationResult("Event must be scheduled after 9 am and before 8 pm.", new[] { "GameTime" });
+                yield return new ValidationResult("Games must be scheduled after 9 am and before 8 pm.", new[] { "GameTime" });
             }
             //Games are played at an approved field
             //if (GameLocation != "Chippawa Park Diamond" || GameLocation != "Maple Park Diamond #1" || GameLocation != "Maple Park Diamond #2"
@@ -57,8 +57,7 @@ namespace WMBA_7_2_.Models
             //{
             //    yield return new ValidationResult("Games must be scheduled at an appropriate field.", new[] { "GameLocation" });
             //}
-            //Home team and Visiting team can't play against each other
-
+            //Home team and Visiting team can't be the same team
             if (HomeTeam == AwayTeam)
             {
                 yield return new ValidationResult("Home and Visitor must be different teams", new[] { "HomeTeam","AwayTeam" });
