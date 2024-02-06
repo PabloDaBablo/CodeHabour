@@ -26,53 +26,80 @@ namespace WMBA_7_2_.Controllers
         }
 
 		[HttpGet]
-        public JsonResult GetPlayers(int page = 1, int pageSize = 10, string sortColumn = "divAge", string sortDirection = "asc")
-        {
-            try
-            {
-                var query = _context.Players
-                    .Include(p => p.Team)
-                    .Include(p => p.Division)
-                    .AsQueryable();
+		public JsonResult GetPlayers(int page = 1, int pageSize = 10, string sortColumn = "divAge", string sortDirection = "asc",
+							 string divisionSearch = "", string firstNameSearch = "", string lastNameSearch = "",
+							 string numberSearch = "", int? teamId = null)
+		{
+			try
+			{
+				var query = _context.Players
+					.Include(p => p.Team)
+					.Include(p => p.Division)
+					.AsQueryable();
 
-                if (sortColumn == "teamName")
-                {
-                    query = sortDirection == "asc" ? query.OrderBy(p => p.Team.TeamName) : query.OrderByDescending(p => p.Team.TeamName);
-                }
-                else if (sortColumn == "divAge")
-                {
-                    query = sortDirection == "asc" ? query.OrderBy(p => p.Division.DivAge) : query.OrderByDescending(p => p.Division.DivAge);
-                }
+				if (!string.IsNullOrEmpty(divisionSearch))
+				{
+					query = query.Where(p => p.Division.DivAge.Contains(divisionSearch));
+				}
 
-                var totalRecords = query.Count();
-                var totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
+				if (!string.IsNullOrEmpty(firstNameSearch))
+				{
+					query = query.Where(p => p.PlayerFirstName.Contains(firstNameSearch));
+				}
 
-                var players = query
-                    .Skip((page - 1) * pageSize)
-                    .Take(pageSize)
-                    .Select(p => new
-                    {
-                        id = p.ID,
-                        p.PlayerMemberID,
-                        p.PlayerFirstName,
-                        p.PlayerLastName,
-                        p.PlayerNumber,
-                        TeamName = p.Team.TeamName,
-                        p.DivisionID,
-                        DivAge = p.Division.DivAge,
-                        p.IsActive
-                    })
-                .ToList();
+				if (!string.IsNullOrEmpty(lastNameSearch))
+				{
+					query = query.Where(p => p.PlayerLastName.Contains(lastNameSearch));
+				}
 
-                return Json(new { players, totalPages });
-            }
-            catch (Exception ex)
-            {
+				if (!string.IsNullOrEmpty(numberSearch) && int.TryParse(numberSearch, out int number))
+				{
+					query = query.Where(p => p.PlayerNumber == number);
+				}
+
+				if (teamId.HasValue)
+				{
+					query = query.Where(p => p.TeamID == teamId.Value);
+				}
+
+				if (sortColumn == "teamName")
+				{
+					query = sortDirection == "asc" ? query.OrderBy(p => p.Team.TeamName) : query.OrderByDescending(p => p.Team.TeamName);
+				}
+				else if (sortColumn == "divAge")
+				{
+					query = sortDirection == "asc" ? query.OrderBy(p => p.Division.DivAge) : query.OrderByDescending(p => p.Division.DivAge);
+				}
+
+				var totalRecords = query.Count();
+				var totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
+
+				var players = query
+					.Skip((page - 1) * pageSize)
+					.Take(pageSize)
+					.Select(p => new
+					{
+						id = p.ID,
+						p.PlayerMemberID,
+						p.PlayerFirstName,
+						p.PlayerLastName,
+						p.PlayerNumber,
+						TeamName = p.Team.TeamName,
+						p.DivisionID,
+						DivAge = p.Division.DivAge,
+						p.IsActive
+					})
+				.ToList();
+
+				return Json(new { players, totalPages });
+			}
+			catch (Exception ex)
+			{
 				return Json(new { error = "An error occurred while processing your request." });
 			}
-        }
+		}
 
-		[HttpPost]
+			[HttpPost]
         public JsonResult Insert(Player model)
         {
             try
@@ -125,7 +152,7 @@ namespace WMBA_7_2_.Controllers
             }
             catch (Exception ex)
             {
-                return Json(new { error = "An error occurred while processing your request." });
+            return Json(new { error = "An error occurred while processing your request." });
             }
 		}
 

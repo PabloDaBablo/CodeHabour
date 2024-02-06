@@ -42,7 +42,7 @@ function GetCoaches() {
 $('#btnAdd').click(function () {
     resetValidationStates();
     $('#CoachModal').modal('show');
-    $('#modalTitle').text('Add Player');
+    $('#modalTitle').text('Add Coach');
     $('#Update').css('display', 'none');
     $('#Save').css('display', 'block');
 })

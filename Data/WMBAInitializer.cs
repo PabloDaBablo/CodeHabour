@@ -138,22 +138,26 @@ namespace WMBA_7_2_.Data
                 new Team
                 {
                     TeamName = "Bananas",
-                    CoachID = 1
+                    CoachID = 1,
+                    DivisionID = 1
                 },
                 new Team
                 {
                     TeamName = "Dragons",
-                    CoachID = 3
-                },
+                    CoachID = 3,
+					DivisionID = 2
+				},
                 new Team
                 {
                     TeamName = "Bisons",
-                    CoachID = 5
-                },
+                    CoachID = 5,
+                    DivisionID = 3
+				},
                 new Team
                 {
                     TeamName = "Whitecaps",
-                    CoachID = 7
+                    CoachID = 7,
+                    DivisionID = 4
                 });
                     context.SaveChanges();
                     if (!context.Team_Coaches.Any())
@@ -609,6 +613,11 @@ namespace WMBA_7_2_.Data
                     context.SaveChanges();
 
                 }
+
+
+
+
+
             }
             catch (Exception ex)
             {

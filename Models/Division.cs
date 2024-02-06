@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 
 namespace WMBA_7_2_.Models
@@ -23,8 +24,8 @@ namespace WMBA_7_2_.Models
         [Display(Name = "League")]
         public League League { get; set; }
 
+        [Display (Name = "Team")]
+		public ICollection<Team> Teams { get; set; } = new HashSet<Team>();
 
-
-
-    }
+	}
 }
