@@ -29,7 +29,7 @@ namespace WMBA_7_2_.Controllers
                         .Include(tg => tg.Game)
                         select new
                         {
-                           
+
                         };
             //How many rows?
             int numRows = appts.Count();
@@ -224,15 +224,36 @@ namespace WMBA_7_2_.Controllers
                 //
                 //You will get a warning about using an await for this to be async but that
                 //will come when you start saving data to the database.
+
+                if (ModelState.IsValid)
+                {
+                    await AddPlayer(imported, feedBack);
+                    _context.Add(imported);
+                    await _context.SaveChangesAsync();
+                }
+                else
+                {
+                    feedBack = "Error: You may have selected the wrong file to upload.";
+                }
+                return;
             }
-       
-            else
-            {
-                feedBack = "Error: You may have selected the wrong file to upload.";
-            }
-        }
 
         }
+
+        private static Task AddPlayer(List<ImportReport> imported, string feedBack)
+        {
+            foreach (ImportReport ir in imported)
+            {
+                Player player = new Player();
+                player.PlayerFirstName = ir.First_Name;
+                player.PlayerLastName = ir.Last_Name;
+                player.PlayerMemberID = ir.Member_ID;
+               // player.Division.DivAge = ir.Division;
+               // player.Team.TeamName = ir.Team;
+            }
+            return Task.CompletedTask;
+        }
+    }
 }
         
     
