@@ -7,32 +7,46 @@ using OfficeOpenXml;
 using WMBA_7_2_.Data;
 using OfficeOpenXml.Style;
 using System.Drawing;
-using WMBA_7_2_.ViewModels;
 using OfficeOpenXml.Table;
+using WMBA_7_2_.CustomControllers;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace WMBA_7_2_.Controllers
 {
-    public class ReportController : Controller
+    public class ReportController : LookupsController
     {
         private readonly WMBAContext _context;
+
+        public ReportController(WMBAContext context)
+        {
+            _context = context;
+        }
 
         // GET: Excel Data
         public async Task<IActionResult> Index()
         {
             return View();
         }
-
+        public IActionResult Reports() 
+        {
+            var report = _context.Reports.AsNoTracking();
+            
+            return View(report);
+        }
         public IActionResult DownloadGames()
         {
             //Get the appointments
-            var appts = from tg in _context.Team_Games
-                        .Include(tg => tg.Game)
+            var games = from g in _context.Games
                         select new
                         {
-
+                            Date = g.GameDate,
+                            Time = g.GameTime,
+                            Home = g.HomeTeam,
+                            Away = g.AwayTeam,
+                            Location = g.GameLocation
                         };
             //How many rows?
-            int numRows = appts.Count();
+            int numRows = games.Count();
 
             if (numRows > 0) //We have data
             {
@@ -58,7 +72,7 @@ namespace WMBA_7_2_.Controllers
                     var workSheet = excel.Workbook.Worksheets.Add("Games");
 
                     //Note: Cells[row, column]
-                    workSheet.Cells[3, 1].LoadFromCollection(appts, true);
+                    workSheet.Cells[3, 1].LoadFromCollection(games, true);
 
                     //Style first column for dates
                     workSheet.Column(1).Style.Numberformat.Format = "yyyy-mm-dd";
@@ -70,7 +84,7 @@ namespace WMBA_7_2_.Controllers
 
 
                     //Set Style and backgound colour of headings
-                    using (ExcelRange headings = workSheet.Cells[3, 1, 3, 7])
+                    using (ExcelRange headings = workSheet.Cells[3, 1, 3, 5])
                     {
                         headings.Style.Font.Bold = true;
                         var fill = headings.Style.Fill;
@@ -86,7 +100,7 @@ namespace WMBA_7_2_.Controllers
 
                     //Add a title and timestamp at the top of the report
                     workSheet.Cells[1, 1].Value = "WMBA Games";
-                    using (ExcelRange Rng = workSheet.Cells[1, 1, 1, 6])
+                    using (ExcelRange Rng = workSheet.Cells[1, 1, 1, 5])
                     {
                         Rng.Merge = true; //Merge columns start and end range
                         Rng.Style.Font.Bold = true; //Font should be bold
@@ -194,12 +208,8 @@ namespace WMBA_7_2_.Controllers
             var end = workSheet.Dimension.End;
 
             //Test some of the heading cells to help confirm this is the right kind of file.
-            if (workSheet.Cells[1, 2].Text == "First Name" &&
-                workSheet.Cells[1, 3].Text == "Last Name" &&
-                workSheet.Cells[1, 4].Text == "Member ID" &&
-                workSheet.Cells[1, 6].Text == "Division" &&
-                workSheet.Cells[1, 8].Text == "Team"
-                )
+            if (workSheet.Cells[1, 1].Text == "ID" &&
+                workSheet.Cells[1, 4].Text == "Member ID")
             {
                 for (int row = start.Row + 1; row <= end.Row; row++)
                 {
@@ -214,7 +224,12 @@ namespace WMBA_7_2_.Controllers
                         Club = workSheet.Cells[row, 7].Text,
                         Team = workSheet.Cells[row, 8].Text
                     };
-                    imported.Add(ir);
+                    //Add if not blank, at least check a couple of properties
+                    if (!(ir.ID == "" || ir.Member_ID == ""))
+                    {
+                        imported.Add(ir);
+                    }
+
                 }
                 //Great! you have read in the data so now do domething with it.
                 //You probably want to check that the team exists or add it if it does not.
@@ -225,14 +240,73 @@ namespace WMBA_7_2_.Controllers
                 //You will get a warning about using an await for this to be async but that
                 //will come when you start saving data to the database.
 
-                }
-                else
+                //Get lists of the unique values
+                var uniqueDivisions = imported.GroupBy(d => d.Division).Select(d => d.First()).Select(d => d.Division);
+                var uniqueDivisionTeams = imported.GroupBy(d => d.Team).Select(i => i.First()).Select(d => d.Team);
+                var uniqueSeasons = imported.GroupBy(d => d.Season).Select(i => i.First()).Select(d => d.Season);
+                var uniqueClubs = imported.GroupBy(d => d.Club).Select(i => i.First()).Select(d => d.Club);
+                //For Team, we only want the name of the Team so we split the string to remove the Division
+                //var uniqueTeams = uniqueDivisionTeams.Select(sub => sub.Split(' ')[1]).ToList();
+                var uniqueTeams = uniqueDivisionTeams.Select(sub => sub.Substring(3)).ToList();
+                //Now you can go on to check each of these to see if they are in the databse already and add 
+                //them if they are not.  Then you should be ready to add the players and assign them to their
+                //lookup values.
+                
+                foreach (var t in uniqueTeams)
                 {
-                    feedBack = "Error: You may have selected the wrong file to upload.";
+                    CheckAndAddTeam(t);
                 }
-                return;
+
+                foreach (var d in uniqueDivisions)
+                {
+                    CheckAndAddDivision(d);
+                }
+               
+                //Add the Players
+                for (int i = 0; i < imported.Count(); i++)
+                {
+                    Player player = new Player();
+                    player.PlayerFirstName = imported[i].First_Name;
+                    player.PlayerLastName = imported[i].Last_Name;
+                    player.PlayerMemberID = imported[i].Member_ID;
+                    //player.TeamID = _context.Teams.FirstOrDefault(p => p.TeamName == imported[i].Team).ID;
+                    //player.DivisionID = _context.Divisions.FirstOrDefault(p => p.DivisionTeams == imported[i].Division).ID;
+                    player.IsActive = true;
+                    _context.Players.Add(player);
+                }
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                feedBack = "Error: You may have selected the wrong file to upload.";
             }
         }
+            private void CheckAndAddTeam(string teamName)
+            {
+                // Check if a team exists in the database
+                bool teamExists = _context.Teams.Any(t => t.TeamName == teamName);
+
+                if (!teamExists)
+                {
+                    var newTeam = new Team() {TeamName = teamName };
+                    _context.Teams.Add(newTeam);
+                    _context.SaveChanges();
+                }
+            }
+            private void CheckAndAddDivision(string division)
+            {
+                // Check if division exists in the database
+                bool divisionExists = _context.Divisions.Any(d => d.DivAge == division);
+
+                if (!divisionExists)
+                {
+                    var newDivision = new Division() {DivAge = division};
+                    _context.Divisions.Add(newDivision);
+                    _context.SaveChanges();
+                }
+            }
+    }
+}
 
         
     

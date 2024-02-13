@@ -1,4 +1,4 @@
-﻿namespace WMBA_7_2_.Data
+﻿namespace WMBA_7_2_.Utilities
 {
     public class CalculatedStats
     {

@@ -14,7 +14,7 @@ namespace WMBA_7_2_.Models
         public string DivAge { get; set; }
 
         [Display(Name = "Division Team")]
-        [Required(ErrorMessage = "Division Team cannot be empty.")]
+        //[Required(ErrorMessage = "Division Team cannot be empty.")]
         public string DivisionTeams { get; set; }
 
         [Required(ErrorMessage = "You must select a League Type")]

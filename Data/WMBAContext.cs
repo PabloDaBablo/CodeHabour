@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using WMBA_7_2_.Models;
+using WMBA_7_2_.ViewModels;
 
 namespace WMBA_7_2_.Data
 {
@@ -23,6 +24,7 @@ namespace WMBA_7_2_.Data
         public DbSet<Team_Coach> Team_Coaches { get; set; }
         public DbSet<Team_Game> Team_Games { get; set; }
         public DbSet<TeamStats> Team_Stats { get; set; }
+        public DbSet<ImportReport> Reports { get; set; }
        
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -56,7 +58,19 @@ namespace WMBA_7_2_.Data
 			modelBuilder.Entity<Player>()
 	            .HasIndex(p => new { p.PlayerNumber, p.TeamID }) //this should work instead, yes?
 	            .IsUnique();
-		}
+
+            modelBuilder.Entity<Game>()
+                .HasIndex(tg => new { tg.ID, tg.HomeTeam, tg.AwayTeam, tg.GameDate,tg.GameTime,tg.GameLocation })
+                .IsUnique();
+
+            modelBuilder.Entity<Team_Game>()
+                .HasKey(tg => new { tg.GameID, tg.TeamID });
+           
+            modelBuilder.Entity<ImportReport>()
+                .ToView(nameof(Reports))
+                .HasKey(r => r.ID);
+
+        }
 
     }
 }

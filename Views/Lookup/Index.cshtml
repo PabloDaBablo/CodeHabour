@@ -1,0 +1,64 @@
+﻿<head>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/site.css" asp-append-version="true" />
+</head>
+
+<h2>Documents</h2>
+
+<div>
+    <!-- Nav tabs -->
+    <nav>
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <button class="nav-link active" id="ExcelUpload-Tab" data-bs-toggle="tab" data-bs-target="#ExcelUploadPanel" type="button" role="tab" aria-controls="ExcelUploadPanel" aria-selected="true">Upload Excel/CSV Data</button>
+            <button class="nav-link" id="ExcelDownload-Tab" data-bs-toggle="tab" data-bs-target="#ExcelDownloadPanel" type="button" role="tab" aria-controls="ExcelDownloadPanel" aria-selected="false">Download Excel File</button>
+            <button class="nav-link" id="PDFDownload-Tab" data-bs-toggle="tab" data-bs-target="#PDFDownloadPanel" type="button" role="tab" aria-controls="PDFDownloadPanel" aria-selected="false">Download PDF File</button>
+        </div>
+    </nav>
+    <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="ExcelUploadPanel" role="tabpanel" aria-labelledby="ExcelUpload-Tab"><br /></div>
+        <div class="tab-pane fade" id="ExcelDownloadPanel" role="tabpanel" aria-labelledby="ExcelDownload-Tab"><br /></div>
+        <div class="tab-pane fade" id="PDFDownloadPanel" role="tabpanel" aria-labelledby="PDFDownload-Tab"><br /></div>
+    </div>
+
+</div>
+<hr />
+<br />
+@section Scripts {
+    <script type="text/javascript">
+        function refreshTab(activeTab) {
+            switch (activeTab) {
+                case 'ExcelUpload-Tab': $('#ExcelUploadPanel').load('/Lookup/ExcelUpload');
+                    break;
+                case 'ExcelDownload-Tab': $('#ExcelDownloadPanel').load('/Lookup/ExcelDownload');
+                    break;
+                case 'PDFDownload-Tab': $('#PDFDownloadPanel').load('/Lookup/PDFDownload');
+                    break;
+                default: break;
+            };
+            return;
+        };
+        $('.nav-link').click(function () {
+            var activeTab = $(this).attr("id");
+            refreshTab(activeTab);
+        });
+        $(".tab-content").on("click", ".linkClick", function (event) {
+            event.preventDefault();
+            var address = $(this).attr("href");
+            var lookup = address.split("/")[1];
+            var id = $("#" + lookup + "ID").val();
+            var caption = $("#" + lookup).html();
+            if (id == null) {
+                alert("Error: no value selected from the " + caption + " list!");
+            } else {
+                window.location.href = address + "/" + id;
+            }
+        });
+        $(function () {
+            setTimeout(function () {
+                $("#@ViewData["Tab"]").trigger('click');
+            }, 10);
+        });
+    </script>
+}

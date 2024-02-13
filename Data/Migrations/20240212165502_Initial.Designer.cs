@@ -11,7 +11,7 @@ using WMBA_7_2_.Data;
 namespace WMBA_7_2_.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240124002848_Initial")]
+    [Migration("20240212165502_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -159,9 +159,11 @@ namespace WMBA_7_2_.Data.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
+                        .HasMaxLength(128)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ProviderKey")
+                        .HasMaxLength(128)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ProviderDisplayName")
@@ -199,9 +201,11 @@ namespace WMBA_7_2_.Data.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("LoginProvider")
+                        .HasMaxLength(128)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
+                        .HasMaxLength(128)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Value")

@@ -13,6 +13,7 @@ namespace WMBA_7_2_.Models
 
         [Display(Name = "Time")]
         [DataType(DataType.Time)]
+        [DisplayFormat(ApplyFormatInEditMode = true , DataFormatString = "{0:HH:mm}")]
         [Required(ErrorMessage = "Time cannot be empty!")]
         public DateTime GameTime { get; set; }
 
@@ -35,8 +36,8 @@ namespace WMBA_7_2_.Models
         [Required(ErrorMessage = "Must enter an away team.")]
         [StringLength(100, ErrorMessage = "Team name must have a max of 100 characters.")]
         public string AwayTeam { get; set; }
-        public ICollection<Team_Game> Team_Games { get; set; } = new HashSet<Team_Game>();
-        public ICollection<Line_Up> Line_Ups { get; set; } = new HashSet<Line_Up>();
+        public ICollection<Line_Up> Team_Games { get; set; } = new List<Line_Up>();
+       // public ICollection<Line_Up> Line_Ups { get; set; } = new List<Line_Up>();
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {

@@ -145,14 +145,14 @@ namespace WMBA_7_2_.Data
                 {
                     TeamName = "Dragons",
                     CoachID = 3,
-					DivisionID = 2
-				},
+                    DivisionID = 2
+                },
                 new Team
                 {
                     TeamName = "Bisons",
                     CoachID = 5,
                     DivisionID = 3
-				},
+                },
                 new Team
                 {
                     TeamName = "Whitecaps",
@@ -292,7 +292,7 @@ namespace WMBA_7_2_.Data
                             PlayerMemberID = "121",
                             PlayerFirstName = "Juan",
                             PlayerLastName = "Soto",
-                            PlayerNumber = 10,
+                            PlayerNumber = 1,
                             TeamID = 2,
                             DivisionID = 2,
                             IsActive = true
@@ -382,7 +382,7 @@ namespace WMBA_7_2_.Data
                             PlayerMemberID = "123",
                             PlayerFirstName = "Gerrit",
                             PlayerLastName = "Cole",
-                            PlayerNumber = 19,
+                            PlayerNumber = 1,
                             TeamID = 3,
                             DivisionID = 3,
                             IsActive = true
