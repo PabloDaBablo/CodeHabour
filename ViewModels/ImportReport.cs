@@ -1,4 +1,4 @@
-﻿namespace WMBA_7_2_.ViewModels
+﻿namespace WMBA_7_2_.Models
 {
     public class ImportReport
     {

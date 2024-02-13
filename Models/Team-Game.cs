@@ -17,5 +17,10 @@ namespace WMBA_7_2_.Models
         public Team Team { get; set; }
         public int GameID { get; set; }
         public Game Game { get; set; }
+        public int AwayTeamID { get; set; }
+        public ICollection<Team> AwayTeams { get; set; } = new List<Team>();
+        public int HomeTeamID {  get; set; }
+        public ICollection<Team>HomeTeams { get; set; } = new List<Team>();
+        
     }
 }

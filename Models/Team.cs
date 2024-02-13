@@ -10,7 +10,6 @@ namespace WMBA_7_2_.Models
         [Required (ErrorMessage = "Team Name cannot be empty.")]
         [StringLength(100, ErrorMessage = "Team name cannot be longer than 100 characters!")]
         public string TeamName { get; set; }
-
         public int? CoachID { get; set; }
         [Display(Name = "Coach")]
         public Coach? Coach { get; set; }
@@ -27,7 +26,7 @@ namespace WMBA_7_2_.Models
 
         [Display(Name = "Stats")]
         public ICollection<Stats> StatsTotal { get; set; } = new HashSet<Stats>();
-
+        
         [Display(Name = "Division")]
         public int? DivisionID { get; set; }
         [Display(Name = "Division")]

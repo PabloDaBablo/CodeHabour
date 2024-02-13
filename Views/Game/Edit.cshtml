@@ -31,12 +31,12 @@
             </div>
             <div class="form-group">
                 <label asp-for="HomeTeam" class="control-label"></label>
-                <input asp-for="HomeTeam" class="form-control" />
+                <select asp-for="HomeTeam" class="form-select" asp-items="ViewBag.HomeTeamID"></select>
                 <span asp-validation-for="HomeTeam" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="AwayTeam" class="control-label"></label>
-                <input asp-for="AwayTeam" class="form-control" />
+                <select asp-for="AwayTeam" class="form-select" asp-items="ViewBag.AwayTeamID"></select>
                 <span asp-validation-for="AwayTeam" class="text-danger"></span>
             </div>
             @* <div class="form-group">
