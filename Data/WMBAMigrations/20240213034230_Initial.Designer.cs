@@ -11,7 +11,7 @@ using WMBA_7_2_.Data;
 namespace WMBA_7_2_.Data.WMBAMigrations
 {
     [DbContext(typeof(WMBAContext))]
-    [Migration("20240212192420_Initial")]
+    [Migration("20240213034230_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -120,6 +120,9 @@ namespace WMBA_7_2_.Data.WMBAMigrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("ID");
+
+                    b.HasIndex("ID", "HomeTeam", "AwayTeam", "GameDate", "GameTime", "GameLocation")
+                        .IsUnique();
 
                     b.ToTable("Games");
                 });
@@ -345,22 +348,16 @@ namespace WMBA_7_2_.Data.WMBAMigrations
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("Team_GameAwayTeamID")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("Team_GameAwayTeamID1")
-                        .HasColumnType("INTEGER");
-
                     b.Property<int?>("Team_GameGameID")
                         .HasColumnType("INTEGER");
 
                     b.Property<int?>("Team_GameGameID1")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("Team_GameHomeTeamID")
+                    b.Property<int?>("Team_GameTeamID")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("Team_GameHomeTeamID1")
+                    b.Property<int?>("Team_GameTeamID1")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("ID");
@@ -369,9 +366,9 @@ namespace WMBA_7_2_.Data.WMBAMigrations
 
                     b.HasIndex("DivisionID");
 
-                    b.HasIndex("Team_GameGameID", "Team_GameHomeTeamID", "Team_GameAwayTeamID");
+                    b.HasIndex("Team_GameGameID", "Team_GameTeamID");
 
-                    b.HasIndex("Team_GameGameID1", "Team_GameHomeTeamID1", "Team_GameAwayTeamID1");
+                    b.HasIndex("Team_GameGameID1", "Team_GameTeamID1");
 
                     b.ToTable("Teams");
                 });
@@ -428,19 +425,19 @@ namespace WMBA_7_2_.Data.WMBAMigrations
                     b.Property<int>("GameID")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("HomeTeamID")
+                    b.Property<int>("TeamID")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("AwayTeamID")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("HomeTeamID")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("ID")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("TeamID")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("GameID", "HomeTeamID", "AwayTeamID");
+                    b.HasKey("GameID", "TeamID");
 
                     b.HasIndex("TeamID");
 
@@ -535,11 +532,11 @@ namespace WMBA_7_2_.Data.WMBAMigrations
 
                     b.HasOne("WMBA_7_2_.Models.Team_Game", null)
                         .WithMany("AwayTeams")
-                        .HasForeignKey("Team_GameGameID", "Team_GameHomeTeamID", "Team_GameAwayTeamID");
+                        .HasForeignKey("Team_GameGameID", "Team_GameTeamID");
 
                     b.HasOne("WMBA_7_2_.Models.Team_Game", null)
                         .WithMany("HomeTeams")
-                        .HasForeignKey("Team_GameGameID1", "Team_GameHomeTeamID1", "Team_GameAwayTeamID1");
+                        .HasForeignKey("Team_GameGameID1", "Team_GameTeamID1");
 
                     b.Navigation("Coach");
 

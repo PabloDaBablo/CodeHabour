@@ -247,7 +247,7 @@ namespace WMBA_7_2_.Controllers
                 var uniqueClubs = imported.GroupBy(d => d.Club).Select(i => i.First()).Select(d => d.Club);
                 //For Team, we only want the name of the Team so we split the string to remove the Division
                 //var uniqueTeams = uniqueDivisionTeams.Select(sub => sub.Split(' ')[1]).ToList();
-                var uniqueTeams = uniqueDivisionTeams.Select(sub => sub.Substring(3)).ToList();
+                var uniqueTeams = uniqueDivisionTeams.Select(sub => sub.Substring(3).TrimStart()).ToList();
                 //Now you can go on to check each of these to see if they are in the databse already and add 
                 //them if they are not.  Then you should be ready to add the players and assign them to their
                 //lookup values.
@@ -270,18 +270,52 @@ namespace WMBA_7_2_.Controllers
                     player.PlayerLastName = imported[i].Last_Name;
                     player.PlayerMemberID = imported[i].Member_ID;
                     //player.TeamID = _context.Teams.FirstOrDefault(p => p.TeamName == imported[i].Team).ID;
+                    player.TeamID = GetTeamID(imported[i].Team.Substring(3).TrimStart());
                     //player.DivisionID = _context.Divisions.FirstOrDefault(p => p.DivisionTeams == imported[i].Division).ID;
+                    player.DivisionID = GetDivisionID(imported[i].Division); ;
+
                     player.IsActive = true;
                     _context.Players.Add(player);
                 }
                 await _context.SaveChangesAsync();
-            }
+            } 
             else
             {
                 feedBack = "Error: You may have selected the wrong file to upload.";
             }
         }
-            private void CheckAndAddTeam(string teamName)
+
+        private int GetDivisionID(string division)
+        {
+            bool flag = true;
+            while (flag)
+            foreach (var d in _context.Divisions)
+            {
+                    if (d.DivAge == division)
+                    {
+                        flag = false;
+                        return d.ID;
+                    }
+            };
+            return 0;
+        }
+
+        private int GetTeamID(string team)
+        {
+            bool flag = true;
+            while (flag)
+                foreach (var t in _context.Teams)
+            {
+                if(team == t.TeamName)
+                {
+                    flag=false;
+                    return t.ID;
+                }
+            };
+            return 0;
+        }
+
+        private void CheckAndAddTeam(string teamName)
             {
                 // Check if a team exists in the database
                 bool teamExists = _context.Teams.Any(t => t.TeamName == teamName);

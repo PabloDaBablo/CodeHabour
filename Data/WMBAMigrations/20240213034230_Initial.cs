@@ -245,15 +245,15 @@ namespace WMBA_7_2_.Data.WMBAMigrations
                 name: "Team_Games",
                 columns: table => new
                 {
+                    TeamID = table.Column<int>(type: "INTEGER", nullable: false),
                     GameID = table.Column<int>(type: "INTEGER", nullable: false),
-                    AwayTeamID = table.Column<int>(type: "INTEGER", nullable: false),
-                    HomeTeamID = table.Column<int>(type: "INTEGER", nullable: false),
                     ID = table.Column<int>(type: "INTEGER", nullable: false),
-                    TeamID = table.Column<int>(type: "INTEGER", nullable: false)
+                    AwayTeamID = table.Column<int>(type: "INTEGER", nullable: false),
+                    HomeTeamID = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Team_Games", x => new { x.GameID, x.HomeTeamID, x.AwayTeamID });
+                    table.PrimaryKey("PK_Team_Games", x => new { x.GameID, x.TeamID });
                     table.ForeignKey(
                         name: "FK_Team_Games_Games_GameID",
                         column: x => x.GameID,
@@ -271,12 +271,10 @@ namespace WMBA_7_2_.Data.WMBAMigrations
                     TeamName = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
                     CoachID = table.Column<int>(type: "INTEGER", nullable: true),
                     DivisionID = table.Column<int>(type: "INTEGER", nullable: true),
-                    Team_GameAwayTeamID = table.Column<int>(type: "INTEGER", nullable: true),
-                    Team_GameAwayTeamID1 = table.Column<int>(type: "INTEGER", nullable: true),
                     Team_GameGameID = table.Column<int>(type: "INTEGER", nullable: true),
                     Team_GameGameID1 = table.Column<int>(type: "INTEGER", nullable: true),
-                    Team_GameHomeTeamID = table.Column<int>(type: "INTEGER", nullable: true),
-                    Team_GameHomeTeamID1 = table.Column<int>(type: "INTEGER", nullable: true)
+                    Team_GameTeamID = table.Column<int>(type: "INTEGER", nullable: true),
+                    Team_GameTeamID1 = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -292,15 +290,15 @@ namespace WMBA_7_2_.Data.WMBAMigrations
                         principalTable: "Divisions",
                         principalColumn: "ID");
                     table.ForeignKey(
-                        name: "FK_Teams_Team_Games_Team_GameGameID1_Team_GameHomeTeamID1_Team_GameAwayTeamID1",
-                        columns: x => new { x.Team_GameGameID1, x.Team_GameHomeTeamID1, x.Team_GameAwayTeamID1 },
+                        name: "FK_Teams_Team_Games_Team_GameGameID1_Team_GameTeamID1",
+                        columns: x => new { x.Team_GameGameID1, x.Team_GameTeamID1 },
                         principalTable: "Team_Games",
-                        principalColumns: new[] { "GameID", "HomeTeamID", "AwayTeamID" });
+                        principalColumns: new[] { "GameID", "TeamID" });
                     table.ForeignKey(
-                        name: "FK_Teams_Team_Games_Team_GameGameID_Team_GameHomeTeamID_Team_GameAwayTeamID",
-                        columns: x => new { x.Team_GameGameID, x.Team_GameHomeTeamID, x.Team_GameAwayTeamID },
+                        name: "FK_Teams_Team_Games_Team_GameGameID_Team_GameTeamID",
+                        columns: x => new { x.Team_GameGameID, x.Team_GameTeamID },
                         principalTable: "Team_Games",
-                        principalColumns: new[] { "GameID", "HomeTeamID", "AwayTeamID" });
+                        principalColumns: new[] { "GameID", "TeamID" });
                 });
 
             migrationBuilder.CreateTable(
@@ -341,6 +339,12 @@ namespace WMBA_7_2_.Data.WMBAMigrations
                 name: "IX_GameLine_Up_Team_GamesID",
                 table: "GameLine_Up",
                 column: "Team_GamesID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Games_ID_HomeTeam_AwayTeam_GameDate_GameTime_GameLocation",
+                table: "Games",
+                columns: new[] { "ID", "HomeTeam", "AwayTeam", "GameDate", "GameTime", "GameLocation" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Line_Up_Players_Line_UpID",
@@ -411,14 +415,14 @@ namespace WMBA_7_2_.Data.WMBAMigrations
                 column: "DivisionID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Teams_Team_GameGameID_Team_GameHomeTeamID_Team_GameAwayTeamID",
+                name: "IX_Teams_Team_GameGameID_Team_GameTeamID",
                 table: "Teams",
-                columns: new[] { "Team_GameGameID", "Team_GameHomeTeamID", "Team_GameAwayTeamID" });
+                columns: new[] { "Team_GameGameID", "Team_GameTeamID" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Teams_Team_GameGameID1_Team_GameHomeTeamID1_Team_GameAwayTeamID1",
+                name: "IX_Teams_Team_GameGameID1_Team_GameTeamID1",
                 table: "Teams",
-                columns: new[] { "Team_GameGameID1", "Team_GameHomeTeamID1", "Team_GameAwayTeamID1" });
+                columns: new[] { "Team_GameGameID1", "Team_GameTeamID1" });
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Players_Teams_TeamID",
