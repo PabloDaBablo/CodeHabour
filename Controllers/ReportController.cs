@@ -225,11 +225,6 @@ namespace WMBA_7_2_.Controllers
                 //You will get a warning about using an await for this to be async but that
                 //will come when you start saving data to the database.
 
-                if (ModelState.IsValid)
-                {
-                    await AddPlayer(imported, feedBack);
-                    _context.Add(imported);
-                    await _context.SaveChangesAsync();
                 }
                 else
                 {
@@ -237,24 +232,8 @@ namespace WMBA_7_2_.Controllers
                 }
                 return;
             }
-
         }
 
-        private static Task AddPlayer(List<ImportReport> imported, string feedBack)
-        {
-            foreach (ImportReport ir in imported)
-            {
-                Player player = new Player();
-                player.PlayerFirstName = ir.First_Name;
-                player.PlayerLastName = ir.Last_Name;
-                player.PlayerMemberID = ir.Member_ID;
-               // player.Division.DivAge = ir.Division;
-               // player.Team.TeamName = ir.Team;
-            }
-            return Task.CompletedTask;
-        }
-    }
-}
         
     
 
