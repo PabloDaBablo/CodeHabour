@@ -66,10 +66,10 @@ $(document).ready(function () {
         }
     });
 
-    ('#Save').off('click').on('click', function (e) {
-        e.preventDefault(); 
+    $('#Save').off('click').on('click', function (e) {
+        e.preventDefault();
         console.log('Save button clicked');
-        if (validateAllFields()) {
+        if (validatePlayerForm()) {
             console.log('Validation passed, proceeding to insert.');
             Insert();
         } else {
@@ -102,6 +102,7 @@ $(document).ready(function () {
 
 $('#btnAdd').click(function () {
     $('#PlayerModal').modal('show');
+    resetValidationStates();
     $('#modalTitle').text('Add Player');
     $('#Update').css('display', 'none');
     $('#Save').css('display', 'block');
@@ -127,7 +128,11 @@ function Insert() {
             if (response == null || response == undefined || response.length == 0) {
                 alert('Unable to Add Player Data.');
             }
+            else if (response.error) {
+                alert(response.error)
+            }
             else {
+                alert(response)
                 HideModal()
                 GetPlayers();
             }
@@ -141,6 +146,7 @@ function Insert() {
 
 /* Hide Modal */
 function HideModal() {
+    console.log('HideModal called');
     ClearData()
     $('#PlayerModal').modal('hide');
 };
@@ -169,6 +175,9 @@ function Edit(id) {
             }
             else if (response.length == 0) {
                 alert('Player Data Not Found with the ID.');
+            }
+            else if (response.error) {
+                alert(response.error)
             }
             else {
                 $('#PlayerModal').modal('show')
@@ -212,6 +221,9 @@ function Update() {
             if (response == null || response == undefined || response.length == 0) {
                 alert('Unable to save Player Data.');
             }
+            else if (response.error) {
+                alert(response.error)
+            }
             else {
                 HideModal()
                 GetPlayers();
@@ -237,6 +249,9 @@ function Delete(id) {
                 }
                 else if (response.length == 0) {
                     alert('Player Data Not Found with the ID.');
+                }
+                else if (response.error) {
+                    alert(response.error)
                 }
                 else {
                     GetPlayers()
@@ -322,54 +337,51 @@ $(document).on('click', '.edit', function () {
     Edit(id);
 });
 
-function showValidationError(inputId, message) {
-    $(`#${inputId}`).addClass('is-invalid');
-    $(`#${inputId}Error`).text(message);
-}
+function validatePlayerForm() {
+    let isValid = true;
+    
+    const regexAlphaNumeric = /^[a-zA-Z0-9]+$/;
+    const regexAlphaSpaces = /^[a-zA-Z\s]+$/;
+    const regexNumericRange = /^(?:[0-9]|[1-9][0-9])$/; 
 
-function clearValidationError(inputId) {
-    $(`#${inputId}`).removeClass('is-invalid');
-    $(`#${inputId}Error`).text('');
-}
+    validateField('PlayerMemberID', regexAlphaNumeric, 'Member ID should contain letters and numbers only.');
+    validateField('PlayerFirstName', regexAlphaSpaces, 'First name should contain only letters and spaces.');
+    validateField('PlayerLastName', regexAlphaSpaces, 'Last name should contain only letters and spaces.');
+    validateField('PlayerNumber', regexNumericRange, 'Player number must be between 0-99.');
 
-function validatePlayerMemberID(value) {
-    var regex = /^[a-zA-Z0-9]+$/;
-    if (!regex.test(value)) {
-        showValidationError('PlayerMemberID', 'MemberID should only contain letters and numbers.');
-        return false;
+    
+
+    function validateField(fieldId, regex, errorMessage) {
+        if (!regex.test($(`#${fieldId}`).val())) {
+            showError(fieldId, errorMessage);
+            isValid = false;
+        } else {
+            clearError(fieldId);
+        }
     }
-    clearValidationError('PlayerMemberID');
-    return true;
+
+    return isValid;
 }
 
-function validateName(value, fieldName) {
-    var regex = /^[a-zA-Z\s]+$/;
-    if (!regex.test(value)) {
-        showValidationError(fieldName, `First or Last name should only contain letters and spaces.`);
-        return false;
-    }
-    clearValidationError(fieldName);
-    return true;
+function showError(fieldId, message) {
+    $(`#${fieldId}`).addClass('is-invalid');
+    $(`#${fieldId}Error`).text(message).show();
 }
 
-function validatePlayerNumber(value) {
-    var number = parseInt(value, 10);
-    if (isNaN(number) || number < 0 || number > 99) {
-        showValidationError('PlayerNumber', 'Player number should be an integer between 0 and 99.');
-        return false;
-    }
-    clearValidationError('PlayerNumber');
-    return true;
+function clearError(fieldId) {
+    $(`#${fieldId}`).removeClass('is-invalid');
+    $(`#${fieldId}Error`).hide();
 }
 
-function validateAllFields() {
-    var isValid = true;
-    isValid &= validatePlayerMemberID($('#PlayerMemberID').val());
-    isValid &= validateName($('#PlayerFirstName').val(), 'PlayerFirstName');
-    isValid &= validateName($('#PlayerLastName').val(), 'PlayerLastName');
-    isValid &= validatePlayerNumber($('#PlayerNumber').val());
-
-    return isValid === 1; 
+function resetValidationStates() {
+    
+    clearError('PlayerMemberID');
+    clearError('PlayerFirstName');
+    clearError('PlayerLastName');
+    clearError('PlayerNumber');
+    
 }
 
-
+$('#PlayerModal').on('hidden.bs.modal', function () {
+    resetValidationStates();
+});
