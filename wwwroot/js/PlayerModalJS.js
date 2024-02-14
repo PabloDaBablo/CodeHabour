@@ -66,10 +66,14 @@ $(document).ready(function () {
         }
     });
 
-    $('#Save').off('click').on('click', function (e) {
-        e.preventDefault();
+    ('#Save').off('click').on('click', function (e) {
+        e.preventDefault(); 
+        console.log('Save button clicked');
         if (validateAllFields()) {
+            console.log('Validation passed, proceeding to insert.');
             Insert();
+        } else {
+            console.log('Validation failed, insert not called.');
         }
     });
     $('#PlayerModal').on('hidden.bs.modal', function () {
@@ -126,7 +130,6 @@ function Insert() {
             else {
                 HideModal()
                 GetPlayers();
-                alert(response)
             }
         },
         error: function () {
@@ -212,7 +215,7 @@ function Update() {
             else {
                 HideModal()
                 GetPlayers();
-                alert(response)
+                alert("Successfully edited Player Data")
             }
         },
         error: function () {
@@ -237,7 +240,7 @@ function Delete(id) {
                 }
                 else {
                     GetPlayers()
-                    alert(response)
+                    alert("Successfully deleted Player Data")
                 }
             },
             error: function () {

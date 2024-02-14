@@ -70,6 +70,9 @@ namespace WMBA_7_2_.Data
                 .ToView(nameof(Reports))
                 .HasKey(r => r.ID);
 
+            modelBuilder.Entity<Player>()
+                .HasIndex(p => p.PlayerMemberID).IsUnique();
+
         }
 
     }
