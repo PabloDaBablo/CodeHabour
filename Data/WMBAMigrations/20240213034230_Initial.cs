@@ -463,6 +463,8 @@ namespace WMBA_7_2_.Data.WMBAMigrations
                 principalTable: "Teams",
                 principalColumn: "ID",
                 onDelete: ReferentialAction.Cascade);
+
+            ExtraMigration.Steps(migrationBuilder);
         }
 
         /// <inheritdoc />

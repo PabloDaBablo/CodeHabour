@@ -27,117 +27,83 @@ namespace WMBA_7_2_.Controllers
         {
             return View();
         }
-        public IActionResult Reports() 
+        public IActionResult Reports()
         {
             var report = _context.Reports.AsNoTracking();
-            
+
             return View(report);
         }
-        public IActionResult DownloadGames()
+        public IActionResult DownloadSampleExcel()
         {
-            //Get the appointments
-            var games = from g in _context.Games
-                        select new
-                        {
-                            Date = g.GameDate,
-                            Time = g.GameTime,
-                            Home = g.HomeTeam,
-                            Away = g.AwayTeam,
-                            Location = g.GameLocation
-                        };
-            //How many rows?
-            int numRows = games.Count();
-
-            if (numRows > 0) //We have data
+            //Create a new spreadsheet from scratch.
+            using (ExcelPackage excel = new ExcelPackage())
             {
-                //Create a new spreadsheet from scratch.
-                using (ExcelPackage excel = new ExcelPackage())
+                var workSheet = excel.Workbook.Worksheets.Add("Sample");
+
+                //Set Style and backgound colour of headings
+                using (ExcelRange headings = workSheet.Cells[1, 1, 1, 8])
                 {
+                    headings.Style.Font.Bold = true;
+                    var fill = headings.Style.Fill;
+                    fill.PatternType = ExcelFillStyle.Solid;
+                    fill.BackgroundColor.SetColor(Color.LightBlue);
+                }
 
-                    //Note: you can also pull a spreadsheet out of the database if you
-                    //have saved it in the normal way we do, as a Byte Array in a Model
-                    //such as the UploadedFile class.
-                    //
-                    // Suppose...
-                    //
-                    // var theSpreadsheet = _context.UploadedFiles.Include(f => f.FileContent).Where(f => f.ID == id).SingleOrDefault();
-                    //
-                    //    //Pass the Byte[] FileContent to a MemoryStream
-                    //
-                    // using (MemoryStream memStream = new MemoryStream(theSpreadsheet.FileContent.Content))
-                    // {
-                    //     ExcelPackage package = new ExcelPackage(memStream);
-                    // }
+                //Manually set width of columns as well
+                workSheet.Column(1).Width = 15;
+                workSheet.Column(2).Width = 15;
+                workSheet.Column(3).Width = 15;
+                workSheet.Column(4).Width = 15;
+                workSheet.Column(5).Width = 10;
+                workSheet.Column(6).Width = 10;
+                workSheet.Column(7).Width = 35;
+                workSheet.Column(8).Width = 20;
 
-                    var workSheet = excel.Workbook.Worksheets.Add("Games");
+                //Add a title and timestamp at the top of the report
+                workSheet.Cells[1, 1].Value = "ID";
+                workSheet.Cells[1, 2].Value = "First Name";
+                workSheet.Cells[1, 3].Value = "Last Name";
+                workSheet.Cells[1, 4].Value = "Member ID";
+                workSheet.Cells[1, 5].Value = "Season";
+                workSheet.Cells[1, 6].Value = "Division";
+                workSheet.Cells[1, 7].Value = "Club";
+                workSheet.Cells[1, 8].Value = "Team";
+                workSheet.Cells[1, 10].Value = "Welland Minor Baseball Association";
+                using (ExcelRange Rng = workSheet.Cells[1, 10, 1, 18])
+                {
+                    Rng.Merge = true; //Merge columns start and end range
+                    Rng.Style.Font.Bold = true; //Font should be bold
+                    Rng.Style.Font.Size = 18;
+                    Rng.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                }
+                //Since the time zone where the server is running can be different, adjust to 
+                //Local for us.
+                DateTime utcDate = DateTime.UtcNow;
+                TimeZoneInfo esTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
+                DateTime localDate = TimeZoneInfo.ConvertTimeFromUtc(utcDate, esTimeZone);
+                using (ExcelRange Rng = workSheet.Cells[2, 12])
+                {
+                    Rng.Value = "Created: " + localDate.ToShortTimeString() + " on " +
+                        localDate.ToShortDateString();
+                    Rng.Style.Font.Bold = true;
+                    Rng.Style.Font.Size = 12;
+                    Rng.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                }
 
-                    //Note: Cells[row, column]
-                    workSheet.Cells[3, 1].LoadFromCollection(games, true);
-
-                    //Style first column for dates
-                    workSheet.Column(1).Style.Numberformat.Format = "yyyy-mm-dd";
-
-
-                    //Note: You can define a BLOCK of cells: Cells[startRow, startColumn, endRow, endColumn]
-                    //Make Date and Patient Bold
-                    workSheet.Cells[4, 1, numRows + 3, 2].Style.Font.Bold = true;
-
-
-                    //Set Style and backgound colour of headings
-                    using (ExcelRange headings = workSheet.Cells[3, 1, 3, 5])
-                    {
-                        headings.Style.Font.Bold = true;
-                        var fill = headings.Style.Fill;
-                        fill.PatternType = ExcelFillStyle.Solid;
-                        fill.BackgroundColor.SetColor(Color.LightBlue);
-                    }
-
-
-                    //Autofit columns
-                    workSheet.Cells.AutoFitColumns();
-                    //Note: You can manually set width of columns as well
-                    //workSheet.Column(7).Width = 10;
-
-                    //Add a title and timestamp at the top of the report
-                    workSheet.Cells[1, 1].Value = "WMBA Games";
-                    using (ExcelRange Rng = workSheet.Cells[1, 1, 1, 5])
-                    {
-                        Rng.Merge = true; //Merge columns start and end range
-                        Rng.Style.Font.Bold = true; //Font should be bold
-                        Rng.Style.Font.Size = 18;
-                        Rng.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-                    }
-                    //Since the time zone where the server is running can be different, adjust to 
-                    //Local for us.
-                    DateTime utcDate = DateTime.UtcNow;
-                    TimeZoneInfo esTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
-                    DateTime localDate = TimeZoneInfo.ConvertTimeFromUtc(utcDate, esTimeZone);
-                    using (ExcelRange Rng = workSheet.Cells[2, 6])
-                    {
-                        Rng.Value = "Created: " + localDate.ToShortTimeString() + " on " +
-                            localDate.ToShortDateString();
-                        Rng.Style.Font.Bold = true; //Font should be bold
-                        Rng.Style.Font.Size = 12;
-                        Rng.Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
-                    }
-
-                    //Ok, time to download the Excel
-
-                    try
-                    {
-                        Byte[] theData = excel.GetAsByteArray();
-                        string filename = "WMBA_Games.xlsx";
-                        string mimeType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-                        return File(theData, mimeType, filename);
-                    }
-                    catch (Exception)
-                    {
-                        return BadRequest("Could not build and download the file.");
-                    }
+                try
+                {
+                    Byte[] theData = excel.GetAsByteArray();
+                    string filename = "Sample_WMBA_Players.xlsx";
+                    string mimeType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                    return File(theData, mimeType, filename);
+                }
+                catch (Exception)
+                {
+                    return BadRequest("Could not build and download the file.");
                 }
             }
-            return NotFound("No data.");
         }
+
         [HttpPost]
         public async Task<IActionResult> ImportFromExcel(IFormFile theExcel)
         {
@@ -209,7 +175,13 @@ namespace WMBA_7_2_.Controllers
 
             //Test some of the heading cells to help confirm this is the right kind of file.
             if (workSheet.Cells[1, 1].Text == "ID" &&
-                workSheet.Cells[1, 4].Text == "Member ID")
+                workSheet.Cells[1, 2].Text == "First Name" &&
+                workSheet.Cells[1, 3].Text == "Last Name" &&
+                workSheet.Cells[1, 4].Text == "Member ID" &&
+                workSheet.Cells[1, 5].Text == "Season" &&
+                workSheet.Cells[1, 6].Text == "Division" &&
+                workSheet.Cells[1, 7].Text == "Club" &&
+                workSheet.Cells[1, 8].Text == "Team")
             {
                 for (int row = start.Row + 1; row <= end.Row; row++)
                 {
@@ -251,7 +223,7 @@ namespace WMBA_7_2_.Controllers
                 //Now you can go on to check each of these to see if they are in the databse already and add 
                 //them if they are not.  Then you should be ready to add the players and assign them to their
                 //lookup values.
-                
+
                 foreach (var t in uniqueTeams)
                 {
                     CheckAndAddTeam(t);
@@ -261,7 +233,7 @@ namespace WMBA_7_2_.Controllers
                 {
                     CheckAndAddDivision(d);
                 }
-               
+
                 //Add the Players
                 for (int i = 0; i < imported.Count(); i++)
                 {
@@ -269,81 +241,80 @@ namespace WMBA_7_2_.Controllers
                     player.PlayerFirstName = imported[i].First_Name;
                     player.PlayerLastName = imported[i].Last_Name;
                     player.PlayerMemberID = imported[i].Member_ID;
-                    //player.TeamID = _context.Teams.FirstOrDefault(p => p.TeamName == imported[i].Team).ID;
-                    player.TeamID = GetTeamID(imported[i].Team.Substring(3).TrimStart());
-                    //player.DivisionID = _context.Divisions.FirstOrDefault(p => p.DivisionTeams == imported[i].Division).ID;
-                    player.DivisionID = GetDivisionID(imported[i].Division); ;
-
+                    player.TeamID = _context.Teams.FirstOrDefault(p => p.TeamName == imported[i].Team.Substring(3).TrimStart()).ID;
+                    //player.TeamID = GetTeamID(imported[i].Team.Substring(3).TrimStart());
+                    player.DivisionID = _context.Divisions.FirstOrDefault(p => p.DivAge == imported[i].Division).ID;
+                    //player.DivisionID = GetDivisionID(imported[i].Division); ;
                     player.IsActive = true;
                     _context.Players.Add(player);
                 }
                 await _context.SaveChangesAsync();
-            } 
+            }
             else
             {
                 feedBack = "Error: You may have selected the wrong file to upload.";
             }
         }
 
-        private int GetDivisionID(string division)
-        {
-            bool flag = true;
-            while (flag)
-            foreach (var d in _context.Divisions)
-            {
-                    if (d.DivAge == division)
-                    {
-                        flag = false;
-                        return d.ID;
-                    }
-            };
-            return 0;
-        }
+        //private int GetDivisionID(string division)
+        //{
+        //    bool flag = true;
+        //    while (flag)
+        //        foreach (var d in _context.Divisions)
+        //        {
+        //            if (d.DivAge == division)
+        //            {
+        //                flag = false;
+        //                return d.ID;
+        //            }
+        //        };
+        //    return 0;
+        //}
 
-        private int GetTeamID(string team)
-        {
-            bool flag = true;
-            while (flag)
-                foreach (var t in _context.Teams)
-            {
-                if(team == t.TeamName)
-                {
-                    flag=false;
-                    return t.ID;
-                }
-            };
-            return 0;
-        }
+        //private int GetTeamID(string team)
+        //{
+        //    bool flag = true;
+        //    while (flag)
+        //        foreach (var t in _context.Teams)
+        //        {
+        //            if (team == t.TeamName)
+        //            {
+        //                flag = false;
+        //                return t.ID;
+        //            }
+        //        };
+        //    return 0;
+        //}
 
         private void CheckAndAddTeam(string teamName)
-            {
-                // Check if a team exists in the database
-                bool teamExists = _context.Teams.Any(t => t.TeamName == teamName);
+        {
+            // Check if a team exists in the database
+            bool teamExists = _context.Teams.Any(t => t.TeamName == teamName);
 
-                if (!teamExists)
-                {
-                    var newTeam = new Team() {TeamName = teamName };
-                    _context.Teams.Add(newTeam);
-                    _context.SaveChanges();
-                }
-            }
-            private void CheckAndAddDivision(string division)
+            if (!teamExists)
             {
-                // Check if division exists in the database
-                bool divisionExists = _context.Divisions.Any(d => d.DivAge == division);
-
-                if (!divisionExists)
-                {
-                    var newDivision = new Division() {DivAge = division};
-                    _context.Divisions.Add(newDivision);
-                    _context.SaveChanges();
-                }
+                var newTeam = new Team() { TeamName = teamName };
+                _context.Teams.Add(newTeam);
+                _context.SaveChanges();
             }
+        }
+        private void CheckAndAddDivision(string division)
+        {
+            // Check if division exists in the database
+            bool divisionExists = _context.Divisions.Any(d => d.DivAge == division);
+
+            if (!divisionExists)
+            {
+                var newDivision = new Division() { DivAge = division };
+                _context.Divisions.Add(newDivision);
+                _context.SaveChanges();
+            }
+        }
     }
 }
 
-        
-    
 
 
-	
+
+
+
