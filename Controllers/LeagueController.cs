@@ -10,93 +10,85 @@ using WMBA_7_2_.Models;
 
 namespace WMBA_7_2_.Controllers
 {
-    public class DivisionController : Controller
+    public class LeagueController : Controller
     {
         private readonly WMBAContext _context;
 
-        public DivisionController(WMBAContext context)
+        public LeagueController(WMBAContext context)
         {
             _context = context;
         }
 
-        // GET: Division
+        // GET: Leagues
         public async Task<IActionResult> Index()
         {
-
-            ViewData["LeagueTypeID"] = new SelectList(_context.Leagues, "ID", "LeagueType");
-            return View(await _context.Divisions.ToListAsync());
-
-
+              return View(await _context.Leagues.ToListAsync());
         }
 
-        // GET: Division/Details/5
+        // GET: Leagues/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Divisions == null)
+            if (id == null || _context.Leagues == null)
             {
                 return NotFound();
             }
 
-            var division = await _context.Divisions
+            var league = await _context.Leagues
                 .FirstOrDefaultAsync(m => m.ID == id);
-            if (division == null)
+            if (league == null)
             {
                 return NotFound();
             }
 
-            return View(division);
+            return View(league);
         }
 
-        // GET: Division/Create
+        // GET: Leagues/Create
         public IActionResult Create()
         {
-
-            ViewData["LeagueTypeID"] = new SelectList(_context.Leagues, "ID", "LeagueType");
             return View();
         }
 
-        // POST: Division/Create
+        // POST: Leagues/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,DivAge,DivisionTeams,LeagueTypeID")] Division division)
+        public async Task<IActionResult> Create([Bind("ID,LeagueType")] League league)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(division);
+                _context.Add(league);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index", "ManageLookup");
             }
-
-            ViewData["LeagueTypeID"] = new SelectList(_context.Leagues, "ID", "LeagueType");
-            return View(division);
+            return View(league);
         }
 
-        // GET: Division/Edit/5
+        // GET: Leagues/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Divisions == null)
+            if (id == null || _context.Leagues == null)
             {
                 return NotFound();
             }
 
-            var division = await _context.Divisions.FindAsync(id);
-            if (division == null)
+            var league = await _context.Leagues.FindAsync(id);
+            if (league == null)
             {
                 return NotFound();
             }
-            return View(division);
+            return View(league);
         }
 
-        // POST: Division/Edit/5
+        // POST: Leagues/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,DivAge,DivisionTeams,LeagueTypeID")] Division division)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,LeagueType")] League league)
         {
-            if (id != division.ID)
+            if (id != league.ID)
             {
                 return NotFound();
             }
@@ -105,12 +97,12 @@ namespace WMBA_7_2_.Controllers
             {
                 try
                 {
-                    _context.Update(division);
+                    _context.Update(league);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!DivisionExists(division.ID))
+                    if (!LeagueExists(league.ID))
                     {
                         return NotFound();
                     }
@@ -121,49 +113,49 @@ namespace WMBA_7_2_.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(division);
+            return View(league);
         }
 
-        // GET: Division/Delete/5
+        // GET: Leagues/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Divisions == null)
+            if (id == null || _context.Leagues == null)
             {
                 return NotFound();
             }
 
-            var division = await _context.Divisions
+            var league = await _context.Leagues
                 .FirstOrDefaultAsync(m => m.ID == id);
-            if (division == null)
+            if (league == null)
             {
                 return NotFound();
             }
 
-            return View(division);
+            return View(league);
         }
 
-        // POST: Division/Delete/5
+        // POST: Leagues/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Divisions == null)
+            if (_context.Leagues == null)
             {
-                return Problem("Entity set 'WMBAContext.Divisions'  is null.");
+                return Problem("Entity set 'WMBAContext.Leagues'  is null.");
             }
-            var division = await _context.Divisions.FindAsync(id);
-            if (division != null)
+            var league = await _context.Leagues.FindAsync(id);
+            if (league != null)
             {
-                _context.Divisions.Remove(division);
+                _context.Leagues.Remove(league);
             }
             
             await _context.SaveChangesAsync();
             return RedirectToAction("Index", "ManageLookup");
         }
 
-        private bool DivisionExists(int id)
+        private bool LeagueExists(int id)
         {
-          return _context.Divisions.Any(e => e.ID == id);
+          return _context.Leagues.Any(e => e.ID == id);
         }
     }
 }

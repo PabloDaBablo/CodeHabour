@@ -6,13 +6,13 @@
 <div>
     <nav>
         <div class="nav nav-tabs" id="nav-tab" role="tablist">
-            <button class="nav-link active" id="Division-Tab" data-bs-toggle="tab" data-bs-target="#SpecialtyPanel" type="button" role="tab" aria-controls="SpecialtiesPanel" aria-selected="true">Divisions</button>
-            
+            <button class="nav-link active" id="Division-Tab" data-bs-toggle="tab" data-bs-target="#DivisionPanel" type="button" role="tab" aria-controls="DivisionPanel" aria-selected="true">Divisions</button>
+            <button class="nav-link" id="League-Tab" data-bs-toggle="tab" data-bs-target="#LeaguePanel" type="button" role="tab" aria-controls="LeaguePanel" aria-selected="false">Leagues</button>
         </div>
     </nav>
     <div class="tab-content" id="nav-tabContent">
-        <div class="tab-pane fade show active" id="DivisionPanel" role="tabpanel" aria-labelledby="DivisionTab"><br />1</div>
-        
+        <div class="tab-pane fade show active" id="DivisionPanel" role="tabpanel" aria-labelledby="Division-Tab"><br />1</div>
+        <div class="tab-pane fade" id="LeaguePanel" role="tabpanel" aria-labelledby="League-Tab"><br />2</div>
     </div>
 
 </div>
@@ -25,12 +25,19 @@
             switch (activeTab) {
                 case 'Division-Tab': $('#DivisionPanel').load('/ManageLookup/Division');
                     break;
+                case 'League-Tab': $('#LeaguePanel').load('/ManageLookup/League');
+                    break;
                 default: break;
             };
             return;
         };
         $('.nav-link').click(function () {
             var activeTab = $(this).attr("id");
+            $('.nav-link').removeClass('active'); 
+            $(this).addClass('active'); 
+            $('.tab-pane').removeClass('show active'); 
+            var targetPane = $(this).data('bs-target');
+            $(targetPane).addClass('show active'); 
             refreshTab(activeTab);
         });
         $(".tab-content").on("click", ".linkClick", function (event) {
