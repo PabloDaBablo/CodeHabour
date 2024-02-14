@@ -59,7 +59,7 @@ namespace WMBA_7_2_.Controllers
                 workSheet.Column(7).Width = 35;
                 workSheet.Column(8).Width = 20;
 
-                //Add a title and timestamp at the top of the report
+                //Add a headings and a title
                 workSheet.Cells[1, 1].Value = "ID";
                 workSheet.Cells[1, 2].Value = "First Name";
                 workSheet.Cells[1, 3].Value = "Last Name";
@@ -69,25 +69,13 @@ namespace WMBA_7_2_.Controllers
                 workSheet.Cells[1, 7].Value = "Club";
                 workSheet.Cells[1, 8].Value = "Team";
                 workSheet.Cells[1, 10].Value = "Welland Minor Baseball Association";
+               
                 using (ExcelRange Rng = workSheet.Cells[1, 10, 1, 18])
                 {
-                    Rng.Merge = true; //Merge columns start and end range
-                    Rng.Style.Font.Bold = true; //Font should be bold
+                    Rng.Merge = true; 
+                    Rng.Style.Font.Bold = true; 
                     Rng.Style.Font.Size = 18;
                     Rng.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-                }
-                //Since the time zone where the server is running can be different, adjust to 
-                //Local for us.
-                DateTime utcDate = DateTime.UtcNow;
-                TimeZoneInfo esTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
-                DateTime localDate = TimeZoneInfo.ConvertTimeFromUtc(utcDate, esTimeZone);
-                using (ExcelRange Rng = workSheet.Cells[2, 12])
-                {
-                    Rng.Value = "Created: " + localDate.ToShortTimeString() + " on " +
-                        localDate.ToShortDateString();
-                    Rng.Style.Font.Bold = true;
-                    Rng.Style.Font.Size = 12;
-                    Rng.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
                 }
 
                 try
@@ -242,9 +230,7 @@ namespace WMBA_7_2_.Controllers
                     player.PlayerLastName = imported[i].Last_Name;
                     player.PlayerMemberID = imported[i].Member_ID;
                     player.TeamID = _context.Teams.FirstOrDefault(p => p.TeamName == imported[i].Team.Substring(3).TrimStart()).ID;
-                    //player.TeamID = GetTeamID(imported[i].Team.Substring(3).TrimStart());
                     player.DivisionID = _context.Divisions.FirstOrDefault(p => p.DivAge == imported[i].Division).ID;
-                    //player.DivisionID = GetDivisionID(imported[i].Division); ;
                     player.IsActive = true;
                     _context.Players.Add(player);
                 }
@@ -255,36 +241,6 @@ namespace WMBA_7_2_.Controllers
                 feedBack = "Error: You may have selected the wrong file to upload.";
             }
         }
-
-        //private int GetDivisionID(string division)
-        //{
-        //    bool flag = true;
-        //    while (flag)
-        //        foreach (var d in _context.Divisions)
-        //        {
-        //            if (d.DivAge == division)
-        //            {
-        //                flag = false;
-        //                return d.ID;
-        //            }
-        //        };
-        //    return 0;
-        //}
-
-        //private int GetTeamID(string team)
-        //{
-        //    bool flag = true;
-        //    while (flag)
-        //        foreach (var t in _context.Teams)
-        //        {
-        //            if (team == t.TeamName)
-        //            {
-        //                flag = false;
-        //                return t.ID;
-        //            }
-        //        };
-        //    return 0;
-        //}
 
         private void CheckAndAddTeam(string teamName)
         {
