@@ -17,7 +17,7 @@ namespace WMBA_7_2_.Models
         [Required(ErrorMessage = "Time cannot be empty!")]
         public DateTime GameTime { get; set; }
 
-        //I dont know if we need this or not ~donaven
+        //I dont know if we need this or not. ~donaven
         //[Display(Name = "Season")]
         //[Required(ErrorMessage = "Season cannot be empty!")]
         //[StringLength (50, ErrorMessage = "Season cannot be longer than 50 characters")]
@@ -36,8 +36,8 @@ namespace WMBA_7_2_.Models
         [Required(ErrorMessage = "Must enter an away team.")]
         [StringLength(100, ErrorMessage = "Team name must have a max of 100 characters.")]
         public string AwayTeam { get; set; }
-        public ICollection<Line_Up> Team_Games { get; set; } = new List<Line_Up>();
-       // public ICollection<Line_Up> Line_Ups { get; set; } = new List<Line_Up>();
+        public ICollection<Team_Game> Team_Games { get; set; } = new List<Team_Game>();
+        public ICollection<Line_Up> Line_Ups { get; set; } = new List<Line_Up>();
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {

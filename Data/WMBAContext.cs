@@ -60,8 +60,7 @@ namespace WMBA_7_2_.Data
 	            .IsUnique();
 
             modelBuilder.Entity<Game>()
-                .HasIndex(tg => new { tg.ID, tg.HomeTeam, tg.AwayTeam, tg.GameDate,tg.GameTime,tg.GameLocation })
-                .IsUnique();
+                .HasIndex(tg => new { tg.ID, tg.HomeTeam, tg.AwayTeam, tg.GameDate, tg.GameTime, tg.GameLocation });
 
             modelBuilder.Entity<Team_Game>()
                 .HasKey(tg => new { tg.GameID, tg.TeamID });
@@ -69,11 +68,6 @@ namespace WMBA_7_2_.Data
             modelBuilder.Entity<ImportReport>()
                 .ToView(nameof(Reports))
                 .HasKey(r => r.ID);
-
-            modelBuilder.Entity<Player>()
-                .HasIndex(p => p.PlayerMemberID).IsUnique();
-
         }
-
     }
 }
