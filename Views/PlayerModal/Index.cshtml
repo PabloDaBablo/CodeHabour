@@ -115,7 +115,7 @@
 			</div>
 			<div class="modal-footer">
 				<button class="btn btn-primary" id="Save" type="submit"
-					onclick="Insert();">Save</button>
+					>Save</button>
 				<button class="btn btn-success" style="display:none" id="Update" type="submit"
 					onclick="Update();">Update</button>
 			    <button class="btn btn-danger" data-dismiss="modal"
@@ -124,17 +124,5 @@
 		</div>
 	</div>
 </div>
-
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/js/playermodaljs.js"></script>
-<script>
-	document.addEventListener('DOMContentLoaded', function () {
-		var sortableHeaders = document.querySelectorAll('.sortable');
-		sortableHeaders.forEach(function (header) {
-			header.addEventListener('click', function () {
-				var sortColumn = this.getAttribute('data-sort');
-				console.log('Sorting by:', sortColumn);
-			});
-		});
-	});
-</script>
