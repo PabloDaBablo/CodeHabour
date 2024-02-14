@@ -115,10 +115,22 @@ namespace WMBA_7_2_.Controllers
                 }
                 return Json("Model validation failed.");
             }
-            catch (Exception ex)
+			catch (DbUpdateException dex)
+			{
+				if(dex.InnerException.Message.Contains("UNIQUE"))
+				{
+					return Json(new { error = "Player Member ID already exists in the database." });
+				}
+				else
+				{
+					return Json(new { error = "An error occurred while processing your request." });
+				}
+			}
+			catch (Exception ex)
             {
 				return Json(new { error = "An error occurred while processing your request." });
 			}
+			
         }
 
 		[HttpGet]

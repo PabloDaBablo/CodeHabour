@@ -17,13 +17,13 @@ namespace WMBA_7_2_.Controllers
     {
         private readonly WMBAContext _context;
 
-        public ReportController(WMBAContext context)
-        {
-            _context = context;
-        }
+		public ReportController(WMBAContext context)
+		{
+			_context = context;
+		}
 
-        // GET: Excel Data
-        public async Task<IActionResult> Index()
+		// GET: Excel Data
+		public async Task<IActionResult> Index()
         {
             return View();
         }
