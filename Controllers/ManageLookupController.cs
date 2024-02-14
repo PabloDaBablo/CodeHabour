@@ -29,5 +29,13 @@ namespace WMBA_7_2_.Controllers
 				.OrderBy(a => a.DivisionTeams), "ID", "DivisionTeams");
 			return PartialView("_Division");
 		}
-	}
+
+        public PartialViewResult League()
+        {
+            ViewData["LeagueID"] = new
+                SelectList(_context.Leagues
+                .OrderBy(a => a.LeagueType), "ID", "LeagueType");
+            return PartialView("_League");
+        }
+    }
 }

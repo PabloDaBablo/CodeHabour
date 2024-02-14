@@ -26,12 +26,9 @@ namespace WMBA_7_2_.Data
                         new League
                         {
                             LeagueType = "House League"
-                        },
-                    new League
-                    {
-                        LeagueType = "Select"
-                    });
-
+                        }
+                        );
+                    
                     context.SaveChanges();
                 }
                 //    //Create Divisions
