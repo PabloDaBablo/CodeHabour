@@ -86,6 +86,8 @@ namespace WMBA_7_2_.Controllers
             {
                 return NotFound();
             }
+
+            ViewData["LeagueTypeID"] = new SelectList(_context.Leagues, "ID", "LeagueType");
             return View(division);
         }
 
@@ -121,6 +123,8 @@ namespace WMBA_7_2_.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+
+            ViewData["LeagueTypeID"] = new SelectList(_context.Leagues, "ID", "LeagueType", division.LeagueTypeID);
             return View(division);
         }
 
@@ -138,6 +142,7 @@ namespace WMBA_7_2_.Controllers
             {
                 return NotFound();
             }
+            ViewData["LeagueTypeID"] = new SelectList(_context.Leagues, "ID", "LeagueType", division.LeagueTypeID);
 
             return View(division);
         }
@@ -156,7 +161,8 @@ namespace WMBA_7_2_.Controllers
             {
                 _context.Divisions.Remove(division);
             }
-            
+
+            ViewData["LeagueTypeID"] = new SelectList(_context.Leagues, "ID", "LeagueType", division.LeagueTypeID);
             await _context.SaveChangesAsync();
             return RedirectToAction("Index", "ManageLookup");
         }

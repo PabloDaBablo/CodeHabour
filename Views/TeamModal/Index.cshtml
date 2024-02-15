@@ -13,7 +13,7 @@
 <hr />
 <div class="d-flex align-items-center">
 	<button class="btn btn-primary mb-2 mr-2" id="btnAdd">Add Team</button>
-	<button class="btn btn-danger mb-2" style="margin-left: 5px;" onclick="window.history.back();">Go Back</button>
+	<a href="/" class="btn btn-danger mb-2 mr-2" style="margin-left: 5px;">Back to Home</a>
 	<a href="@Url.Action("Index", "CoachModal")" style="margin-left: 5px;" class="btn btn-secondary mb-2">Manage Coaches</a>
 	<a href="@Url.Action("Index", "PlayerModal")" style="margin-left: 5px;" class="btn btn-secondary mb-2">Manage Players</a>
 </div>
@@ -44,20 +44,19 @@
 					<input type="text" id="TeamName" class="form-control" placeholder="Ex. Bananas">
 					<div id="TeamNameError" class="invalid-feedback" style="display:none;"></div>
 				</div>
-				@*<div class="mb-2">
+				<div class="mb-2">
 					<label asp-for="DivisionID" class="form-label">Division</label>
 					<select asp-for="DivisionID" class="form-select" asp-items="ViewBag.DivisionID"></select>
 					<span asp-validation-for="DivisionID" class="text-danger"></span>
 				</div>
-				*@
 			</div>
 			<div class="modal-footer">
 				<button class="btn btn-primary" id="Save" type="submit"
-						onclick="Insert();">
+						>
 					Save
 				</button>
 				<button class="btn btn-success" style="display:none" id="Update" type="submit"
-						onclick="Update();">
+						>
 					Update
 				</button>
 				<button class="btn btn-danger" data-dismiss="modal"

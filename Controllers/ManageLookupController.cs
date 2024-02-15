@@ -26,7 +26,7 @@ namespace WMBA_7_2_.Controllers
 		{
 			ViewData["DivisionID"] = new
 				SelectList(_context.Divisions
-				.OrderBy(a => a.DivisionTeams), "ID", "DivisionTeams");
+				.OrderBy(a => a.DivAge), "ID", "DivAge");
 			return PartialView("_Division");
 		}
 

@@ -137,6 +137,7 @@ function Edit(id) {
 
                 $('#ID').val(response.id);
                 $('#TeamName').val(response.teamName);
+                $('#DivisionID').val(response.divisionID);
             }
         },
         error: function () {
@@ -154,6 +155,7 @@ function Update() {
     var formData = new Object();
     formData.id = $('#ID').val();
     formData.teamName = $('#TeamName').val();
+    formData.divisionID = $('#DivisionID').val();
 
 
     $.ajax({

@@ -20,7 +20,7 @@ namespace WMBA_7_2_.Controllers
         public IActionResult Index()
         {
 
-			ViewData["DivisionID"] = new SelectList(_context.Divisions, "ID", "DivisionTeams");
+			ViewData["DivisionID"] = new SelectList(_context.Divisions, "ID", "DivAge");
 			ViewData["TeamID"] = new SelectList(_context.Teams, "ID", "TeamName");
 			return View();
         }
@@ -83,8 +83,8 @@ namespace WMBA_7_2_.Controllers
 						p.PlayerMemberID,
 						p.PlayerFirstName,
 						p.PlayerLastName,
-						p.PlayerNumber,
-						TeamName = p.Team.TeamName,
+                        PlayerNumber = p.PlayerNumber ?? 0,
+                        TeamName = p.Team.TeamName,
 						p.DivisionID,
 						DivAge = p.Division.DivAge,
 						p.IsActive

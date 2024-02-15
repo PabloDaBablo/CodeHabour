@@ -65,7 +65,6 @@ function Insert() {
         SelectedTeamIds: $('#TeamCoach').val() ? $('#TeamCoach').val().map(Number) : []
     };
 
-    console.log(formData); 
 
     $.ajax({
         url: '/CoachModal/Insert',
@@ -73,13 +72,12 @@ function Insert() {
         contentType: 'application/json',
         data: JSON.stringify(formData), 
         success: function (response) {
-            alert('Success: ' + response);
             HideModal();
             GetCoaches();
+            alert(response)
         },
         error: function (xhr, status, error) {
             console.error('Error: ' + error);
-            alert('Error: ' + xhr.responseText);
         }
     });
 }
@@ -263,7 +261,7 @@ function validateCoachForm() {
 
     validateField('CoachName', regexAlphaSpaces, 'Coach Name should contain only letters and spaces.');
 
-    validateField('CoachNumber', regexNumericRange, 'Coach Number must be between 0-99.');
+    
 
     validateField('CoachPosition', regexAlphaSpaces, 'Coach Position should contain only letters and spaces.');
 
@@ -293,7 +291,7 @@ function clearError(fieldId) {
 function resetValidationStates() {
     clearError('CoachMemberID');
     clearError('CoachName');
-    clearError('CoachNumber');
+    
     clearError('CoachPosition');
 }
 
@@ -310,12 +308,6 @@ function clearError(fieldId) {
     $(`#${fieldId}Error`).hide();
 }
 
-function resetValidationStates() {
-    clearError('CoachMemberID');
-    clearError('CoachName');
-    clearError('CoachNumber');
-    clearError('CoachPosition');
-}
 $('#Save').click(function () {
     if (validateCoachForm()) {
         Insert();
