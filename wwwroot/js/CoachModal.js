@@ -20,13 +20,11 @@ function GetCoaches() {
                 var object = '';
                 $.each(response, function (index, coach) {
                     object += '<tr>';
+                    object += '<td>' + (coach.division || '') + '</td>';
                     object += '<td>' + (coach.coachName || '') + '</td>';
                     object += '<td>' + (coach.coachNumber || '') + '</td>';
-                    object += '<td>' + (coach.coachPosition || '') + '</td>';
-
                     var teamNames = coach.teams.map(function (team) { return team.teamName; }).join(', ');
                     object += '<td>' + (teamNames || 'No Assigned Team') + '</td>';
-
                     object += '<td> <a href="#" class="btn btn-primary btn-sm" onclick="Edit(' + coach.id + ')">Edit</a> </td>';
                     object += '</tr>';
                 });
@@ -41,6 +39,7 @@ function GetCoaches() {
 
 $('#btnAdd').click(function () {
     resetValidationStates();
+    $('#ID').val('0');
     $('#CoachModal').modal('show');
     $('#modalTitle').text('Add Coach');
     $('#Update').css('display', 'none');
@@ -61,8 +60,8 @@ function Insert() {
         coachMemberID: $('#CoachMemberID').val(),
         coachName: $('#CoachName').val(),
         coachNumber: $('#CoachNumber').val() || null,
-        coachPosition: $('#CoachPosition').val(),
-        SelectedTeamIds: $('#TeamCoach').val() ? $('#TeamCoach').val().map(Number) : []
+        SelectedTeamIds: $('#TeamCoach').val() ? $('#TeamCoach').val().map(Number) : [],
+        DivisionID: $('#DivisionID').val()
     };
 
 
@@ -72,12 +71,22 @@ function Insert() {
         contentType: 'application/json',
         data: JSON.stringify(formData), 
         success: function (response) {
-            HideModal();
-            GetCoaches();
-            alert(response)
+
+            if (response.error) {
+                alert(response.error)
+            }
+            else {
+                HideModal();
+                GetCoaches();
+                alert(response)
+            }
         },
         error: function (xhr, status, error) {
-            console.error('Error: ' + error);
+            if (xhr.responseJSON && xhr.responseJSON.error) {
+                alert(xhr.responseJSON.error);
+            } else {
+                alert("An unexpected error occurred.");
+            }
         }
     });
 }
@@ -108,9 +117,9 @@ function Edit(id) {
                 $('#CoachMemberID').val(response.coachMemberID);
                 $('#CoachName').val(response.coachName);
                 $('#CoachNumber').val(response.coachNumber);
-                $('#CoachPosition').val(response.coachPosition);
                 var teamIDs = response.teams.map(team => team.TeamID);
                 $('#TeamCoach').val(teamIDs).trigger('change'); 
+                $('#DivisionID').val(response.DivisionID);
             }
         },
         error: function () {
@@ -133,8 +142,8 @@ function Update() {
     formData.coachMemberID = $('#CoachMemberID').val(),
     formData.coachName = $('#CoachName').val(),
     formData.coachNumber = $('#CoachNumber').val() ? parseInt($('#CoachNumber').val(), 10) : null,
-    formData.coachPosition = $('#CoachPosition').val()
     formData.SelectedTeamIds = selectedTeamIds;
+    formData.DivisionID = $('#DivisionID').val();   
 
     $.ajax({
         url: '/CoachModal/Update',
@@ -145,6 +154,7 @@ function Update() {
             if (response == null || response == undefined || response.length == 0) {
                 alert('Unable to save Coach Data.');
             }
+            
             else {
                 HideModal()
                 GetCoaches();
@@ -210,13 +220,6 @@ function Validate() {
         $('#CoachNumber').css('border-color', 'lightgrey');
     }
 
-    if ($('#CoachPosition').val() == "") {
-        $('#CoachPosition').css('border-color', 'Red');
-        isValid = false;
-    } else {
-        $('#CoachPosition').css('border-color', 'lightgrey');
-    }
-
     if ($('#TeamCoach').val() == "") {
         $('#TeamCoach').css('border-color', 'Red');
         isValid = false;
@@ -247,7 +250,6 @@ function ClearData() {
     $('#CoachMemberID').val('');
     $('#CoachName').val('');
     $('#CoachNumber').val('');
-    $('#CoachPosition').val('');
     $('#TeamCoach').val('');
 };
 
@@ -261,9 +263,6 @@ function validateCoachForm() {
 
     validateField('CoachName', regexAlphaSpaces, 'Coach Name should contain only letters and spaces.');
 
-    
-
-    validateField('CoachPosition', regexAlphaSpaces, 'Coach Position should contain only letters and spaces.');
 
     function validateField(fieldId, regex, errorMessage) {
         if (!regex.test($(`#${fieldId}`).val())) {
@@ -292,7 +291,6 @@ function resetValidationStates() {
     clearError('CoachMemberID');
     clearError('CoachName');
     
-    clearError('CoachPosition');
 }
 
 $('#CoachModal').on('hidden.bs.modal', function () {

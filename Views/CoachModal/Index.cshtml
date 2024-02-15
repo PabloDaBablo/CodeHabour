@@ -22,9 +22,9 @@
 	<table class="table table-striped table-bordered table-responsive table-hover">
 		<thead>
 			<tr>
+				<th>Division</th>
 				<th>@Html.DisplayNameFor(model => model.CoachName)</th>
 				<th>@Html.DisplayNameFor(model => model.CoachNumber)</th>
-				<th>@Html.DisplayNameFor(model => model.CoachPosition)</th>
 				<th>Team</th>
 				<th>Action</th>
 			</tr>
@@ -65,16 +65,14 @@
 					<div id="CoachNumberError" class="invalid-feedback"></div>
 				</div>
 				<div class="mb-2">
-					<label asp-for=CoachPosition></label>
-					<input type="text" asp-for="CoachPosition" class="form-control"
-						   placeholder="Ex. Head Coach" />
-					<span asp-validation-for="CoachPosition" class="text-danger"></span>
-					<div id="CoachPositionError" class="invalid-feedback"></div>
-				</div>
-				<div class="mb-2">
 					<label asp-for="TeamCoach" class="form-label">Team</label>
 					<select asp-for="SelectedTeamIds" id="TeamCoach" class="form-select" asp-items="@ViewBag.TeamCoaches" multiple="multiple" name="SelectedTeamIds"></select>
 					<span asp-validation-for="TeamCoach" class="text-danger"></span>
+				</div>
+				<div class="mb-2">
+					<label asp-for="DivisionID" class="form-label">Division</label>
+					<select asp-for="DivisionID" class="form-select" asp-items="ViewBag.DivisionID"></select>
+					<span asp-validation-for="DivisionID" class="text-danger"></span>
 				</div>
 
 			</div>
@@ -84,7 +82,7 @@
 					Save
 				</button>
 				<button class="btn btn-success" style="display:none" id="Update" type="submit"
-						>
+						onclick="Update()">
 					Update
 				</button>
 				<button class="btn btn-danger" data-dismiss="modal"
