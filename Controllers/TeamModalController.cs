@@ -20,7 +20,7 @@ namespace WMBA_7_2_.Controllers
         {
 
 			ViewData["CoachID"] = new SelectList(_context.Coaches, "ID", "CoachName");
-			ViewData["DivisionID"] = new SelectList(_context.Divisions, "ID", "DivisionTeams");
+			ViewData["DivisionID"] = new SelectList(_context.Divisions, "ID", "DivAge");
 
 			return View();
         }

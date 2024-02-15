@@ -23,11 +23,7 @@
                 <input asp-for="DivAge" class="form-control" />
                 <span asp-validation-for="DivAge" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="DivisionTeams" class="control-label"></label>
-                <input asp-for="DivisionTeams" class="form-control" />
-                <span asp-validation-for="DivisionTeams" class="text-danger"></span>
-            </div>
+            
             <div class="form-group">
                 <label asp-for="LeagueTypeID" class="form-label">League</label>
                 <select asp-for="LeagueTypeID" class="form-select" asp-items="@ViewData["LeagueTypeID"] as SelectList"></select>

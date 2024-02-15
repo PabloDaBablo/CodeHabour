@@ -1,4 +1,4 @@
-﻿var currentSortColumn = 'divAge';
+﻿ var currentSortColumn = 'divAge';
 var currentSortDirection = 'asc';
 var currentPage = 1;
 var pageSize = 10;
@@ -103,6 +103,7 @@ $(document).ready(function () {
 $('#btnAdd').click(function () {
     $('#PlayerModal').modal('show');
     resetValidationStates();
+    $('#PlayerMemberID').prop('disabled', false);
     $('#modalTitle').text('Add Player');
     $('#Update').css('display', 'none');
     $('#Save').css('display', 'block');
@@ -187,7 +188,7 @@ function Edit(id) {
 
 
                 $('#ID').val(response.id);
-                $('#PlayerMemberID').val(response.playerMemberID);
+                $('#PlayerMemberID').val(response.playerMemberID).prop('disabled', true);
                 $('#PlayerFirstName').val(response.playerFirstName);
                 $('#PlayerLastName').val(response.playerLastName);
                 $('#PlayerNumber').val(response.playerNumber);
@@ -383,5 +384,6 @@ function resetValidationStates() {
 }
 
 $('#PlayerModal').on('hidden.bs.modal', function () {
+    $('#PlayerMemberID').prop('disabled', false);
     resetValidationStates();
 });
