@@ -24,7 +24,6 @@ namespace WMBA_7_2_.Controllers
         {
             var games = await _context.Games
                 .Include(g => g.Team_Games)
-                .Include(g => g.Line_Ups)
                 .AsNoTracking()
                 .ToListAsync();
 
@@ -41,7 +40,6 @@ namespace WMBA_7_2_.Controllers
 
             var games = await _context.Games
             .Include(g => g.Team_Games)
-            .Include(g => g.Line_Ups)
             .AsNoTracking()
             .ToListAsync();
 
@@ -70,7 +68,6 @@ namespace WMBA_7_2_.Controllers
             {
                 var games = await _context.Games
              .Include(g => g.Team_Games)
-             .Include(g => g.Line_Ups)
              .AsNoTracking()
              .ToListAsync();
             return View(games);

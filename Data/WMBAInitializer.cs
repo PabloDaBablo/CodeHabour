@@ -72,59 +72,51 @@ namespace WMBA_7_2_.Data
                      {
                          CoachMemberID = "7890987",
                          CoachName = "Dave Roberts",
-                         CoachNumber = 99,
-                         CoachPosition = "Head Coach"
+                         CoachNumber = 99
                      },
                     new Coach
                     {
                         CoachMemberID = "5678765",
                         CoachName = "Alex Cora",
-                        CoachNumber = 88,
-                        CoachPosition = "Assistant Coach"
+                        CoachNumber = 88
                     },
                     new Coach
                     {
                         CoachMemberID = "4984484",
                         CoachName = "Aaron Boone",
-                        CoachNumber = 33,
-                        CoachPosition = "Head Coach"
+                        CoachNumber = 33
                     },
 
                     new Coach
                     {
                         CoachMemberID = "567876",
                         CoachName = "Terry Francona",
-                        CoachNumber = 44,
-                        CoachPosition = "Assistant Coach"
+                        CoachNumber = 44
                     },
                      new Coach
                      {
                          CoachMemberID = "49810293",
                          CoachName = "Gabe Kapler",
-                         CoachNumber = null,
-                         CoachPosition = "Head Coach"
+                         CoachNumber = null
                      },
 
                         new Coach
                         {
                             CoachMemberID = "21983198",
                             CoachName = "Brian Snitker",
-                            CoachNumber = null,
-                            CoachPosition = "Assistant Coach"
+                            CoachNumber = null
                         },
                      new Coach
                      {
                          CoachMemberID = "49481283",
                          CoachName = "Dusty Baker",
-                         CoachNumber = 77,
-                         CoachPosition = "Assistant Coach"
+                         CoachNumber = 77
                      },
                     new Coach
                     {
                         CoachMemberID = "3456543",
                         CoachName = "Craig Counsell",
-                        CoachNumber = null,
-                        CoachPosition = "Head Coach"
+                        CoachNumber = null
                     });
                     context.SaveChanges();
                 }

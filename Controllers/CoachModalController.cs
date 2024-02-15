@@ -19,8 +19,15 @@ namespace WMBA_7_2_.Controllers
 
 		public IActionResult Index()
 		{
-			var teams = _context.Teams.ToList(); 
+			var teams = _context.Teams
+				.ToList(); 
+			var division = _context.Divisions
+				.ToList();
+
 			ViewData["TeamCoaches"] = new SelectList(teams, "ID", "TeamName");
+
+			ViewData["DivisionID"] = new SelectList(_context.Divisions, "ID", "DivAge");
+
 			return View();
 		}
 
@@ -31,15 +38,15 @@ namespace WMBA_7_2_.Controllers
 			var coaches = _context.Coaches
 				.Include(c => c.TeamCoach)
 					.ThenInclude(tc => tc.Team)
+				.Include(c => c.Division)
 				.Select(c => new
 				{
 					id = c.ID,
 					CoachMemberID = c.CoachMemberID,
 					CoachName = c.CoachName,
 					CoachNumber = c.CoachNumber,
-					CoachPosition = c.CoachPosition,
-					Teams = c.TeamCoach.Select(tc => new { tc.TeamID, tc.Team.TeamName }).ToList()
-
+					Teams = c.TeamCoach.Select(tc => new { tc.TeamID, tc.Team.TeamName }).ToList(),
+					division = c.Division.DivAge
 				})
 				.ToList();
 
@@ -59,8 +66,7 @@ namespace WMBA_7_2_.Controllers
 						CoachMemberID = viewModel.CoachMemberID,
 						CoachName = viewModel.CoachName,
 						CoachNumber = viewModel.CoachNumber,
-						CoachPosition = viewModel.CoachPosition,
-
+						DivisionID = viewModel.DivisionID
 					};
 
 					if (viewModel.ID > 0)
@@ -103,6 +109,7 @@ namespace WMBA_7_2_.Controllers
 			var coaches = _context.Coaches
 								 .Include(p => p.TeamCoach)
 									.ThenInclude(tc => tc.Team) 
+									.Include(p => p.Division)
 								 .FirstOrDefault(p => p.ID == id);
 
 			if (coaches == null)
@@ -119,8 +126,8 @@ namespace WMBA_7_2_.Controllers
 				coachMemberID = coaches.CoachMemberID,
 				coachName = coaches.CoachName,
 				coachNumber = coaches.CoachNumber,
-				coachPosition = coaches.CoachPosition,
-				teams = teams 
+				teams = teams, 
+				division = coaches.DivisionID
 			};
 
 			return Json(result);
@@ -133,6 +140,7 @@ namespace WMBA_7_2_.Controllers
 			{
 				var coachToUpdate = _context.Coaches
 					.Include(c => c.TeamCoach)
+					.Include(c => c.Division)
 					.FirstOrDefault(c => c.ID == viewModel.ID);
 
 				if (coachToUpdate == null)
@@ -143,7 +151,7 @@ namespace WMBA_7_2_.Controllers
 				coachToUpdate.CoachMemberID = viewModel.CoachMemberID;
 				coachToUpdate.CoachName = viewModel.CoachName;
 				coachToUpdate.CoachNumber = viewModel.CoachNumber;
-				coachToUpdate.CoachPosition = viewModel.CoachPosition;
+				coachToUpdate.DivisionID = viewModel.DivisionID;
 
 
 				var existingTeamIds = coachToUpdate.TeamCoach.Select(tc => tc.TeamID).ToList();

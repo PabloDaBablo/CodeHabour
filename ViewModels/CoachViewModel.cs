@@ -23,16 +23,15 @@ namespace WMBA_7_2_.ViewModels
 
 		public int? CoachNumber { get; set; }
 
-		[Display(Name = "Coach Position")]
-		[Required(ErrorMessage = "Coach position cannot be blank.")]
-		[StringLength(75, ErrorMessage = "Coach position cannot be longer than 75 characters!")]
-		public string CoachPosition { get; set; }
-
 		[Display(Name = "Team")]
 		public ICollection<Team_Coach> TeamCoach { get; set; } = new HashSet<Team_Coach>();
 		public List<int> SelectedTeamIds { get; set; } = new List<int>();
 		public SelectList TeamOptions { get; set; }
-		
-	
-	}
+
+        [Display(Name = "Division")]
+        public Division Division { get; set; }
+
+        [Display(Name = "Division")]
+        public int? DivisionID { get; set; }
+    }
 }

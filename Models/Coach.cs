@@ -9,7 +9,7 @@ namespace WMBA_7_2_.Models
 
         [Display(Name = "Coach Member ID")]//not sure if this is required or not, but ill leave it in a comment the code
 		[RegularExpression(@"^[a-zA-Z0-9]*$", ErrorMessage = "Coach Member ID must contain only letters and numbers.")]
-        [Required(ErrorMessage = "Coach Member ID Required.")]
+        //[Required(ErrorMessage = "Coach Member ID Required.")]
 		public string CoachMemberID { get; set; }
 
         [Display(Name = "Coach Name")]
@@ -23,14 +23,14 @@ namespace WMBA_7_2_.Models
         [RegularExpression(@"^[0-9]*$", ErrorMessage = "Coach Number must contain only numbers.")]
         public int? CoachNumber { get; set; }
 
-        [Display(Name = "Coach Position")]
-        [Required(ErrorMessage = "Coach position cannot be blank.")]
-		[RegularExpression(@"^[a-zA-Z\s]*$", ErrorMessage = "Coach Position must contain only letters.")]
-		[StringLength(75, ErrorMessage = "Coach position cannot be longer than 75 characters!")]
-        public string CoachPosition { get; set; }
-
+        
         [Display(Name = "Team")]
         public ICollection<Team_Coach> TeamCoach { get; set; } = new HashSet<Team_Coach>();
 
+        [Display(Name = "Division")]
+        public Division Division { get; set; }
+
+        [Display(Name = "Division")]
+        public int? DivisionID { get; set; }
     }
 }
