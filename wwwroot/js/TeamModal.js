@@ -66,7 +66,9 @@ function Insert() {
 
     var formData = {
         teamName: $('#TeamName').val(),
-        coachID: $('#CoachID').val(),
+        division: $('#DivisionID').val(),
+        players: $('#Players').val() ? $('#Players').val().map(Number) : [],
+        coaches: $('#TeamCoaches').val() ? $('#TeamCoaches').val().map(Number) : []
     };
 
     if (insertInProgress) {
@@ -79,7 +81,8 @@ function Insert() {
 
     $.ajax({
         url: '/TeamModal/Insert',
-        data: formData,
+        data: JSON.stringify(formData),
+        contentType: 'application/json',
         type: 'post',
         success: function (response) {
             HideModal();
@@ -138,6 +141,8 @@ function Edit(id) {
                 $('#ID').val(response.id);
                 $('#TeamName').val(response.teamName);
                 $('#DivisionID').val(response.divisionID);
+                $('#Players').val(response.players).trigger('change'); 
+                $('#TeamCoaches').val(response.coaches).trigger('change');
             }
         },
         error: function () {
@@ -156,11 +161,14 @@ function Update() {
     formData.id = $('#ID').val();
     formData.teamName = $('#TeamName').val();
     formData.divisionID = $('#DivisionID').val();
+    formData.players = $('#Players').val() ? $('#Players').val().map(Number) : [],
+    formData.coaches = $('#TeamCoaches').val() ? $('#TeamCoaches').val().map(Number) : []
 
 
     $.ajax({
         url: '/TeamModal/Update',
-        data: formData,
+        data: JSON.stringify(formData),
+        contentType: 'application/json;charset=utf-8',
         type: 'post',
         success: function (response) {
             if (response == null || response == undefined || response.length == 0) {

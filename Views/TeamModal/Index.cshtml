@@ -46,8 +46,18 @@
 				</div>
 				<div class="mb-2">
 					<label asp-for="DivisionID" class="form-label">Division</label>
-					<select asp-for="DivisionID" class="form-select" asp-items="ViewBag.DivisionID"></select>
+					<select asp-for="DivisionID" id="DivisionID" class="form-select" asp-items="ViewBag.DivisionID"></select>
 					<span asp-validation-for="DivisionID" class="text-danger"></span>
+				</div>
+				<div class="mb-2">
+					<label asp-for="Players" class="form-label">Players</label>
+					<select asp-for="Players"  id="Players" class="form-select" multiple="multiple" asp-items="ViewBag.Players"></select>
+					<span asp-validation-for="Players" class="text-danger"></span>
+				</div>
+				<div class="mb-2">
+					<label asp-for="TeamCoaches" class="form-label">Coaches</label>
+					<select asp-for="TeamCoaches"  id="TeamCoaches" class="form-select" multiple="multiple" asp-items="ViewBag.Coaches"></select>
+					<span asp-validation-for="TeamCoaches" class="text-danger"></span>
 				</div>
 			</div>
 			<div class="modal-footer">
