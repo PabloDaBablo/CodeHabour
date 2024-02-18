@@ -20,12 +20,12 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="ID" />
             <div class="form-group">
-                <label asp-for="DivAge" class="control-label"></label>
+                <label asp-for="DivAge" class="control-label">Division &#42</label>
                 <input asp-for="DivAge" class="form-control" />
                 <span asp-validation-for="DivAge" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="LeagueTypeID" class="form-label">League</label>
+                <label asp-for="LeagueTypeID" class="form-label">League &#42</label>
                 <select asp-for="LeagueTypeID" class="form-select" asp-items="@ViewData["LeagueTypeID"] as SelectList"></select>
                 <span asp-validation-for="LeagueTypeID" class="text-danger"></span>
             </div>

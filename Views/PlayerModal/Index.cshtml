@@ -82,32 +82,32 @@
 			<div class="modal-body">
 				<input type="hidden" asp-for="ID" value="0" />
 				<div class="mb-2">
-					<label asp-for="PlayerMemberID" class="form-label">Player Member ID</label>
+					<label asp-for="PlayerMemberID" class="form-label">Player Member ID &#42;</label>
 					<input type="text" id="PlayerMemberID" class="form-control" placeholder="Ex. 13442334" />
 					<span id="PlayerMemberIDError" class="text-danger"></span>
 				</div>
 				<div class="mb-2">
-					<label asp-for="PlayerFirstName" class="form-label">First Name</label>
+					<label asp-for="PlayerFirstName" class="form-label">First Name &#42;</label>
 					<input type="text" id="PlayerFirstName" class="form-control" placeholder="Ex. John" />
 					<span id="PlayerFirstNameError" class="text-danger"></span>
 				</div>
 				<div class="mb-2">
-					<label asp-for="PlayerLastName" class="form-label">Last Name</label>
+					<label asp-for="PlayerLastName" class="form-label">Last Name &#42;</label>
 					<input type="text" id="PlayerLastName" class="form-control" placeholder="Ex. Smith" />
 					<span id="PlayerLastNameError" class="text-danger"></span>
 				</div>
 				<div class="mb-2">
-					<label asp-for="PlayerNumber" class="form-label">Player Number</label>
+					<label asp-for="PlayerNumber" class="form-label">Player Number &#42;</label>
 					<input type="text" id="PlayerNumber" class="form-control" placeholder="Ex. 13" />
 					<span id="PlayerNumberError" class="text-danger"></span>
 				</div>
 				<div class="mb-2">
-					<label asp-for="TeamID" class="form-label">Team</label>
+					<label asp-for="TeamID" class="form-label">Team &#42;</label>
 					<select asp-for="TeamID" class="form-select" asp-items="ViewBag.TeamID"></select>
 					<span asp-validation-for="TeamID" class="text-danger"></span>
 				</div>
 				<div class="mb-2">
-					<label asp-for="DivisionID" class="form-label">Division</label>
+					<label asp-for="DivisionID" class="form-label">Division &#42;</label>
 					<select asp-for="DivisionID" class="form-select" asp-items="ViewBag.DivisionID"></select>
 					<span asp-validation-for="DivisionID" class="text-danger"></span>
 				</div>

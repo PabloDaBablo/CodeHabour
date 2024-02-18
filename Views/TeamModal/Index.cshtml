@@ -40,23 +40,23 @@
 			<div class="modal-body">
 				<input type="hidden" asp-for="ID" value="0" />
 				<div class="mb-2">
-					<label for="TeamName">Team Name</label>
+					<label for="TeamName">Team Name &#42</label>
 					<input type="text" id="TeamName" class="form-control" placeholder="Ex. Bananas">
 					<div id="TeamNameError" class="invalid-feedback" style="display:none;"></div>
 				</div>
 				<div class="mb-2">
-					<label asp-for="DivisionID" class="form-label">Division</label>
+					<label asp-for="DivisionID" class="form-label">Division &#42</label>
 					<select asp-for="DivisionID" id="DivisionID" class="form-select" asp-items="ViewBag.DivisionID"></select>
 					<span asp-validation-for="DivisionID" class="text-danger"></span>
 				</div>
 				<div class="mb-2">
-					<label asp-for="Players" class="form-label">Players</label>
+					<label asp-for="Players" class="form-label">Players &#42</label>
 					<select asp-for="Players"  id="Players" class="form-select" multiple="multiple" asp-items="ViewBag.Players"></select>
 					<span asp-validation-for="Players" class="text-danger"></span>
 				</div>
 				<div class="mb-2">
-					<label asp-for="TeamCoaches" class="form-label">Coaches</label>
-					<select asp-for="TeamCoaches"  id="TeamCoaches" class="form-select" multiple="multiple" asp-items="ViewBag.Coaches"></select>
+					<label asp-for="TeamCoaches" class="form-label">Coaches &#42</label>
+					<select asp-for="TeamCoaches"  id="TeamCoach" class="form-select" multiple="multiple" asp-items="ViewBag.Coaches"></select>
 					<span asp-validation-for="TeamCoaches" class="text-danger"></span>
 				</div>
 			</div>
