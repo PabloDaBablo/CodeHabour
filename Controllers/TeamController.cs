@@ -81,7 +81,6 @@ namespace WMBA_7_2_.Controllers
 
             var viewModel = new TeamVM
             {
-                SelectedPlayerID = new List<int>()
             };
             ViewData["CoachID"] = new SelectList(_context.Coaches, "ID", "CoachName");
             ViewData["PlayerID"] = new SelectList(_context.Players, "ID", "PlayerFullName");
@@ -99,8 +98,7 @@ namespace WMBA_7_2_.Controllers
             {
                 var team = new Team
                 {
-                    TeamName = viewModel.TeamName,
-                    CoachID = viewModel.CoachID,
+                    
                 };
 
                 _context.Teams.Add(team);

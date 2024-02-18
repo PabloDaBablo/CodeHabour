@@ -120,35 +120,16 @@ namespace WMBA_7_2_.Data
                     });
                     context.SaveChanges();
                 }
-                //    //Add 4 Teams
-                //    if (!context.Teams.Any())
-                //    {
-                //        context.Teams.AddRange(
-                //    new Team
-                //    {
-                //        TeamName = "Bananas",
-                //        CoachID = 1,
-                //        DivisionID = 1
-                //    },
-                //    new Team
-                //    {
-                //        TeamName = "Dragons",
-                //        CoachID = 3,
-                //        DivisionID = 2
-                //    },
-                //    new Team
-                //    {
-                //        TeamName = "Bisons",
-                //        CoachID = 5,
-                //        DivisionID = 3
-                //    },
-                //    new Team
-                //    {
-                //        TeamName = "Whitecaps",
-                //        CoachID = 7,
-                //        DivisionID = 4
-                //    });
-                //        context.SaveChanges();
+                if (!context.Teams.Any())
+                {
+                    context.Teams.AddRange(
+                new Team
+                {
+                    TeamName = "No Assigned Team",
+
+                });
+                }
+                     context.SaveChanges();
                 //        if (!context.Team_Coaches.Any())
                 //        {
                 //            context.Team_Coaches.AddRange(

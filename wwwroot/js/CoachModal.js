@@ -296,15 +296,8 @@ function resetValidationStates() {
 $('#CoachModal').on('hidden.bs.modal', function () {
     resetValidationStates(); 
 });
-function showError(fieldId, message) {
-    $(`#${fieldId}`).addClass('is-invalid');
-    $(`#${fieldId}Error`).text(message).show();
-}
 
-function clearError(fieldId) {
-    $(`#${fieldId}`).removeClass('is-invalid');
-    $(`#${fieldId}Error`).hide();
-}
+
 
 $('#Save').click(function () {
     if (validateCoachForm()) {
