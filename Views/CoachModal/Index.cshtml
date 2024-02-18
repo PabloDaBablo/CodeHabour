@@ -43,7 +43,7 @@
 			<div class="modal-body">
 				<input type="hidden" asp-for="ID" value="0" />
 				<div class="mb-2">
-					<label asp-for=CoachMemberID></label>
+					<label asp-for=CoachMemberID>Coach MemberID &#42</label>
 					<input type="text" asp-for="CoachMemberID" class="form-control"
 						   placeholder="Ex.  1234ASD" />
 					<span asp-validation-for="CoachMemberID" class="text-danger"></span>
@@ -51,26 +51,26 @@
 
 				</div>
 				<div class="mb-2">
-					<label asp-for=CoachName></label>
+					<label asp-for=CoachName>Coach Name &#42</label>
 					<input type="text" asp-for="CoachName" class="form-control"
 						   placeholder="Ex. John Doe" />
 					<span asp-validation-for="CoachName" class="text-danger"></span>
 					<div id="CoachNameError" class="invalid-feedback"></div>
 				</div>
 				<div class="mb-2">
-					<label asp-for=CoachNumber></label>
+					<label asp-for=CoachNumber>Coach Number</label>
 					<input type="text" asp-for="CoachNumber" class="form-control"
 						   placeholder="Ex. 99" />
 					<span asp-validation-for="CoachNumber" class="text-danger"></span>
 					<div id="CoachNumberError" class="invalid-feedback"></div>
 				</div>
 				<div class="mb-2">
-					<label asp-for="TeamCoach" class="form-label">Team</label>
+					<label asp-for="TeamCoach" class="form-label">Team </label>
 					<select asp-for="SelectedTeamIds" id="TeamCoach" class="form-select" asp-items="@ViewBag.TeamCoaches" multiple="multiple" name="SelectedTeamIds"></select>
 					<span asp-validation-for="TeamCoach" class="text-danger"></span>
 				</div>
 				<div class="mb-2">
-					<label asp-for="DivisionID" class="form-label">Division</label>
+					<label asp-for="DivisionID" class="form-label">Division </label>
 					<select asp-for="DivisionID" class="form-select" asp-items="ViewBag.DivisionID"></select>
 					<span asp-validation-for="DivisionID" class="text-danger"></span>
 				</div>

@@ -41,6 +41,7 @@ $('#btnAdd').click(function () {
     resetValidationStates();
     $('#ID').val('0');
     $('#CoachModal').modal('show');
+    $('#CoachMemberID').prop('disabled', false);
     $('#modalTitle').text('Add Coach');
     $('#Update').css('display', 'none');
     $('#Save').css('display', 'block');
@@ -113,13 +114,13 @@ function Edit(id) {
                 $('#Save').css('display', 'none');
                 $('#Update').css('display', 'block');
 
+                $('#CoachMemberID').val(response.coachMemberID).prop('disabled', true);
                 $('#ID').val(response.id);
                 $('#CoachMemberID').val(response.coachMemberID);
                 $('#CoachName').val(response.coachName);
                 $('#CoachNumber').val(response.coachNumber);
-                var teamIDs = response.teams.map(team => team.TeamID);
-                $('#TeamCoach').val(teamIDs).trigger('change'); 
-                $('#DivisionID').val(response.DivisionID);
+                $('#TeamCoach').val(response.teams).trigger('change');
+                $('#DivisionID').val(response.division);
             }
         },
         error: function () {
