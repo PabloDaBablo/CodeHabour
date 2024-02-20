@@ -362,3 +362,5 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /Views/Game/Delete.cshtml
+/WMBADatabase.db-wal
+/WMBADatabase.db-shm
