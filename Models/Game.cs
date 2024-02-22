@@ -2,6 +2,14 @@
 
 namespace WMBA_7_2_.Models
 {
+
+    public enum TeamLineup
+    {
+        Home,
+        Away
+    }
+
+
     public class Game : IValidatableObject
     {
         public int ID { get; set; }
@@ -26,18 +34,31 @@ namespace WMBA_7_2_.Models
         [Display(Name = "Location")]
         [Required(ErrorMessage = "Location cannot be empty!")]
         [StringLength (75, ErrorMessage = "Location cannot be longer than 75 characters!")]
-       
         public string GameLocation { get; set; }
-        [Display(Name = "Home")]
-        [Required(ErrorMessage = "Must enter a home team.")]
-        [StringLength(100, ErrorMessage = "Team name must have a max of 100 characters.")]
-        public string HomeTeam { get; set; }
-        [Display(Name = "Visitor")]
-        [Required(ErrorMessage = "Must enter an away team.")]
-        [StringLength(100, ErrorMessage = "Team name must have a max of 100 characters.")]
-        public string AwayTeam { get; set; }
+
+
+
+        [Display(Name = "Home Team")]
+        [Required(ErrorMessage = "You must select the Home Team for the Game.")]
+        public int HomeTeamID { get; set; }
+
+        [Display(Name = "Home Team")]
+        public Team HomeTeam { get; set; }
+
+
+        [Display(Name = "Away Team")]
+        [Required(ErrorMessage = "You must select the Away Team for the Game.")]
+        public int AwayTeamID { get; set; }
+
+        [Display(Name = "Away Team")]
+        public Team AwayTeam { get; set; }
+
+
         public ICollection<Team_Game> Team_Games { get; set; } = new List<Team_Game>();
         public ICollection<Line_Up> Line_Ups { get; set; } = new List<Line_Up>();
+
+        [Display(Name = "Game Players")]
+        public ICollection<GamePlayer> GamePlayers { get; set; } = new HashSet<GamePlayer>();
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
@@ -59,7 +80,7 @@ namespace WMBA_7_2_.Models
             //    yield return new ValidationResult("Games must be scheduled at an appropriate field.", new[] { "GameLocation" });
             //}
             //Home team and Visiting team can't be the same team
-            if (HomeTeam == AwayTeam)
+            if (HomeTeamID == AwayTeamID)
             {
                 yield return new ValidationResult("Home and Visitor must be different teams", new[] { "HomeTeam","AwayTeam" });
             }

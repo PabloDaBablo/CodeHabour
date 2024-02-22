@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WMBA_7_2_.Data;
 
@@ -10,9 +11,11 @@ using WMBA_7_2_.Data;
 namespace WMBA_7_2_.Data.WMBAMigrations
 {
     [DbContext(typeof(WMBAContext))]
-    partial class WMBAContextModelSnapshot : ModelSnapshot
+    [Migration("20240221191003_AddedRelationshipsForLineup")]
+    partial class AddedRelationshipsForLineup
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.16");
@@ -94,8 +97,10 @@ namespace WMBA_7_2_.Data.WMBAMigrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("AwayTeamID")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("AwayTeam")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("GameDate")
                         .HasColumnType("TEXT");
@@ -108,43 +113,16 @@ namespace WMBA_7_2_.Data.WMBAMigrations
                     b.Property<DateTime>("GameTime")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("HomeTeamID")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("HomeTeam")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
 
                     b.HasKey("ID");
 
-                    b.HasIndex("AwayTeamID");
-
-                    b.HasIndex("HomeTeamID");
-
-                    b.HasIndex("ID", "HomeTeamID", "AwayTeamID", "GameDate", "GameTime", "GameLocation");
+                    b.HasIndex("ID", "HomeTeam", "AwayTeam", "GameDate", "GameTime", "GameLocation");
 
                     b.ToTable("Games");
-                });
-
-            modelBuilder.Entity("WMBA_7_2_.Models.GamePlayer", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("GameID")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("PlayerID")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("TeamLineup")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("GameID");
-
-                    b.HasIndex("PlayerID", "GameID")
-                        .IsUnique();
-
-                    b.ToTable("GamePlayers");
                 });
 
             modelBuilder.Entity("WMBA_7_2_.Models.ImportReport", b =>
@@ -201,12 +179,12 @@ namespace WMBA_7_2_.Data.WMBAMigrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("TeamID1")
+                    b.Property<int?>("PlayerID1")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("ID");
 
-                    b.HasIndex("TeamID1");
+                    b.HasIndex("PlayerID1");
 
                     b.ToTable("Line_Ups");
                 });
@@ -370,6 +348,9 @@ namespace WMBA_7_2_.Data.WMBAMigrations
                     b.Property<int?>("DivisionID")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int?>("LineUpID")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("TeamName")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -380,6 +361,9 @@ namespace WMBA_7_2_.Data.WMBAMigrations
                     b.HasIndex("CoachID");
 
                     b.HasIndex("DivisionID");
+
+                    b.HasIndex("LineUpID")
+                        .IsUnique();
 
                     b.ToTable("Teams");
                 });
@@ -433,21 +417,18 @@ namespace WMBA_7_2_.Data.WMBAMigrations
 
             modelBuilder.Entity("WMBA_7_2_.Models.Team_Game", b =>
                 {
-                    b.Property<int>("TeamID")
+                    b.Property<int>("GameID")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("GameID")
+                    b.Property<int>("TeamID")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("ID")
                         .HasColumnType("INTEGER");
 
-                    b.Property<bool>("IsHomeTeam")
-                        .HasColumnType("INTEGER");
+                    b.HasKey("GameID", "TeamID");
 
-                    b.HasKey("TeamID", "GameID");
-
-                    b.HasIndex("GameID");
+                    b.HasIndex("TeamID");
 
                     b.ToTable("Team_Games");
                 });
@@ -485,51 +466,13 @@ namespace WMBA_7_2_.Data.WMBAMigrations
                     b.Navigation("League");
                 });
 
-            modelBuilder.Entity("WMBA_7_2_.Models.Game", b =>
-                {
-                    b.HasOne("WMBA_7_2_.Models.Team", "AwayTeam")
-                        .WithMany("AwayGames")
-                        .HasForeignKey("AwayTeamID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("WMBA_7_2_.Models.Team", "HomeTeam")
-                        .WithMany("HomeGames")
-                        .HasForeignKey("HomeTeamID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("AwayTeam");
-
-                    b.Navigation("HomeTeam");
-                });
-
-            modelBuilder.Entity("WMBA_7_2_.Models.GamePlayer", b =>
-                {
-                    b.HasOne("WMBA_7_2_.Models.Game", "Game")
-                        .WithMany()
-                        .HasForeignKey("GameID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("WMBA_7_2_.Models.Player", "Player")
-                        .WithMany("GamePlayers")
-                        .HasForeignKey("PlayerID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Game");
-
-                    b.Navigation("Player");
-                });
-
             modelBuilder.Entity("WMBA_7_2_.Models.Line_Up", b =>
                 {
-                    b.HasOne("WMBA_7_2_.Models.Team", "Team")
-                        .WithMany("LineUp")
-                        .HasForeignKey("TeamID1");
+                    b.HasOne("WMBA_7_2_.Models.Player", "Player")
+                        .WithMany()
+                        .HasForeignKey("PlayerID1");
 
-                    b.Navigation("Team");
+                    b.Navigation("Player");
                 });
 
             modelBuilder.Entity("WMBA_7_2_.Models.Line_Up_Player", b =>
@@ -604,9 +547,15 @@ namespace WMBA_7_2_.Data.WMBAMigrations
                         .WithMany("Teams")
                         .HasForeignKey("DivisionID");
 
+                    b.HasOne("WMBA_7_2_.Models.Line_Up", "LineUp")
+                        .WithOne("Team")
+                        .HasForeignKey("WMBA_7_2_.Models.Team", "LineUpID");
+
                     b.Navigation("Coach");
 
                     b.Navigation("Division");
+
+                    b.Navigation("LineUp");
                 });
 
             modelBuilder.Entity("WMBA_7_2_.Models.TeamStats", b =>
@@ -648,7 +597,7 @@ namespace WMBA_7_2_.Data.WMBAMigrations
                         .IsRequired();
 
                     b.HasOne("WMBA_7_2_.Models.Team", "Team")
-                        .WithMany("Team_Games")
+                        .WithMany()
                         .HasForeignKey("TeamID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -681,12 +630,12 @@ namespace WMBA_7_2_.Data.WMBAMigrations
             modelBuilder.Entity("WMBA_7_2_.Models.Line_Up", b =>
                 {
                     b.Navigation("LineUps");
+
+                    b.Navigation("Team");
                 });
 
             modelBuilder.Entity("WMBA_7_2_.Models.Player", b =>
                 {
-                    b.Navigation("GamePlayers");
-
                     b.Navigation("LineUps");
 
                     b.Navigation("StatsTotal");
@@ -694,12 +643,6 @@ namespace WMBA_7_2_.Data.WMBAMigrations
 
             modelBuilder.Entity("WMBA_7_2_.Models.Team", b =>
                 {
-                    b.Navigation("AwayGames");
-
-                    b.Navigation("HomeGames");
-
-                    b.Navigation("LineUp");
-
                     b.Navigation("Players");
 
                     b.Navigation("StatsTotal");
@@ -707,8 +650,6 @@ namespace WMBA_7_2_.Data.WMBAMigrations
                     b.Navigation("TeamCoaches");
 
                     b.Navigation("TeamStats");
-
-                    b.Navigation("Team_Games");
                 });
 
             modelBuilder.Entity("WMBA_7_2_.Models.TeamStats", b =>

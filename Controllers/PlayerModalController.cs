@@ -2,12 +2,13 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
+using WMBA_7_2_.CustomControllers;
 using WMBA_7_2_.Data;
 using WMBA_7_2_.Models;
 
 namespace WMBA_7_2_.Controllers
 {
-    public class PlayerModalController : Controller
+    public class PlayerModalController : CognizantController
     {
 
         private readonly WMBAContext _context;
@@ -35,6 +36,7 @@ namespace WMBA_7_2_.Controllers
 				var query = _context.Players
 					.Include(p => p.Team)
 					.Include(p => p.Division)
+					.Include(p => p.GamePlayers)
 					.AsQueryable();
 
 				if (!string.IsNullOrEmpty(divisionSearch))
@@ -227,5 +229,7 @@ namespace WMBA_7_2_.Controllers
 			}
 			return Json(new { success = false });
 		}
+
+
 	}
 }

@@ -47,5 +47,10 @@ namespace WMBA_7_2_.Models
 
         [Display(Name = "Status")]
         public bool IsActive { get; set; }
+
+        public ICollection<Line_Up_Player> LineUps { get; set; } = new HashSet<Line_Up_Player>();
+
+        [Display(Name = "Game Players")]
+        public ICollection<GamePlayer> GamePlayers { get; set; }
     }
 }

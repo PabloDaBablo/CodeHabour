@@ -17,7 +17,7 @@ namespace WMBA_7_2_.Models
         public Team Team { get; set; }
         public int GameID { get; set; }
         public Game Game { get; set; }
-        
-        
+
+        public bool IsHomeTeam { get; set; }
     }
 }

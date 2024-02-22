@@ -25,6 +25,8 @@ namespace WMBA_7_2_.Data
         public DbSet<Team_Game> Team_Games { get; set; }
         public DbSet<TeamStats> Team_Stats { get; set; }
         public DbSet<ImportReport> Reports { get; set; }
+
+        public DbSet<GamePlayer> GamePlayers { get; set; }
        
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -60,14 +62,41 @@ namespace WMBA_7_2_.Data
 	            .IsUnique();
 
             modelBuilder.Entity<Game>()
-                .HasIndex(tg => new { tg.ID, tg.HomeTeam, tg.AwayTeam, tg.GameDate, tg.GameTime, tg.GameLocation });
+                .HasIndex(tg => new { tg.ID, tg.HomeTeamID, tg.AwayTeamID, tg.GameDate, tg.GameTime, tg.GameLocation });
 
-            modelBuilder.Entity<Team_Game>()
-                .HasKey(tg => new { tg.GameID, tg.TeamID });
-           
             modelBuilder.Entity<ImportReport>()
                 .ToView(nameof(Reports))
                 .HasKey(r => r.ID);
+
+
+            modelBuilder.Entity<Team_Game>()
+                .HasKey(tg => new { tg.TeamID, tg.GameID });
+
+            modelBuilder.Entity<Team_Game>()
+                .HasOne(tg => tg.Team)
+                .WithMany(t => t.Team_Games)
+                .HasForeignKey(tg => tg.TeamID);
+
+            modelBuilder.Entity<Team_Game>()
+                .HasOne(tg => tg.Game)
+                .WithMany(g => g.Team_Games)
+                .HasForeignKey(tg => tg.GameID);
+
+            modelBuilder.Entity<Game>()
+                .HasOne(g => g.HomeTeam)
+                .WithMany(t => t.HomeGames)
+                .HasForeignKey(g => g.HomeTeamID)
+                .OnDelete(DeleteBehavior.Restrict); 
+
+            modelBuilder.Entity<Game>()
+                .HasOne(g => g.AwayTeam)
+                .WithMany(t => t.AwayGames)
+                .HasForeignKey(g => g.AwayTeamID)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<GamePlayer>()
+              .HasIndex(c => new { c.PlayerID, c.GameID})
+              .IsUnique();
         }
     }
 }

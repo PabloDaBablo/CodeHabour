@@ -21,8 +21,7 @@ namespace WMBA_7_2_.Controllers
 		{
 			var teams = _context.Teams
 				.ToList(); 
-			var division = _context.Divisions
-				.ToList();
+			
 
 			ViewData["TeamCoaches"] = new SelectList(teams, "ID", "TeamName");
 
