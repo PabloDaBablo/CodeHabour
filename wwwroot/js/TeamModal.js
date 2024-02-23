@@ -55,6 +55,7 @@ $('#btnAdd').click(function () {
     $('#modalTitle').text('Add Team');
     $('#Update').css('display', 'none');
     $('#Save').css('display', 'block');
+    $("#Players, #TeamCoach, label[for='Players'], label[for='TeamCoaches']").hide();
 });
 
 let insertInProgress = false;
@@ -66,9 +67,9 @@ function Insert() {
 
     var formData = {
         teamName: $('#TeamName').val(),
-        division: $('#DivisionID').val(),
+        divisionID: $('#DivisionID').val(),
         players: $('#Players').val() ? $('#Players').val().map(Number) : [],
-        coaches: $('#TeamCoaches').val() ? $('#TeamCoaches').val().map(Number) : []
+        coaches: $('#TeamCoach').val() ? $('#TeamCoach').val().map(Number) : []
     };
 
     if (insertInProgress) {
@@ -82,7 +83,7 @@ function Insert() {
     $.ajax({
         url: '/TeamModal/Insert',
         data: JSON.stringify(formData),
-        contentType: 'application/json',
+        contentType: 'application/json;charset=utf-8',
         type: 'post',
         success: function (response) {
             HideModal();
@@ -136,13 +137,13 @@ function Edit(id) {
                 $('#modalTitle').text('Edit Team');
                 $('#Save').css('display', 'none');
                 $('#Update').css('display', 'block');
-
+                $("#Players, #TeamCoach, label[for='Players'], label[for='TeamCoaches']").show();
 
                 $('#ID').val(response.id);
                 $('#TeamName').val(response.teamName);
                 $('#DivisionID').val(response.divisionID);
                 $('#Players').val(response.players).trigger('change'); 
-                $('#TeamCoaches').val(response.coaches).trigger('change');
+                $('#TeamCoach').val(response.coaches).trigger('change');
             }
         },
         error: function () {
@@ -162,7 +163,7 @@ function Update() {
     formData.teamName = $('#TeamName').val();
     formData.divisionID = $('#DivisionID').val();
     formData.players = $('#Players').val() ? $('#Players').val().map(Number) : [],
-    formData.coaches = $('#TeamCoaches').val() ? $('#TeamCoaches').val().map(Number) : []
+    formData.coaches = $('#TeamCoach').val() ? $('#TeamCoach').val().map(Number) : []
 
 
     $.ajax({

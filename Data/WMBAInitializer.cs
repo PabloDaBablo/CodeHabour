@@ -136,38 +136,38 @@ namespace WMBA_7_2_.Data
                 );
                 }
                      context.SaveChanges();
-                //        if (!context.Team_Coaches.Any())
-                //        {
-                //            context.Team_Coaches.AddRange(
-                //                new Team_Coach
-                //                {
-                //                    TeamID = 1,
-                //                    CoachID = 1
-                //                },
-                //                new Team_Coach
-                //                {
-                //                    TeamID = 1,
-                //                    CoachID = 2
-                //                },
-                //                new Team_Coach
-                //                {
-                //                    TeamID = 2,
-                //                    CoachID = 3
-                //                },
-                //                new Team_Coach
-                //                {
-                //                    TeamID = 2,
-                //                    CoachID = 4
-                //                },
-                //                new Team_Coach
-                //                {
-                //                    TeamID = 3,
-                //                    CoachID = 5
-                //                }
-                //                );
-                //            context.SaveChanges();
+                if (!context.Team_Coaches.Any())
+                {
+                    context.Team_Coaches.AddRange(
+                        new Team_Coach
+                        {
+                            TeamID = 2,
+                            CoachID = 1
+                        },
+                        new Team_Coach
+                        {
+                            TeamID = 2,
+                            CoachID = 2
+                        },
+                        new Team_Coach
+                        {
+                            TeamID = 3,
+                            CoachID = 3
+                        },
+                        new Team_Coach
+                        {
+                            TeamID = 3,
+                            CoachID = 4
+                        },
+                        new Team_Coach
+                        {
+                            TeamID = 4,
+                            CoachID = 5
+                        }
+                        );
+                    context.SaveChanges();
 
-                //        }
+                }
                 //        // Add 36 Players
                 if (!context.Players.Any())
                 {
