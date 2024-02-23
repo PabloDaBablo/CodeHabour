@@ -119,7 +119,7 @@ function Edit(id) {
                 $('#CoachMemberID').val(response.coachMemberID);
                 $('#CoachName').val(response.coachName);
                 $('#CoachNumber').val(response.coachNumber);
-                $('#TeamCoach').val(response.teams).trigger('change');
+                $('#TeamCoach').val(response.coachName).trigger('change');
                 $('#DivisionID').val(response.division);
             }
         },

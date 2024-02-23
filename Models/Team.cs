@@ -11,9 +11,7 @@ namespace WMBA_7_2_.Models
         [Required (ErrorMessage = "Team Name cannot be empty.")]
         [StringLength(100, ErrorMessage = "Team name cannot be longer than 100 characters!")]
         public string TeamName { get; set; }
-        public int? CoachID { get; set; }
-        [Display(Name = "Coach")]
-        public Coach Coach { get; set; }
+        
 
         //for now, feel free to change it if this is incorrect.
         [Display(Name = "Team Stats")]
