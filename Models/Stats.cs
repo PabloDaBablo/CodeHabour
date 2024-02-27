@@ -9,14 +9,17 @@ namespace WMBA_7_2_.Models
         public int TeamStatsID { get; set; }
         public TeamStats TeamStats { get; set; }
 
-        public int PlayerStatsID { get; set; }
-        //public PlayerStats PlayerStats { get; set; }  ---- PlayerStats is not created yet
 
         public int PlayerID { get; set; }
         public Player Player { get; set; }
 
         public int TeamID { get; set; }
         public Team Team { get; set; }
+
+        public ICollection<PlayerGameStats> PlayerGameStats { get; set; } = new HashSet<PlayerGameStats>();                                                                                                          
+
+        public int GameID { get; set; }
+        public Game Game { get; set; }
 
     }
 }

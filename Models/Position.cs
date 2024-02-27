@@ -28,10 +28,10 @@ namespace WMBA_7_2_.Models
 
     public class Position
     {
-        public int PlayerPosID { get; set; }
+        public int ID { get; set; }
 
         [ValidPosition]
         public string PlayerPosName { get; set; }
-        public virtual ICollection<PlayerPosition> PlayerPositions { get; set; }
+        public ICollection<PlayerPosition> PlayerPositions { get; set; } = new HashSet<PlayerPosition>();
     }
 }

@@ -1,0 +1,74 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Scorekeeping</title>
+    <link rel="stylesheet" href="/css/site.css" asp-append-version="true" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        .svg-container {
+            max-width: 100%;
+            height: auto;
+            padding: 10px;
+        }
+
+        svg {
+            width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="svg-container">
+
+        <svg width="400px" height="400px" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+            <!-- Grass background Added comments to make this more clear -Michael -->
+            <rect id="grass" width="100%" height="100%" fill="green" />
+
+            <!-- Baseball diamond -->
+            <polygon id="diamond" points="100,200 200,100 300,200 200,300" fill="sandybrown" />
+
+            <!-- Bases -->
+            <circle id="first-base" cx="300" cy="200" r="15" fill="grey" />
+            <circle id="second-base" cx="200" cy="100" r="15" fill="grey" />
+            <circle id="third-base" cx="100" cy="200" r="15" fill="grey" />
+            <circle id="home-plate" cx="200" cy="300" r="15" fill="grey" />
+
+            <!-- Player positions -->
+            <circle id="catcher" cx="200" cy="300" r="10" fill="white" />
+            <circle id="first-base-player" cx="300" cy="200" r="10" fill="white" />
+            <circle id="second-base-player" cx="200" cy="100" r="10" fill="white" />
+            <circle id="third-base-player" cx="100" cy="200" r="10" fill="white" />
+            <circle id="pitcher" cx="200" cy="200" r="10" fill="white" />
+            <circle id="shortstop" cx="150" cy="150" r="10" fill="white" />
+            <circle id="left-field" cx="50" cy="100" r="10" fill="white" />
+            <circle id="center-field" cx="200" cy="50" r="10" fill="white" />
+            <circle id="right-field" cx="350" cy="100" r="10" fill="white" />
+
+            <!-- Position labels -->
+            <text id="label-catcher" x="200" y="320" text-anchor="middle" font-family="Verdana" font-size="14">C</text>
+            <text id="label-second-base" x="200" y="90" text-anchor="middle" font-family="Verdana" font-size="14">2B</text>
+            <text id="label-third-base" x="90" y="200" text-anchor="middle" font-family="Verdana" font-size="14">3B</text>
+            <text id="label-first-base" x="310" y="200" text-anchor="middle" font-family="Verdana" font-size="14">1B</text>
+            <text id="label-pitcher" x="190" y="200" text-anchor="middle" font-family="Verdana" font-size="14">P</text>
+            <text id="label-shortstop" x="150" y="140" text-anchor="middle" font-family="Verdana" font-size="14">SS</text>
+            <text id="label-left-field" x="50" y="90" text-anchor="middle" font-family="Verdana" font-size="14">LF</text>
+            <text id="label-center-field" x="200" y="40" text-anchor="middle" font-family="Verdana" font-size="14">CF</text>
+            <text id="label-right-field" x="350" y="90" text-anchor="middle" font-family="Verdana" font-size="14">RF</text>
+        </svg>
+
+    </div>
+
+	<script src="~/js/scorekeeping.js"></script>
+
+    @{
+        var gameId = ViewData["GameId"];
+    }
+
+    <script type="text/javascript">
+        var gameId = @gameId;
+    </script>
+</body>
+</html>
+
