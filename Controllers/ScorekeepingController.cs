@@ -28,13 +28,13 @@ namespace WMBA_7_2_.Controllers
 
         public JsonResult GetPlayers(int gameId)
         {
-            var homeTeamId = _context.Games
+            var awayTeamID = _context.Games
                                      .Where(g => g.ID == gameId)
-                                     .Select(g => g.HomeTeamID)
-                                     .FirstOrDefault();
+                                     .Select(g => g.AwayTeamID)
+                                     .FirstOrDefault();//loads the away team lineup onto the scorekeeping page. -Michael
 
             var players = _context.Players
-                .Where(p => p.GamePlayers.Any(gp => gp.GameID == gameId) && p.TeamID == homeTeamId) // Ensure player is part of the home team.
+                .Where(p => p.GamePlayers.Any(gp => gp.GameID == gameId) && p.TeamID == awayTeamID) // Ensure player is part of the home team.
                 .Include(c => c.Division)
                 .Include(c => c.Team)
                 .Include(c => c.PlayerPositions).ThenInclude(pp => pp.Position)
