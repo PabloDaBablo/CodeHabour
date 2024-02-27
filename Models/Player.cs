@@ -27,8 +27,6 @@ namespace WMBA_7_2_.Models
         [Range(0, 99, ErrorMessage = "Player number must be between 0 and 99!")]
         public int? PlayerNumber { get; set; }
 
-        [Display(Name = "Stats")]
-        public ICollection<Stats> StatsTotal { get; set; } = new HashSet<Stats>();
 
         [Display(Name = "Division")]
         public int? DivisionID { get; set; }
@@ -51,6 +49,14 @@ namespace WMBA_7_2_.Models
         public ICollection<Line_Up_Player> LineUps { get; set; } = new HashSet<Line_Up_Player>();
 
         [Display(Name = "Game Players")]
-        public ICollection<GamePlayer> GamePlayers { get; set; }
+        public ICollection<GamePlayer> GamePlayers { get; set; } = new HashSet<GamePlayer>();
+
+        [Display(Name = "Player Game Stats")]
+        public ICollection<PlayerGameStats> PlayerGameStats { get; set; } = new HashSet<PlayerGameStats>();
+
+        [Display(Name = "Player Stats")]
+        public ICollection<Stats> Stats { get; set; } = new HashSet<Stats>();
+    
+        public ICollection<PlayerPosition> PlayerPositions { get; set; } = new HashSet<PlayerPosition>();
     }
 }

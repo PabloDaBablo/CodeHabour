@@ -51,6 +51,51 @@ namespace WMBA_7_2_.Data
                     context.SaveChanges();
 
                 }
+                if (!context.Positions.Any())
+                {
+                    context.Positions.AddRange(
+                        new Position
+                        {
+                            PlayerPosName = "Catcher"
+                        },
+                        new Position
+                        {
+                            PlayerPosName = "First Base"
+                        },
+                        new Position
+                        {
+                            PlayerPosName = "Second Base"
+                        },
+                        new Position
+                        {
+                            PlayerPosName = "Third Base"
+                        },  
+                        new Position
+                        {
+                            PlayerPosName = "Pitcher"
+                        },
+                        new Position
+                        {
+                            PlayerPosName = "Short Stop"
+                        },
+                        new Position
+                        {
+                            PlayerPosName = "Left Field"
+                        },
+                        new Position
+                        {
+                            PlayerPosName = "Center Field"
+                        },
+                        new Position
+                        {
+                            PlayerPosName = "Right Field"
+                        }
+
+                        );
+
+                    context.SaveChanges();
+
+                }
                 //    // Add 8 coaches.
                 if (!context.Coaches.Any())
                 {
@@ -536,7 +581,195 @@ namespace WMBA_7_2_.Data
 
                     context.SaveChanges();
                 }
-            
+
+                if (!context.PlayerPositions.Any())
+                {
+                    context.PlayerPositions.AddRange(
+                        new PlayerPosition
+                        {
+                            PlayerID = 1,
+                            PositionID = 1
+                        },
+                        new PlayerPosition
+                        {
+                            PlayerID = 2,
+                            PositionID = 2
+                        },
+                        new PlayerPosition
+                        {
+                            PlayerID = 3,
+                            PositionID = 3
+                        },
+                        new PlayerPosition
+                        {
+                            PlayerID = 4,
+                            PositionID = 4
+                        },
+                        new PlayerPosition
+                        {
+                            PlayerID = 5,
+                            PositionID = 5
+                        },
+                        new PlayerPosition
+                        {
+                            PlayerID = 6,
+                            PositionID = 6
+                        },
+                        new PlayerPosition
+                        {
+                            PlayerID = 7,
+                            PositionID = 7
+                        },
+                        new PlayerPosition
+                        {
+                            PlayerID = 8,
+                            PositionID = 8
+                        },
+                        new PlayerPosition
+                        {
+                            PlayerID = 9,
+                            PositionID = 9
+                        },
+                        new PlayerPosition
+                        {
+                            PlayerID = 10,
+                            PositionID = 1
+                        },
+                        new PlayerPosition
+                        {
+                            PlayerID = 11,
+                            PositionID = 2
+                        },
+                        new PlayerPosition
+                        {
+                            PlayerID = 12,
+                            PositionID = 3
+                        },
+                        new PlayerPosition
+                        {
+                            PlayerID = 13,
+                            PositionID = 4
+                        },
+                        new PlayerPosition
+                        {
+                            PlayerID = 14,
+                            PositionID = 5
+                        },
+                        new PlayerPosition
+                        {
+                            PlayerID = 15,
+                            PositionID = 6
+                        },
+                        new PlayerPosition
+                        {
+                            PlayerID = 16,
+                            PositionID = 7
+                        },
+                        new PlayerPosition
+                        {
+                            PlayerID = 17,
+                            PositionID = 8
+                        },
+                        new PlayerPosition
+                        {
+                            PlayerID = 18,
+                            PositionID = 9
+                        },
+                        new PlayerPosition
+                        {
+                            PlayerID = 19,
+                            PositionID = 1
+                        },
+                        new PlayerPosition
+                        {
+                            PlayerID = 20,
+                            PositionID = 2
+                        },
+                        new PlayerPosition
+                        {
+                            PlayerID = 21,
+                            PositionID = 3
+                        },
+                        new PlayerPosition
+                        {
+                            PlayerID = 22,
+                            PositionID = 4
+                        },
+                        new PlayerPosition
+                        {
+                            PlayerID = 23,
+                            PositionID = 5
+                        },
+                        new PlayerPosition
+                        {
+                            PlayerID = 24,
+                            PositionID = 6
+                        },
+                        new PlayerPosition
+                        {
+                            PlayerID = 25,
+                            PositionID = 7
+                        },
+                        new PlayerPosition
+                        {
+                            PlayerID = 26,
+                            PositionID = 8
+                        },
+                        new PlayerPosition
+                        {
+                            PlayerID = 27,
+                            PositionID = 9
+                        },
+                        new PlayerPosition
+                        {
+                            PlayerID = 28,
+                            PositionID = 1
+                        },
+                        new PlayerPosition
+                        {
+                            PlayerID = 29,
+                            PositionID = 2
+                        },
+                        new PlayerPosition
+                        {
+                            PlayerID = 30,
+                            PositionID = 3
+                        },
+                        new PlayerPosition
+                        {
+                            PlayerID = 31,
+                            PositionID = 4
+                        },
+                        new PlayerPosition
+                        {
+                            PlayerID = 32,
+                            PositionID = 5
+                        },
+                        new PlayerPosition
+                        {
+                            PlayerID = 33,
+                            PositionID = 6
+                        },
+                        new PlayerPosition
+                        {
+                            PlayerID = 34,
+                            PositionID = 7
+                        },
+                        new PlayerPosition
+                        {
+                            PlayerID = 35,
+                            PositionID = 8
+                        },
+                        new PlayerPosition
+                        {
+                            PlayerID = 36,
+                            PositionID = 9
+                        }
+                        
+                        );
+                    context.SaveChanges();
+
+                }
 
 
                 if (!context.Games.Any())

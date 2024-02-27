@@ -27,6 +27,12 @@ namespace WMBA_7_2_.Data
         public DbSet<ImportReport> Reports { get; set; }
 
         public DbSet<GamePlayer> GamePlayers { get; set; }
+
+        public DbSet<Position> Positions { get; set; }
+
+        public DbSet<PlayerGameStats> PlayerGamesStats { get; set; }
+
+        public DbSet<PlayerStats> PlayerStats { get; set; }
        
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -34,6 +40,7 @@ namespace WMBA_7_2_.Data
 
             modelBuilder.Entity<Team_Coach>()
                 .HasKey(tc => new { tc.CoachID, tc.TeamID});
+
 
 			modelBuilder.Entity<Team_Coach>()
 		        .HasOne(tc => tc.Team)
@@ -45,7 +52,20 @@ namespace WMBA_7_2_.Data
 				.WithMany(c => c.TeamCoach)
 				.HasForeignKey(tc => tc.CoachID);
 
-			modelBuilder.Entity<Player>()
+            modelBuilder.Entity<PlayerPosition>()
+                .HasKey(pp => new { pp.PlayerID, pp.PositionID });
+
+            modelBuilder.Entity<PlayerPosition>()
+                .HasOne(pp => pp.Player)
+                .WithMany(p => p.PlayerPositions)
+                .HasForeignKey(pp => pp.PlayerID);
+
+            modelBuilder.Entity<PlayerPosition>()
+                .HasOne(pp => pp.Position)
+                .WithMany(p => p.PlayerPositions)
+                .HasForeignKey(pp => pp.PositionID);
+
+            modelBuilder.Entity<Player>()
                 .HasOne(p => p.Team)
                 .WithMany( t => t.Players)
                 .HasForeignKey( p => p.TeamID)

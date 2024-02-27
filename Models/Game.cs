@@ -60,6 +60,9 @@ namespace WMBA_7_2_.Models
         [Display(Name = "Game Players")]
         public ICollection<GamePlayer> GamePlayers { get; set; } = new HashSet<GamePlayer>();
 
+        [Display(Name = "Player Game Stats")]
+        public ICollection<PlayerGameStats> PlayerGameStats { get; set; } = new HashSet<PlayerGameStats>();
+
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             //Games can't be played in the past
