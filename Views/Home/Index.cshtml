@@ -10,6 +10,87 @@
 
 <body>
 
+    <br />
+    <br />  
+    <br />
+
+    <div id="carouselBaseball" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="/Images/umpire-registration-24.svg" class="d-block w-100" alt="Umpire Registration 2024">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>Umpire Registration Open Now!</h5>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img src="/Images/registeration-2024-web-banner-slider.svg" class="d-block w-100" alt="Registration 2024 Web Banner">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>2024 REGISTRATION IS NOW OPEN</h5>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img src="/Images/WMBABaseballwlogo.svg" class="d-block w-100" alt="WMBA Baseball Logo">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>2024 Welland Junior Jackfish Tournaments</h5>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img src="/Images/Provincial-Tournament.svg" class="d-block w-100" alt="Provincial Tournament Banner">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>13U 'C' OBA Provincial Championships</h5>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img src="/Images/11u-seaway-champs.svg" class="d-block w-100" alt="11U Seaway Champions">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>2023 11U Seaway Shootout Champs</h5>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img src="/Images/2023-9u-champs.svg" class="d-block w-100" alt="2023 9U Champions">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>2023 Annual Rose City 9U Champs</h5>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img src="/Images/2023-11u-rep.svg" class="d-block w-100" alt="2023 11U Representative Team">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>2023 Battle at the Beach 11U Champs</h5>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img src="/Images/2023-10u-jr-jackfish.svg" class="d-block w-100" alt="2023 10U Jr Jackfish Team">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>Congratulations 2023 10U Rep Junior Jackfish</h5>
+                </div>
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselBaseball" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselBaseball" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+    <br />
+    <br />
+    <br />
+
+
+
+    <select id="rulesDropdown" class="form-select">
+        <option value="">Select a Rule</option>
+        @foreach (var rule in ViewBag.Rules)
+        {
+            <option value="@rule.ID">@rule.RuleName</option>
+        }
+    </select>
+
+    <div id="ruleDescription" class="text-center mt-3"></div>
+
+
     <div class="column-container">
         <div class="column">
           @*   <a href="" class="custom-btn">Game Selection</a>
@@ -20,12 +101,11 @@
 
 
 
-
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../wwwroot/js/site.js" asp-append-version="true"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://kit.fontawesome.com/44b9581dbb.js" crossorigin="anonymous"></script>
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/rules.js" asp-append-version="true"></script>
 </body>
 
 
