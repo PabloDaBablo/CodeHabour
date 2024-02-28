@@ -25,7 +25,7 @@ namespace WMBA_7_2_.Data
         public DbSet<Team_Game> Team_Games { get; set; }
         public DbSet<TeamStats> Team_Stats { get; set; }
         public DbSet<ImportReport> Reports { get; set; }
-
+        public DbSet<Rules> Rules { get; set; }
         public DbSet<GamePlayer> GamePlayers { get; set; }
 
         public DbSet<Position> Positions { get; set; }

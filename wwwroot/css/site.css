@@ -132,7 +132,39 @@ header {
     text-shadow: 0.5px 0 currentColor, -0.5px 0 currentColor, 0 0.5px currentColor, 0 -0.5px currentColor; /* Simulate boldness */
     }
 
+.carouselExampleIndicators{
+    width: 100%
+}
+
+.carousel-item {
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.carousel-item.active {
+    opacity: 1;
+}
+
+#carouselExampleIndicators .carousel-control-prev-icon,
+#carouselExampleIndicators .carousel-control-next-icon {
+    font-size: 24px;
+    font-weight: bold;
+    content: '';
+}
+
 @media (min-width: 769px) {
+    .carousel-item {
+        max-width: 1200px; 
+        min-width: 600px; 
+    }
+
+        .carousel-item img {
+            height: 400px;
+            width: 500px;
+            object-fit: cover;
+            width: 100%;
+        }
+
     .navbar-nav-desktop {
         display: flex;
         flex-direction: row;
@@ -144,8 +176,8 @@ header {
     .desktop-btn {
         display: inline-block;
         margin: 5px;
-        width: auto; 
-        margin-bottom: 0; 
+        width: auto;
+        margin-bottom: 0;
     }
 
     .navbar-toggler {
@@ -154,6 +186,18 @@ header {
 }
 
 @media (max-width: 768px) {
+    .carousel-item {
+        max-width: 600px; 
+        min-width: 300px; 
+    }
+
+        .carousel-item img {
+            height: 200px;
+            width: 250px;
+            object-fit: cover;
+            width: 100%;
+        }
+
     .navbar-toggler {
         display: flex;
     }
@@ -162,3 +206,28 @@ header {
         display: none;
     }
 }
+
+.rules {
+    color: #15244A;
+    font: bold;
+}
+
+.ruleSection {
+    color: #15244A;
+}
+
+.btn btn-primary {
+    color: white;
+    background-color: #15244A;
+}
+
+#ruleDescription {
+    display: flex; 
+    justify-content: center; 
+    text-align: left; 
+    width: 80%; 
+    margin-left: auto; 
+    margin-right: auto; 
+}
+
+
