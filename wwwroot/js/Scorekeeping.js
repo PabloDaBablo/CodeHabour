@@ -35,3 +35,18 @@ function GetPlayers(gameId) {
         }
     });
 }
+document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById('baseball-image').addEventListener('click', function (event) {
+        var menu = document.getElementById('popup-menu');
+        menu.style.left = event.pageX + 'px';
+        menu.style.top = event.pageY + 'px';
+        menu.style.display = 'block';
+    });
+
+    document.addEventListener('click', function (event) {
+        var menu = document.getElementById('popup-menu');
+        if (event.target.id !== 'baseball-image') {
+            menu.style.display = 'none';
+        }
+    });
+});

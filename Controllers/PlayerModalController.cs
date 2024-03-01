@@ -64,7 +64,7 @@ namespace WMBA_7_2_.Controllers
 					query = query.Where(p => p.TeamID == teamId.Value);
 				}
 
-				if (sortColumn == "teamName")
+				/*if (sortColumn == "teamName")
 				{
 					query = sortDirection == "asc" ? query.OrderBy(p => p.Team.TeamName) : query.OrderByDescending(p => p.Team.TeamName);
 				}
@@ -72,6 +72,7 @@ namespace WMBA_7_2_.Controllers
 				{
 					query = sortDirection == "asc" ? query.OrderBy(p => p.Division.DivAge) : query.OrderByDescending(p => p.Division.DivAge);
 				}
+				*/
 
 				var totalRecords = query.Count();
 				var totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
