@@ -74,7 +74,7 @@ header {
     text-decoration: none;
     border-radius: 5px;
     transition: background-color 0.3s;
-    width: 80%;
+    width: 100%;
 }
 
     .custom-btn:hover {
@@ -230,4 +230,20 @@ header {
     margin-right: auto; 
 }
 
+#inningNumber{
+    padding: 1%;
+}
 
+#outNumber{
+    padding: 1%;
+}
+
+#inningDiv {
+    font-weight: 900;
+    font-size: 250%
+}
+
+#outDiv {
+    font-weight: 900;
+    font-size: 250%;
+}
