@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Game Scorekeeping</title>
     <link rel="stylesheet" href="/css/site.css" asp-append-version="true" />
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <style>
         .svg-container {
             max-width: 100%;
@@ -20,6 +19,31 @@
     </style>
 </head>
 <body>
+@*     Inning count, out count, teams playing based on game here displayed here *@
+    <div class="container">
+        <div class="row">
+            <div class="col d-flex align-items-center justify-content-center" id="inningDiv">
+                Inning: <span id="inningNumber">1</span>
+            </div>
+            <div class="col d-flex align-items-center justify-content-center" id="outDiv">
+                Out: <span id="outNumber">0</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <button id="ballNumberButton" class="custom-btn">Ball: <span id="ballCount">0</span></button>
+            </div>
+            <div class="col">
+                <button id="strikeNumberButton" class="custom-btn">Strike: <span id="strikeCount">0</span></button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col d-flex align-items-center justify-content-center" id="inningDiv">
+                <span id="teamsPlaying">Select a game...</span>
+            </div>
+        </div>
+    </div>
+
     <div class="svg-container">
 
         <svg width="400px" height="400px" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
@@ -61,25 +85,41 @@
         </svg>
     </div>
 
-    <div id="popup-menu" style="display:none; position: absolute; background-color: white; border: 1px solid black; padding: 10px;">
-        <ul>
-            <li>Option 1</li>
-            <li>Option 2</li>
-            <li>Option 3</li>
-        </ul>
+@*     Games and Lineup menus *@
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <label for="team1Dropdown">Select Game:</label>
+                <select id="team1Dropdown" class="form-control">
+                    <option value="0" selected>Select a game...</option>
+                    <option value="1">Ketchup vs Mustard</option>
+                    <option value="2">Apples vs Oranges</option>
+                    <option value="3">Cats vs Dogs</option>
+                </select>
+            </div>
+            <div class="col">
+                <label for="team2Dropdown">Lineup:</label>
+                <select id="team2Dropdown" class="form-control">
+                    <option value="0" selected>Your lineup...</option>
+                    <option value="1">Player X</option>
+                    <option value="2">Player Y</option>
+                    <option value="3">Player Z</option>
+                </select>
+            </div>
+        </div>
     </div>
 
 
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script src="~/js/scorekeeping.js"></script>
 
-    @{
+@*      @{
         var gameId = ViewData["GameId"];
     }
 
     <script type="text/javascript">
         var gameId = @gameId;
-    </script>
+    </script>  *@
 </body>
 </html>
 

@@ -35,18 +35,54 @@ function GetPlayers(gameId) {
         }
     });
 }
+
+/*Counters for Balls, Strikes, Innings, Outs*/
 document.addEventListener('DOMContentLoaded', function () {
-    document.getElementById('baseball-image').addEventListener('click', function (event) {
-        var menu = document.getElementById('popup-menu');
-        menu.style.left = event.pageX + 'px';
-        menu.style.top = event.pageY + 'px';
-        menu.style.display = 'block';
+    var strikeButton = document.getElementById("strikeNumberButton");
+    var ballButton = document.getElementById("ballNumberButton");
+
+    strikeButton.addEventListener("click", function () {
+        var strikeCountSpan = document.getElementById("strikeCount");
+        var strikeCount = parseInt(strikeCountSpan.textContent, 10);
+        strikeCount++;
+
+        if (strikeCount >= 3) {
+            var outCountSpan = document.getElementById("outNumber");
+            var outCount = parseInt(outCountSpan.textContent, 10);
+            outCount++;
+            if (outCount > 3) {
+                outCount = 0;
+                var inningSpan = document.getElementById("inningNumber");
+                var inningCount = parseInt(inningSpan.textContent, 10);
+                inningCount++;
+                inningSpan.textContent = inningCount;
+            }
+            outCountSpan.textContent = outCount;
+            strikeCount = 0;
+        }
+
+        strikeCountSpan.textContent = strikeCount;
     });
 
-    document.addEventListener('click', function (event) {
-        var menu = document.getElementById('popup-menu');
-        if (event.target.id !== 'baseball-image') {
-            menu.style.display = 'none';
+    ballButton.addEventListener("click", function () {
+        var ballCountSpan = document.getElementById("ballCount");
+        var ballCount = parseInt(ballCountSpan.textContent, 10);
+        ballCount++;
+
+        if (ballCount >= 4) {
+            console.log("walk");
+            ballCount = 0;
         }
+
+        ballCountSpan.textContent = ballCount;
     });
 });
+
+/*Change games and lineups*/
+document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById('team1Dropdown').addEventListener('change', function () {
+        var selectedGameText = this.options[this.selectedIndex].text; 
+        document.getElementById('teamsPlaying').textContent = selectedGameText; 
+    });
+});
+
