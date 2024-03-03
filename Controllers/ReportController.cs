@@ -149,7 +149,8 @@ namespace WMBA_7_2_.Controllers
 
             //Note that we are assuming that you are using the Preferred Approach to Lookup Values
             //And the custom LookupsController
-            return Redirect(ViewData["returnURL"].ToString());
+            //return Redirect(ViewData["returnURL"].ToString());
+            return RedirectToAction("Index", "");
         }
 
 
