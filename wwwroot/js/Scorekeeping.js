@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', function () {
         var strikeCount = parseInt(strikeCountSpan.textContent, 10);
         strikeCount++;
 
-        if (strikeCount >= 3) {
+        if (strikeCount > 3) {
             var outCountSpan = document.getElementById("outNumber");
             var outCount = parseInt(outCountSpan.textContent, 10);
             outCount++;
