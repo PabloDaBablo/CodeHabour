@@ -58,5 +58,7 @@ namespace WMBA_7_2_.Models
         public ICollection<Stats> Stats { get; set; } = new HashSet<Stats>();
     
         public ICollection<PlayerPosition> PlayerPositions { get; set; } = new HashSet<PlayerPosition>();
+
+        public ICollection<PlayerStats>PlayerStats { get; set; } = new HashSet<PlayerStats>();
     }
 }

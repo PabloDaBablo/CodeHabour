@@ -5,6 +5,7 @@ using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
 using WMBA_7_2_.CustomControllers;
 using WMBA_7_2_.Data;
 using WMBA_7_2_.Models;
+using WMBA_7_2_.ViewModels;
 
 namespace WMBA_7_2_.Controllers
 {
@@ -37,6 +38,7 @@ namespace WMBA_7_2_.Controllers
 					.Include(p => p.Team)
 					.Include(p => p.Division)
 					.Include(p => p.GamePlayers)
+					.Include(p => p.PlayerStats)
 					.AsQueryable();
 
 				if (!string.IsNullOrEmpty(divisionSearch))
@@ -229,6 +231,20 @@ namespace WMBA_7_2_.Controllers
 				return Json(new { success = true, isActive = player.IsActive });
 			}
 			return Json(new { success = false });
+		}
+
+		public async Task<IActionResult> PlayerDetails(int playerId)
+		{
+			var player = await _context.Players
+										.Include(p => p.PlayerStats)
+										.FirstOrDefaultAsync(p => p.ID == playerId);
+
+			if (player == null)
+			{
+				return NotFound();
+			}
+
+			return View(player);
 		}
 
 

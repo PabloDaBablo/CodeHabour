@@ -1,0 +1,42 @@
+﻿#popup-menu {
+    display: none;
+    position: absolute;
+    background: rgba(255, 255, 255, 0.95); 
+    border: 1px solid #ccc; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    padding: 15px;
+    border-radius: 8px; 
+    width: 200px;
+    font-family: Arial, sans-serif;
+    z-index: 1000; 
+}
+
+#popup-menu h4 {
+    margin-top: 0;
+    color: #333; 
+}
+
+#popup-menu ul {
+    list-style-type: none; 
+    padding: 0;
+    margin: 0;
+}
+#popup-menu ul li {
+    padding: 8px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer; 
+}
+
+#popup-menu ul li:last-child {
+    border-bottom: none; 
+
+}
+
+#popup-menu ul li:hover {
+    background-color: #f9f9f9; 
+}
+
+.player-group.selected {
+    stroke: #ff0000;
+    stroke-width: 1;
+}

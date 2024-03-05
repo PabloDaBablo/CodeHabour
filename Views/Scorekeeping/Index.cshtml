@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Game Scorekeeping</title>
-    <link rel="stylesheet" href="/css/site.css" asp-append-version="true" />
+	<link rel="stylesheet" href="/css/site.css" asp-append-version="true" />
+	<link href="~/css/scorekeeping.css" rel="stylesheet" />
     <style>
         .svg-container {
             max-width: 100%;
@@ -42,6 +43,7 @@
                 <span id="teamsPlaying">Select a game...</span>
             </div>
         </div>
+        <div id="score">Home Score: 0</div>
     </div>
 
     <div class="svg-container">
@@ -81,22 +83,13 @@
             <text id="label-center-field" x="200" y="40" text-anchor="middle" font-family="Verdana" font-size="14">CF</text>
             <text id="label-right-field" x="350" y="90" text-anchor="middle" font-family="Verdana" font-size="14">RF</text>
 
-            <image id="baseball-image" href="/images/baseball.png" x="185" y="225" height="30px" width="30px" />
+            <image id="baseball-image" xlink:href="/images/baseball.png" x="185" y="225" height="30px" width="30px" />
         </svg>
     </div>
 
 @*     Games and Lineup menus *@
     <div class="container">
         <div class="row">
-            <div class="col">
-                <label for="team1Dropdown">Select Game:</label>
-                <select id="team1Dropdown" class="form-control">
-                    <option value="0" selected>Select a game...</option>
-                    <option value="1">Ketchup vs Mustard</option>
-                    <option value="2">Apples vs Oranges</option>
-                    <option value="3">Cats vs Dogs</option>
-                </select>
-            </div>
             <div class="col">
                 <label for="team2Dropdown">Lineup:</label>
                 <select id="team2Dropdown" class="form-control">
@@ -109,17 +102,25 @@
         </div>
     </div>
 
+    <div id="popup-menu">
+        <ul>
+            <li id="advance-player">Advance Selected Player</li>
+            <li id="player-out">Selected Player Out </li>
+            <li>Option 3</li>
+        </ul>
+    </div>
+
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script src="~/js/scorekeeping.js"></script>
 
-@*      @{
+    @{
         var gameId = ViewData["GameId"];
     }
 
     <script type="text/javascript">
         var gameId = @gameId;
-    </script>  *@
+    </script> 
 </body>
 </html>
 
