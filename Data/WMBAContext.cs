@@ -33,8 +33,8 @@ namespace WMBA_7_2_.Data
         public DbSet<PlayerGameStats> PlayerGamesStats { get; set; }
 
         public DbSet<PlayerStats> PlayerStats { get; set; }
-       
 
+        public DbSet<Club> Clubs { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
