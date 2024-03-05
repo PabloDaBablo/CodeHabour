@@ -1051,8 +1051,96 @@ namespace WMBA_7_2_.Data
 
                     }
 
+					if (!context.PlayerStats.Any())
+					{
+						context.PlayerStats.AddRange(
+							new PlayerStats
+							{
+								PlayerID = 1,
+								PA = 250,
+								Runs = 60,
+								Hits = 70,
+								B1 = 45,
+								B2 = 15,
+								B3 = 5,
+								HR = 5,
+								RBI = 55,
+								BB = 50,
+								K = 75,
+								SB = 20,
+								SAC = 3
+							},
+							new PlayerStats
+							{
+								PlayerID = 2,
+								PA = 200,
+								Runs = 40,
+								Hits = 50,
+								B1 = 35,
+								B2 = 10,
+								B3 = 3,
+								HR = 2,
+								RBI = 30,
+								BB = 25,
+								K = 50,
+								SB = 15,
+								SAC = 2
+							},
+							new PlayerStats
+							{
+								PlayerID = 3,
+								PA = 300,
+								Runs = 80,
+								Hits = 90,
+								B1 = 60,
+								B2 = 20,
+								B3 = 7,
+								HR = 3,
+								RBI = 70,
+								BB = 60,
+								K = 80,
+								SB = 25,
+								SAC = 4
+							},
+                            new PlayerStats
+                            {
+                                PlayerID = 4,
+                                PA = 250,
+                                Runs = 60,
+                                Hits = 70,
+                                B1 = 45,
+                                B2 = 15,
+                                B3 = 5,
+                                HR = 5,
+                                RBI = 55,
+                                BB = 50,
+                                K = 75,
+                                SB = 20,
+                                SAC = 3
+                            },
+                            new PlayerStats
+                            {
+                                PlayerID = 5,
+                                PA = 200,
+                                Runs = 40,
+                                Hits = 50,
+                                B1 = 35,
+                                B2 = 10,
+                                B3 = 3,
+                                HR = 2,
+                                RBI = 30,
+                                BB = 25,
+                                K = 50,
+                                SB = 15,
+                                SAC = 2
+                            }
+                            
+						);
+						context.SaveChanges();
+					}
 
-                    foreach (Game game in context.Games)
+
+					foreach (Game game in context.Games)
                     {
 
                         //Add the players from the teams to each one

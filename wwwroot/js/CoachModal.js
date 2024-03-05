@@ -213,13 +213,6 @@ function Validate() {
         $('#CoachName').css('border-color', 'lightgrey');
     }
 
-    if ($('#CoachNumber').val().trim() == "") {
-        $('#CoachNumber').css('border-color', 'Red');
-        isValid = false;
-    }
-    else {
-        $('#CoachNumber').css('border-color', 'lightgrey');
-    }
 
     if ($('#TeamCoach').val() == "") {
         $('#TeamCoach').css('border-color', 'Red');
@@ -235,9 +228,6 @@ $('#CoachMemberID').change(function () {
     Validate();
 });
 $('#CoachName').change(function () {
-    Validate();
-});
-$('#CoachNumber').change(function () {
     Validate();
 });
 $('#CoachPosition').change(function () {

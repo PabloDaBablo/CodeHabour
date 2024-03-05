@@ -117,11 +117,12 @@ body {
 .label-box {
     padding: 10px;
     margin: 10px;
-    background-color: #0047AB; /* Lighter blue background */
+    background-color: #0047AB; 
     color: white;
     text-align: center;
 }
 
 .label {
-    font-size: 1.25em; /* Larger text for the label */
+    font-size: 1.25em; 
 }
+

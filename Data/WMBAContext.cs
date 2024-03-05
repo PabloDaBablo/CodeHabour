@@ -117,6 +117,11 @@ namespace WMBA_7_2_.Data
             modelBuilder.Entity<GamePlayer>()
               .HasIndex(c => new { c.PlayerID, c.GameID})
               .IsUnique();
+
+            modelBuilder.Entity<PlayerStats>()
+            .HasOne(ps => ps.Player)
+            .WithMany(p => p.PlayerStats) 
+            .HasForeignKey(ps => ps.PlayerID);
         }
     }
 }
