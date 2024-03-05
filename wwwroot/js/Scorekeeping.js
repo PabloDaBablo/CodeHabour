@@ -110,36 +110,34 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 //TImer
+function startTimer(duration, displayElement, messageElement, ballButton, strikeButton) {
+    var endTime = new Date(Date.now() + duration);
 
-var now = new Date();
+    var timerInterval = setInterval(function () {
+        var remainingTime = endTime - Date.now();
+        var hours = Math.floor((remainingTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        var minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
 
-// Add 10 seconds to the current time
-var countDownDate = new Date(now.getTime() + 10 * 1000); // 10 seconds * 1000 milliseconds/second
+        displayElement.textContent = `${hours}h ${minutes}m ${seconds}s`;
 
-// Update the count down every 1 second
-var x = setInterval(function () {
-    // Get today's date and time
-    var now = new Date().getTime();
+        if (remainingTime < 0) {
+            clearInterval(timerInterval);
+            displayElement.textContent = 'Time Up!';
+            messageElement.textContent = 'Game Over';
+            ballButton.disabled = true;
+            strikeButton.disabled = true;
+        }
+    }, 1000);
+}
 
-    // Find the distance between now and the count down date
-    var distance = countDownDate - now;
+// Start the timer with a 10-second countdown
+document.addEventListener('DOMContentLoaded', function () {
+    var displayElement = document.getElementById('clock');
+    var messageElement = document.getElementById('gameOverMessageDisplay');
+    var ballButton = document.getElementById('ballNumberButton');
+    var strikeButton = document.getElementById('strikeNumberButton');
 
-    // Time calculations for hours, minutes and seconds
-    var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    startTimer(10000, displayElement, messageElement, ballButton, strikeButton);
+});
 
-    // Display the result in the element with id="clock"
-    document.getElementById("clock").innerHTML = hours + "h " + minutes + "m " + seconds + "s ";
-
-    // If the count down is finished, write some text
-    if (distance < 0) {
-        clearInterval(x);
-        document.getElementById("clock").innerHTML = "Time Up!"; // Change this line to update "clock" instead
-        document.getElementById("gameOverMessageDisplay").textContent = "Game Over"
-
-        // Disable the ball and strike buttons
-        document.getElementById("ballNumberButton").disabled = true;
-        document.getElementById("strikeNumberButton").disabled = true;
-    }
-}, 1000);
