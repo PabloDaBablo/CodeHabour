@@ -10,6 +10,8 @@ using System.Drawing;
 using OfficeOpenXml.Table;
 using WMBA_7_2_.CustomControllers;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using WMBA_7_2_.ViewModels;
+using System.Numerics;
 
 namespace WMBA_7_2_.Controllers
 {
@@ -49,7 +51,7 @@ namespace WMBA_7_2_.Controllers
                     fill.BackgroundColor.SetColor(Color.LightBlue);
                 }
 
-                //Manually set width of columns as well
+                //Manually set width of columns
                 workSheet.Column(1).Width = 15;
                 workSheet.Column(2).Width = 15;
                 workSheet.Column(3).Width = 15;
@@ -59,7 +61,7 @@ namespace WMBA_7_2_.Controllers
                 workSheet.Column(7).Width = 35;
                 workSheet.Column(8).Width = 20;
 
-                //Add a headings and a title
+                //Add headings and a title
                 workSheet.Cells[1, 1].Value = "ID";
                 workSheet.Cells[1, 2].Value = "First Name";
                 workSheet.Cells[1, 3].Value = "Last Name";
@@ -69,11 +71,11 @@ namespace WMBA_7_2_.Controllers
                 workSheet.Cells[1, 7].Value = "Club";
                 workSheet.Cells[1, 8].Value = "Team";
                 workSheet.Cells[1, 10].Value = "Welland Minor Baseball Association";
-               
+
                 using (ExcelRange Rng = workSheet.Cells[1, 10, 1, 18])
                 {
-                    Rng.Merge = true; 
-                    Rng.Style.Font.Bold = true; 
+                    Rng.Merge = true;
+                    Rng.Style.Font.Bold = true;
                     Rng.Style.Font.Size = 18;
                     Rng.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
                 }
@@ -150,7 +152,7 @@ namespace WMBA_7_2_.Controllers
             //Note that we are assuming that you are using the Preferred Approach to Lookup Values
             //And the custom LookupsController
             //return Redirect(ViewData["returnURL"].ToString());
-            return RedirectToAction("Index", "");
+            return RedirectToAction("Index", "Report");
         }
 
 
@@ -213,16 +215,70 @@ namespace WMBA_7_2_.Controllers
                 //them if they are not.  Then you should be ready to add the players and assign them to their
                 //lookup values.
 
-                foreach (var t in uniqueTeams)
+
+
+
+                foreach (var tn in uniqueDivisionTeams)
                 {
-                    CheckAndAddTeam(t);
+                    // Check if team exists in the database
+                    bool teamExists = _context.Divisions.Any(d => d.DivisionTeams == tn);
+                    if (!teamExists)
+                    {
+                        var newTeam = new Division() { DivisionTeams = tn.Substring(3).TrimStart() , DivAge = tn.Remove(3).TrimEnd(), LeagueTypeID = 1 };
+                        _context.Divisions.Add(newTeam);
+                        _context.SaveChanges();
+                    }
+                }
+                
+                //foreach (var div in uniqueDivisions)
+                //{
+                //    // Check if division exists in the database
+                //    bool divisionExists = _context.Divisions.Any(d => d.DivAge == div);
+
+                //    if (divisionExists)
+                //    {
+                //        var newDivision = new Division() { DivAge = div };
+                //        _context.Divisions.Remove(newDivision);
+                //        _context.SaveChanges();
+                //    }
+                //}
+                foreach (var team in uniqueTeams)
+                {
+                    bool teamExists = _context.Teams.Any(d => d.TeamName == team);
+                    if (!teamExists)
+                    {
+
+                        var newTeam = new Team() { TeamName = team };
+                        _context.Teams.Add(newTeam);
+                        _context.SaveChanges();
+
+                    }
                 }
 
-                foreach (var d in uniqueDivisions)
+                foreach (var cl in uniqueClubs)
                 {
-                    CheckAndAddDivision(d);
+                    bool teamExists = _context.Clubs.Any(t => t.ClubName == cl);
+
+                    if (!teamExists)
+                    {
+                        var newClub = new Club () { ClubName = cl };
+                        _context.Clubs.Add(newClub);
+                        _context.SaveChanges();
+                    }
                 }
 
+                //foreach (var sea in uniqueSeasons)
+                //{
+                //    // Check if division exists in the database
+                //    bool seasonExists = _context.Games.Any(g => g.GameSeason == sea);
+
+                //    if (!seasonExists)
+                //    {
+                //        var newSeason = new Game() { GameSeason = sea };
+                //        _context.Games.Add(newSeason);
+                //        _context.SaveChanges();
+                //    }
+                //}
                 //Add the Players
                 for (int i = 0; i < imported.Count(); i++)
                 {
@@ -238,37 +294,12 @@ namespace WMBA_7_2_.Controllers
                 await _context.SaveChangesAsync();
             }
             else
-            {
-                feedBack = "Error: You may have selected the wrong file to upload.";
+                {
+                    feedBack = "Error: You may have selected the wrong file to upload.";
+                }
             }
         }
-
-        private void CheckAndAddTeam(string teamName)
-        {
-            // Check if a team exists in the database
-            bool teamExists = _context.Teams.Any(t => t.TeamName == teamName);
-
-            if (!teamExists)
-            {
-                var newTeam = new Team() { TeamName = teamName };
-                _context.Teams.Add(newTeam);
-                _context.SaveChanges();
-            }
-        }
-        private void CheckAndAddDivision(string division)
-        {
-            // Check if division exists in the database
-            bool divisionExists = _context.Divisions.Any(d => d.DivAge == division);
-
-            if (!divisionExists)
-            {
-                var newDivision = new Division() { DivAge = division };
-                _context.Divisions.Add(newDivision);
-                _context.SaveChanges();
-            }
-        }
-    }
-}
+    } 
 
 
 
