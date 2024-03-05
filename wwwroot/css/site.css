@@ -247,3 +247,13 @@ header {
     font-weight: 900;
     font-size: 250%;
 }
+
+#gameOverMessageDisplay {
+    font-weight: 900;
+    font-size: 250%;
+}
+
+#clock {
+    font-weight: 900;
+    font-size: 250%;
+}

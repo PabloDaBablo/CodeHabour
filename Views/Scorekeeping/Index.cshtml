@@ -20,11 +20,31 @@
 </head>
 <body>
 @*     Inning count, out count, teams playing based on game here displayed here *@
-    <div class="container">
+
+
+        <div class="container">
+
+        
+            <div class="row">
+                <div class="col d-flex align-items-center justify-content-center" id="gameOverMessageDiv">
+                    <span id="gameOverMessageDisplay">Game On!</span>
+                </div>
+                <div class="col d-flex align-items-center justify-content-center" id="clockDiv">
+                    <span><p id="clock"></p></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col d-flex align-items-center justify-content-center" id="timerDisplay">
+                <span id="timerDisplay"></span>
+            </div>
+        </div>
         <div class="row">
             <div class="col d-flex align-items-center justify-content-center" id="inningDiv">
-                Inning: <span id="inningNumber">1</span>
+                <span id="inningTopOrBottom">Top of</span> &nbsp;Inning: <span id="inningNumber">1</span>
             </div>
+        </div>
+        <div class="row">
             <div class="col d-flex align-items-center justify-content-center" id="outDiv">
                 Out: <span id="outNumber">0</span>
             </div>
@@ -42,7 +62,6 @@
                 <span id="teamsPlaying">Select a game...</span>
             </div>
         </div>
-    </div>
 
     <div class="svg-container">
 
@@ -113,13 +132,14 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script src="~/js/scorekeeping.js"></script>
 
-@*      @{
+     @{
         var gameId = ViewData["GameId"];
     }
 
     <script type="text/javascript">
         var gameId = @gameId;
-    </script>  *@
+    </script>  
+
 </body>
 </html>
 
