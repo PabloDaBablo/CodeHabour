@@ -232,7 +232,6 @@ namespace WMBA_7_2_.Controllers
 
 			var playerStats = await _context.PlayerStats.FirstOrDefaultAsync(ps => ps.PlayerID == dto.PlayerId) ?? new PlayerStats { PlayerID = dto.PlayerId };
 
-			// Increment the appropriate statistic based on the base hit type
 			switch (dto.BaseHitType)
 			{
 				case "1B":
@@ -249,7 +248,6 @@ namespace WMBA_7_2_.Controllers
 					break;
 			}
 
-			// If it's a new record, add it to the DbSet
 			if (playerStats.ID == 0)
 			{
 				_context.PlayerStats.Add(playerStats);
