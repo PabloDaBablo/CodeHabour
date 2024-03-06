@@ -451,7 +451,7 @@ function selectPlayer(playerId) {
                 group.classList.toggle('selected');
             }
         });
-        selectedPlayerId = null; 
+        playerIDSVG = null; 
         console.log(`Player ${playerId} deselected`);
     } else {
         
