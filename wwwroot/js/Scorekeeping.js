@@ -9,7 +9,7 @@ $(document).ready(function () {
 
         const selectedPlayer = playersData.find(player => player.id.toString() === playerId);
         if (selectedPlayer) {
-            addPlayerToField(selectedPlayer.id, selectedPlayer.playerLastName, selectedPlayer.playerNumber, 200, 280); // Adjust x, y as needed
+            addPlayerToField(selectedPlayer.id, selectedPlayer.playerLastName, selectedPlayer.playerNumber, 200, 280); 
 
             if (playerPositions[0] === null) {
                 playerPositions[0] = selectedPlayer.id;
@@ -269,59 +269,74 @@ function clearPlayerIcons() {
     const existingIcons = document.querySelectorAll(".player-group");
     existingIcons.forEach(icon => icon.remove());
 }
-function advancePlayers() {
+function advancePlayerBaseHit(hitType) {
     if (!playerIdSVG) {
-        console.log("No player selected to advance.");
+        alert("No player selected!");
         return;
     }
 
-    const playerIdToAdvance = parseInt(playerIdSVG);
-    const currentPlayerIndex = playerPositions.findIndex(id => id === playerIdToAdvance);
-
-    if (currentPlayerIndex === -1) {
-        console.log("Selected player is not on any base.");
-        return; 
+    
+    let newPositionIndex;
+    switch (hitType) {
+        case '1B':
+            newPositionIndex = 1; 
+            break;
+        case '2B':
+            newPositionIndex = 2; 
+            break;
+        case '3B':
+            newPositionIndex = 3; 
+            break;
+        case 'HR':
+            newPositionIndex = 0; 
+            handleHomeRun(playerIdSVG); 
+            break;
+        default:
+            console.error("Invalid hit type:", hitType);
+            return;
     }
 
-    if (currentPlayerIndex < playerPositions.length - 1) {
-        let baseHitType = null;
-        if (currentPlayerIndex === 0) {
-            baseHitType = '1B'; 
-        } else if (currentPlayerIndex === 1) {
-            baseHitType = '2B'; 
-        } else if (currentPlayerIndex === 2) {
-            baseHitType = '3B'; 
-        }
+    
+    const currentPlayerIndex = playerPositions.findIndex(id => id === parseInt(playerIdSVG));
+    if (currentPlayerIndex !== -1) {
+        playerPositions[currentPlayerIndex] = null; 
+    }
+    if (newPositionIndex !== 0) { 
+        playerPositions[newPositionIndex] = parseInt(playerIdSVG);
+    }
 
-        playerPositions[currentPlayerIndex] = null;
-        playerPositions[currentPlayerIndex + 1] = playerIdToAdvance;
+    
+    movePlayerToBase(playerIdSVG, newPositionIndex);
 
-        if (baseHitType) {
-            updatePlayerBaseHit(playerIdToAdvance, baseHitType);
-        }
+
+    drawField(); 
+}
+
+function handleHomeRun(playerId) {
+    updatePlayerBaseHit(playerId, 'HR');
+    removePlayerSVG(playerId);
+    score++
+    document.getElementById('score').textContent = `Home Score: ${score}`;  
+}
+
+function movePlayerToBase(playerId, baseIndex) {
+    const baseCoords = getBaseCoordinates(baseIndex);
+    let playerGroup = document.querySelector(`#player-group-${playerId}`);
+    if (playerGroup) {
+        let playerImage = playerGroup.querySelector("image");
+        let playerNameText = playerGroup.querySelector("text");
+
+        playerImage.setAttribute("x", baseCoords.x);
+        playerImage.setAttribute("y", baseCoords.y);
+        playerNameText.setAttribute("x", baseCoords.x);
+        playerNameText.setAttribute("y", baseCoords.y + 40); 
+
+        console.log(`Moved player ${playerId} to new position.`);
     } else {
-        playerScored(playerIdToAdvance);
-        playerPositions[currentPlayerIndex] = null;
+        console.error(`Player group with ID ${playerId} not found.`);
     }
-
-    drawField();
 }
 
-
-function playerScored(playerId) {
-    $.ajax({
-        url: '/Scorekeeping/PlayerScored', 
-        type: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify({ PlayerId: playerId}), 
-        success: function (response) {
-            console.log('Player scored a run.', response);
-        },
-        error: function (error) {
-            console.error('Error updating player score.', error);
-        }
-    });
-}
 function removePlayerFromFirstBase() {
     if (playerPositions[1] !== null) { 
         removePlayerSVG(playerPositions[1]); 
@@ -390,15 +405,6 @@ function removePlayerSVG(playerId) {
     document.getElementById(`player-number-${playerId}`)?.remove();
 };
 
-function playerStrikedOut(playerId) {
-    $.post('/Scorekeeping/PlayerStruckOut', { playerId: playerId })
-        .done(function (data) {
-            console.log("Player striked out.", data);
-        })
-        .fail(function (error) {
-            console.error("Error updating player strikeout.", error);
-        });
-};
 
 function playerStrikedOut(playerId) {
     $.ajax({
@@ -434,7 +440,6 @@ function playerScored(playerId) {
 
 
 document.addEventListener('DOMContentLoaded', function () {
-    document.getElementById('advance-player').addEventListener('click', advancePlayers);
     document.getElementById('strikeNumberButton').addEventListener('click', function () {
 
         removePlayerFromFirstBase();
@@ -451,7 +456,7 @@ function selectPlayer(playerId) {
                 group.classList.toggle('selected');
             }
         });
-        selectedPlayerId = null; 
+        playerIDSVG = null; 
         console.log(`Player ${playerId} deselected`);
     } else {
         
@@ -575,6 +580,36 @@ function startTimer(duration, displayElement, messageElement, ballButton, strike
     }, 1000);
 }
 
+function advanceToNextBase() {
+    if (!playerIdSVG) {
+        alert("No player selected!");
+        return;
+    }
+
+    const currentPlayerIndex = playerPositions.findIndex(id => id === parseInt(playerIdSVG));
+    if (currentPlayerIndex === -1) {
+        alert("Selected player is not on a base.");
+        return;
+    }
+
+    let nextPositionIndex = currentPlayerIndex + 1;
+    if (nextPositionIndex > 3) {
+        
+        nextPositionIndex = 0;
+        playerScored(playerIdSVG); 
+    }
+
+    
+    playerPositions[currentPlayerIndex] = null; 
+    if (nextPositionIndex !== 0) { 
+        playerPositions[nextPositionIndex] = parseInt(playerIdSVG);
+    }
+
+    movePlayerToBase(playerIdSVG, nextPositionIndex);
+
+    drawField();
+}
+
 // Start the timer with a 10-second countdown
 document.addEventListener('DOMContentLoaded', function () {
     var displayElement = document.getElementById('clock');
@@ -585,3 +620,9 @@ document.addEventListener('DOMContentLoaded', function () {
     startTimer(10000, displayElement, messageElement, ballButton, strikeButton);
 });
 
+document.getElementById('single').addEventListener('click', function () { advancePlayerBaseHit('1B'); });
+document.getElementById('double').addEventListener('click', function () { advancePlayerBaseHit('2B'); });
+document.getElementById('triple').addEventListener('click', function () { advancePlayerBaseHit('3B'); });
+document.getElementById('homerun').addEventListener('click', function () { advancePlayerBaseHit('HR'); });
+
+document.getElementById('advance-player').addEventListener('click', advanceToNextBase);

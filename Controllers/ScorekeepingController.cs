@@ -216,55 +216,54 @@ namespace WMBA_7_2_.Controllers
             public string BaseHitType { get; set; } 
         }
 
-        [HttpPost]
-        public async Task<IActionResult> PlayerBaseHit([FromBody] PlayerBaseHitDto dto)
-        {
-            if (dto == null || (dto.BaseHitType != "1B" && dto.BaseHitType != "2B" && dto.BaseHitType != "3B"))
-            {
-                return BadRequest("Invalid request");
-            }
+		[HttpPost]
+		public async Task<IActionResult> PlayerBaseHit([FromBody] PlayerBaseHitDto dto)
+		{
+			if (dto == null || !new[] { "1B", "2B", "3B", "HR" }.Contains(dto.BaseHitType))
+			{
+				return BadRequest("Invalid request");
+			}
 
-            var playerExists = await _context.Players.AnyAsync(p => p.ID == dto.PlayerId);
-            if (!playerExists)
-            {
-                return NotFound($"Player with ID {dto.PlayerId} not found.");
-            }
+			var player = await _context.Players.FindAsync(dto.PlayerId);
+			if (player == null)
+			{
+				return NotFound($"Player with ID {dto.PlayerId} not found.");
+			}
 
-            var playerStats = await _context.PlayerStats.FirstOrDefaultAsync(ps => ps.PlayerID == dto.PlayerId);
+			var playerStats = await _context.PlayerStats.FirstOrDefaultAsync(ps => ps.PlayerID == dto.PlayerId) ?? new PlayerStats { PlayerID = dto.PlayerId };
 
-            if (playerStats == null)
-            {
-                playerStats = new PlayerStats
-                {
-                    PlayerID = dto.PlayerId
-                };
-                _context.PlayerStats.Add(playerStats);
-            }
+			switch (dto.BaseHitType)
+			{
+				case "1B":
+					playerStats.B1 = (playerStats.B1 ?? 0) + 1;
+					break;
+				case "2B":
+					playerStats.B2 = (playerStats.B2 ?? 0) + 1;
+					break;
+				case "3B":
+					playerStats.B3 = (playerStats.B3 ?? 0) + 1;
+					break;
+				case "HR":
+					playerStats.HR = (playerStats.HR ?? 0) + 1;
+					break;
+			}
 
-            switch (dto.BaseHitType)
-            {
-                case "1B":
-                    playerStats.B1 = (playerStats.B1 ?? 0) + 1;
-                    break;
-                case "2B":
-                    playerStats.B2 = (playerStats.B2 ?? 0) + 1;
-                    break;
-                case "3B":
-                    playerStats.B3 = (playerStats.B3 ?? 0) + 1;
-                    break;
-            }
+			if (playerStats.ID == 0)
+			{
+				_context.PlayerStats.Add(playerStats);
+			}
 
-            try
-            {
-                await _context.SaveChangesAsync();
-                return Json(new { success = true });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { success = false, message = ex.Message });
-            }
-        }
+			try
+			{
+				await _context.SaveChangesAsync();
+				return Json(new { success = true });
+			}
+			catch (Exception ex)
+			{
+				return Json(new { success = false, message = ex.Message });
+			}
+		}
 
 
-    }
+	}
 }

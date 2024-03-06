@@ -15,13 +15,13 @@ namespace WMBA_7_2_.Models
 		[Display(Name = "Hits")]
 		public int? Hits { get; set; }
 
-		[Display(Name = "1st Base")]
+		[Display(Name = "Singles")]
 		public int? B1 { get; set; }
 
-		[Display(Name = "2nd Base")]
+		[Display(Name = "Doubles")]
 		public int? B2 { get; set; }
 
-		[Display(Name = "3rd Base")]
+		[Display(Name = "Triples")]
 		public int? B3 { get; set; }
 
 		[Display(Name = "Home Runs")]
