@@ -215,33 +215,31 @@ namespace WMBA_7_2_.Controllers
                 //them if they are not.  Then you should be ready to add the players and assign them to their
                 //lookup values.
 
-
-
-
-                foreach (var tn in uniqueDivisionTeams)
+                foreach (var div in uniqueDivisions)
                 {
-                    // Check if team exists in the database
-                    bool teamExists = _context.Divisions.Any(d => d.DivisionTeams == tn);
-                    if (!teamExists)
+                    // Check if division exists in the database
+                    bool divisionExists = _context.Divisions.Any(d => d.DivAge == div);
+
+                    if (!divisionExists)
                     {
-                        var newTeam = new Division() { DivisionTeams = tn.Substring(3).TrimStart() , DivAge = tn.Remove(3).TrimEnd(), LeagueTypeID = 1 };
-                        _context.Divisions.Add(newTeam);
+                        var newDivision = new Division() { DivAge = div };
+                        _context.Divisions.Add(newDivision);
                         _context.SaveChanges();
                     }
                 }
-                
-                //foreach (var div in uniqueDivisions)
-                //{
-                //    // Check if division exists in the database
-                //    bool divisionExists = _context.Divisions.Any(d => d.DivAge == div);
 
-                //    if (divisionExists)
+                //foreach (var tn in uniqueDivisionTeams)
+                //{
+                //    // Check if team exists in the database
+                //    bool teamExists = _context.Divisions.Any(d => d.DivisionTeams == tn);
+                //    if (!teamExists)
                 //    {
-                //        var newDivision = new Division() { DivAge = div };
-                //        _context.Divisions.Remove(newDivision);
+                //        var newTeam = new Division() { DivisionTeams = tn.Substring(3).TrimStart() , DivAge = tn.Remove(3).TrimEnd(), LeagueTypeID = 1 };
+                //        _context.Divisions.Add(newTeam);
                 //        _context.SaveChanges();
                 //    }
                 //}
+
                 foreach (var team in uniqueTeams)
                 {
                     bool teamExists = _context.Teams.Any(d => d.TeamName == team);
@@ -267,18 +265,18 @@ namespace WMBA_7_2_.Controllers
                     }
                 }
 
-                //foreach (var sea in uniqueSeasons)
-                //{
-                //    // Check if division exists in the database
-                //    bool seasonExists = _context.Games.Any(g => g.GameSeason == sea);
+                foreach (var season in uniqueSeasons)
+                {
+                    bool seasonExists = _context.Clubs.Any(s => s.ClubName == season);
 
-                //    if (!seasonExists)
-                //    {
-                //        var newSeason = new Game() { GameSeason = sea };
-                //        _context.Games.Add(newSeason);
-                //        _context.SaveChanges();
-                //    }
-                //}
+                    if (!seasonExists)
+                    {
+                        var newSeason = new Season() { Year = season };
+                        _context.Seasons.Add(newSeason);
+                        _context.SaveChanges();
+                    }
+                }
+
                 //Add the Players
                 for (int i = 0; i < imported.Count(); i++)
                 {
