@@ -29,7 +29,7 @@ namespace WMBA_7_2_.Controllers
 
 		[HttpGet]
 		public JsonResult GetPlayers(int page = 1, int pageSize = 10, string sortColumn = "divAge", string sortDirection = "asc",
-							 string divisionSearch = "", string firstNameSearch = "", string lastNameSearch = "",
+							 int? divisionId = null, string firstNameSearch = "", string lastNameSearch = "",
 							 string numberSearch = "", int? teamId = null)
 		{
 			try
@@ -41,9 +41,9 @@ namespace WMBA_7_2_.Controllers
 					.Include(p => p.PlayerStats)
 					.AsQueryable();
 
-				if (!string.IsNullOrEmpty(divisionSearch))
+				if (divisionId.HasValue)
 				{
-					query = query.Where(p => p.Division.DivAge.Contains(divisionSearch));
+					query = query.Where(p => p.DivisionID == divisionId.Value);
 				}
 
 				if (!string.IsNullOrEmpty(firstNameSearch))
