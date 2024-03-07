@@ -8,18 +8,6 @@ namespace WMBA_7_2_.Models
         Home,
         Away
     }
-    public enum Ballparks
-    {
-        ChippawaParkDiamond,
-        MapleParkDiamond1,
-        MapleParkDiamond2,
-        MemorialParkDiamond2,
-        BurgerParkDiamond,
-        MemorialParkDiamond3,
-        WellandJackfishStadium
-    }
-
-
     public class Game : IValidatableObject
     {
         public int ID { get; set; }
@@ -40,8 +28,6 @@ namespace WMBA_7_2_.Models
         [StringLength (75, ErrorMessage = "Location cannot be longer than 75 characters!")]
         public string GameLocation { get; set; }
 
-
-
         [Display(Name = "Home Team")]
         [Required(ErrorMessage = "You must select the Home Team for the Game.")]
         public int HomeTeamID { get; set; }
@@ -49,14 +35,12 @@ namespace WMBA_7_2_.Models
         [Display(Name = "Home Team")]
         public Team HomeTeam { get; set; }
 
-
         [Display(Name = "Away Team")]
         [Required(ErrorMessage = "You must select the Away Team for the Game.")]
         public int AwayTeamID { get; set; }
 
         [Display(Name = "Away Team")]
         public Team AwayTeam { get; set; }
-
 
         public ICollection<Team_Game> Team_Games { get; set; } = new List<Team_Game>();
         public ICollection<Line_Up> Line_Ups { get; set; } = new List<Line_Up>();
