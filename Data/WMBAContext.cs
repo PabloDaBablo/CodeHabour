@@ -8,7 +8,7 @@ namespace WMBA_7_2_.Data
     public class WMBAContext : DbContext
     {
         public WMBAContext(DbContextOptions<WMBAContext> options) : base(options) { }
-
+        public DbSet<Season> Seasons { get; set; }
         public DbSet<League> Leagues { get; set; }
         public DbSet<Division> Divisions { get; set; }
         public DbSet<Coach> Coaches { get; set; }
