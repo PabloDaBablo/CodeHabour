@@ -112,6 +112,12 @@ namespace WMBA_7_2_.Controllers
                 return NotFound();
             }
 
+            //if (player.PlayerNumber.HasValue && PlayerNumberExists(player.PlayerNumber.Value, player.ID))
+            //{
+            //    ModelState.AddModelError("PlayerNumber", "Player number already exists for another player.");
+            //    return View(player);
+            //}
+
             if (ModelState.IsValid)
             {
                 try
@@ -181,5 +187,10 @@ namespace WMBA_7_2_.Controllers
         {
           return _context.Players.Any(e => e.ID == id);
         }
+
+        //private bool PlayerNumberExists(int playerNumber, int playerId)
+        //{
+        //    return _context.Players.Any(p => p.PlayerNumber == playerNumber && p.ID != playerId);
+        //}
     }
 }
