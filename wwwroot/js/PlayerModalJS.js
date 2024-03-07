@@ -5,7 +5,7 @@ var pageSize = 10;
 var totalPages = 0;
 
 function GetPlayers(page) {
-    var divisionSearch = $('#divisionSearch').val();
+    var divisionId = $('#divisionId').val();
     var firstNameSearch = $('#firstNameSearch').val();
     var lastNameSearch = $('#lastNameSearch').val();
     var numberSearch = $('#numberSearch').val();
@@ -17,7 +17,7 @@ function GetPlayers(page) {
         pageSize: pageSize,
         sortColumn: currentSortColumn,
         sortDirection: currentSortDirection,
-        divisionSearch: divisionSearch,
+        divisionId: divisionId,
         firstNameSearch: firstNameSearch,
         lastNameSearch: lastNameSearch,
         numberSearch: numberSearch,
