@@ -9,6 +9,9 @@ namespace WMBA_7_2_.Models
 		[Display(Name = "Plate Appearances")]
 		public int? PA { get; set; }
 
+		[Display(Name = "Games Played")]
+		public int? GP { get; set; }
+
 		[Display(Name = "Runs")]
 		public int? Runs { get; set; }
 
@@ -41,6 +44,15 @@ namespace WMBA_7_2_.Models
 
 		[Display(Name = "Sacrifice")]
 		public int? SAC { get; set; }
+
+		[Display(Name = "Ground Outs")]
+		public int? GO { get; set; }
+
+		[Display(Name = "Pop Outs")]
+		public int? PO { get; set; }
+
+		[Display(Name = "Fly Outs")]
+		public int? FO { get; set; }
 
 		[Display(Name = "Player")]
 		public int PlayerID { get; set; }

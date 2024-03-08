@@ -264,6 +264,53 @@ namespace WMBA_7_2_.Controllers
 			}
 		}
 
+        public class PlayerOutDto
+        {
+            public int PlayerId { get; set; }
+            public string OutType { get; set; } 
+        }
 
-	}
+        [HttpPost]
+        public async Task<IActionResult> PlayerOut([FromBody] PlayerOutDto dto)
+        {
+            if (dto == null || !new[] { "GO", "PO", "FO" }.Contains(dto.OutType))
+            {
+                return BadRequest("Invalid request");
+            }
+
+            var playerStats = await _context.PlayerStats.FirstOrDefaultAsync(ps => ps.PlayerID == dto.PlayerId)
+                ?? new PlayerStats { PlayerID = dto.PlayerId };
+
+            switch (dto.OutType)
+            {
+                case "GO":
+                    playerStats.GO = (playerStats.GO ?? 0) + 1;
+                    break;
+                case "PO":
+                    playerStats.PO = (playerStats.PO ?? 0) + 1;
+                    break;
+                case "FO":
+                    playerStats.FO = (playerStats.FO ?? 0) + 1;
+                    break;
+            }
+
+            if (_context.Entry(playerStats).State == EntityState.Detached)
+            {
+                _context.PlayerStats.Add(playerStats);
+            }
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        
+
+    }
 }

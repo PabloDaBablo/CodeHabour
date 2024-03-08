@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WMBA_7_2_.Data;
 
@@ -10,9 +11,11 @@ using WMBA_7_2_.Data;
 namespace WMBA_7_2_.Data.WMBAMigrations
 {
     [DbContext(typeof(WMBAContext))]
-    partial class WMBAContextModelSnapshot : ModelSnapshot
+    [Migration("20240307201617_updatedstats2")]
+    partial class updatedstats2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.16");
@@ -30,26 +33,6 @@ namespace WMBA_7_2_.Data.WMBAMigrations
                     b.HasIndex("Line_UpsID");
 
                     b.ToTable("GameLine_Up");
-                });
-
-            modelBuilder.Entity("WMBA_7_2_.Models.ActionLog", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("ActionType")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Data")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("Timestamp")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ActionLog");
                 });
 
             modelBuilder.Entity("WMBA_7_2_.Models.Club", b =>
