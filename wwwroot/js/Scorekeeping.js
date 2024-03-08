@@ -193,11 +193,19 @@ function fetchLineup(gameId) {
             });
 
             playersData = data; 
+            placeFirstPlayer();
         })
         .catch(error => console.error('Error:', error));
 }
 
-
+function placeFirstPlayer() {
+    if (playersData.length > 0) {
+        const firstPlayerId = playersData[0].id; 
+        playerPositions[0] = firstPlayerId; 
+        addPlayerToField(firstPlayerId, playersData[0].playerLastName, playersData[0].playerNumber, getBaseCoordinates(0).x, getBaseCoordinates(0).y);
+        saveGameState();
+    }
+}
 
 function addPlayerToField(playerId, lastName, number, startX, startY) {
     const svgNs = "http://www.w3.org/2000/svg";
@@ -270,6 +278,7 @@ function clearPlayerIcons() {
     existingIcons.forEach(icon => icon.remove());
 }
 function advancePlayerBaseHit(hitType) {
+    saveGameState();
     if (!playerIdSVG) {
         alert("No player selected!");
         return;
@@ -307,8 +316,7 @@ function advancePlayerBaseHit(hitType) {
 
     
     movePlayerToBase(playerIdSVG, newPositionIndex);
-
-
+    loadPlayerOntoHomeBase();
     drawField(); 
 }
 
@@ -477,18 +485,18 @@ function selectPlayer(playerId) {
 }
 
 function removePlayerFromField() {
-    if (!selectedPlayerId) {
+    if (!playerIdSVG) {
         alert("No player selected!");
         return;
     }
 
     
-    const playerIndex = playerPositions.indexOf(parseInt(selectedPlayerId));
+    const playerIndex = playerPositions.indexOf(parseInt(playerIdSVG));
 
-    const playerGroup = document.getElementById(`player-group-${selectedPlayerId}`);
+    const playerGroup = document.getElementById(`player-group-${playerIdSVG}`);
     if (playerGroup) {
         playerGroup.remove();
-        console.log(`Player ${selectedPlayerId} removed from field.`);
+        console.log(`Player ${playerIdSVG} removed from field.`);
 
         if (playerIndex !== -1) {
             playerPositions[playerIndex] = null;
@@ -497,7 +505,7 @@ function removePlayerFromField() {
         selectedPlayerId = null;
         drawField(); 
     } else {
-        console.error(`Player group with ID ${selectedPlayerId} not found.`);
+        console.error(`Player group with ID ${playerIdSVG} not found.`);
     }
 }
 
@@ -578,9 +586,11 @@ function startTimer(duration, displayElement, messageElement, ballButton, strike
             strikeButton.disabled = true;
         }
     }, 1000);
-}
+};
 
 function advanceToNextBase() {
+    saveGameState();
+
     if (!playerIdSVG) {
         alert("No player selected!");
         return;
@@ -594,19 +604,20 @@ function advanceToNextBase() {
 
     let nextPositionIndex = currentPlayerIndex + 1;
     if (nextPositionIndex > 3) {
-        
+
         nextPositionIndex = 0;
-        playerScored(playerIdSVG); 
+        playerScored(playerIdSVG);
     }
 
-    
-    playerPositions[currentPlayerIndex] = null; 
-    if (nextPositionIndex !== 0) { 
+
+    playerPositions[currentPlayerIndex] = null;
+    if (nextPositionIndex !== 0) {
         playerPositions[nextPositionIndex] = parseInt(playerIdSVG);
     }
 
+    
     movePlayerToBase(playerIdSVG, nextPositionIndex);
-
+    loadPlayerOntoHomeBase();
     drawField();
 }
 
@@ -620,9 +631,95 @@ document.addEventListener('DOMContentLoaded', function () {
     startTimer(10000, displayElement, messageElement, ballButton, strikeButton);
 });
 
+function updatePlayerOutStatistic(playerId, outType) {
+    $.ajax({
+        url: '/Scorekeeping/PlayerOut',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ PlayerId: playerId, OutType: outType }),
+        success: function (response) {
+            console.log("Out statistic updated successfully", response);
+            drawField(); 
+        },
+        error: function (xhr, status, error) {
+            console.error("Error updating out statistic", error);
+        }
+    });
+}
+
+function handleOut(outType) {
+    saveGameState();
+    if (!playerIdSVG) {
+        alert("No player selected!");
+        return;
+    }
+
+    updatePlayerOutStatistic(playerIdSVG, outType);
+    removePlayerFromField();
+
+    playerIdSVG = null;
+}
+
 document.getElementById('single').addEventListener('click', function () { advancePlayerBaseHit('1B'); });
 document.getElementById('double').addEventListener('click', function () { advancePlayerBaseHit('2B'); });
 document.getElementById('triple').addEventListener('click', function () { advancePlayerBaseHit('3B'); });
 document.getElementById('homerun').addEventListener('click', function () { advancePlayerBaseHit('HR'); });
 
 document.getElementById('advance-player').addEventListener('click', advanceToNextBase);
+ 
+$(document).ready(function () {
+    $('#groundout').click(function () { handleOut('GO'); });
+    $('#flyout').click(function () { handleOut('FO'); });
+    $('#popout').click(function () { handleOut('PO'); });
+});
+
+let currentBatterIndex = 0; 
+
+function moveToNextBatter() {
+    currentBatterIndex++;
+    if (currentBatterIndex >= playersData.length) {
+        currentBatterIndex = 0; 
+    }
+}
+
+function loadPlayerOntoHomeBase() {
+
+
+    if (playerPositions[0] === null) {
+        moveToNextBatter();
+        const playerToLoad = playersData[currentBatterIndex];
+        if (playerToLoad) {
+            playerPositions[0] = playerToLoad.id; 
+            addPlayerToField(playerToLoad.id, playerToLoad.playerLastName, playerToLoad.playerNumber, getBaseCoordinates(0).x, getBaseCoordinates(0).y);
+            
+        }
+    }
+}
+
+let gameStateStack = [];
+
+function saveGameState() {
+    let currentState = {
+        playerPositions: [...playerPositions],
+        score: score,
+        currentBatterIndex: currentBatterIndex,
+    };
+    gameStateStack.push(currentState);
+    console.log("Game state saved", currentState, gameStateStack);
+}
+
+function undoLastAction() {
+    console.log("Attempting to undo. Current stack size:", gameStateStack.length);
+    if (gameStateStack.length > 0) {
+        let prevState = gameStateStack.pop();
+        console.log("Restoring state to", prevState);
+        playerPositions = prevState.playerPositions;
+        score = prevState.score;
+        currentBatterIndex = prevState.currentBatterIndex;
+        drawField();
+    } else {
+        console.log("No more actions to undo.");
+    }
+}
+
+document.getElementById('undo-button').addEventListener('click', undoLastAction);

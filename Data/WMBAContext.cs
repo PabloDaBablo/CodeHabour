@@ -35,6 +35,8 @@ namespace WMBA_7_2_.Data
         public DbSet<PlayerStats> PlayerStats { get; set; }
 
         public DbSet<Club> Clubs { get; set; }
+
+        public DbSet<ActionLog> ActionLog { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
