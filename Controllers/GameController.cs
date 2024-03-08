@@ -97,8 +97,9 @@ namespace WMBA_7_2_.Controllers
 
                 _context.Add(game);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Details", new { id = game.ID });
-            }
+				//return RedirectToAction("Details", new { id = game.ID });
+				return RedirectToAction("Index", new { id = game.ID });
+			}
 
             return View();
         }
