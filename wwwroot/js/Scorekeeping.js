@@ -203,6 +203,8 @@ function placeFirstPlayer() {
         const firstPlayerId = playersData[0].id; 
         playerPositions[0] = firstPlayerId; 
         addPlayerToField(firstPlayerId, playersData[0].playerLastName, playersData[0].playerNumber, getBaseCoordinates(0).x, getBaseCoordinates(0).y);
+        logAction('PlayerPlaced', { playerId: firstPlayerId, baseIndex: 0 })
+        drawField();
         saveGameState();
     }
 }
@@ -289,15 +291,22 @@ function advancePlayerBaseHit(hitType) {
     switch (hitType) {
         case '1B':
             newPositionIndex = 1; 
+            logAction('Single', { playerId: playerIdSVG })
+            updatePlayerBaseHit(playerIdSVG, hitType)
             break;
         case '2B':
             newPositionIndex = 2; 
+            logAction('Double', { playerId: playerIdSVG })
+            updatePlayerBaseHit(playerIdSVG, hitType)
             break;
         case '3B':
             newPositionIndex = 3; 
+            logAction('Triple', { playerId: playerIdSVG })
+            updatePlayerBaseHit(playerIdSVG, hitType)
             break;
         case 'HR':
             newPositionIndex = 0; 
+            logAction('HomeRun', { playerId: playerIdSVG })
             handleHomeRun(playerIdSVG); 
             break;
         default:
@@ -606,6 +615,7 @@ function advanceToNextBase() {
     if (nextPositionIndex > 3) {
 
         nextPositionIndex = 0;
+        logAction('Run', { playerId: playerIdSVG })
         playerScored(playerIdSVG);
     }
 
@@ -649,6 +659,8 @@ function updatePlayerOutStatistic(playerId, outType) {
 
 function handleOut(outType) {
     saveGameState();
+    logAction(outType , { playerId: playerIdSVG});
+
     if (!playerIdSVG) {
         alert("No player selected!");
         return;
@@ -716,6 +728,7 @@ function undoLastAction() {
         playerPositions = prevState.playerPositions;
         score = prevState.score;
         currentBatterIndex = prevState.currentBatterIndex;
+        undoLastActionCont();
         drawField();
     } else {
         console.log("No more actions to undo.");
@@ -723,3 +736,34 @@ function undoLastAction() {
 }
 
 document.getElementById('undo-button').addEventListener('click', undoLastAction);
+
+function logAction(actionType, data) {
+    fetch('/Scorekeeping/LogAction', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ actionType, data: JSON.stringify(data) }) 
+    })
+        .then(response => response.json())
+        .then(result => console.log(result))
+        .catch(error => console.error('Error logging action:', error));
+}
+
+function undoLastActionCont() {
+    fetch('/Scorekeeping/UndoLastAction', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                console.log('Last action undone successfully.');
+            } else {
+                console.log('Failed to undo last action: ' + data.message);
+            }
+        })
+        .catch(error => console.error('Error undoing last action:', error));
+};
