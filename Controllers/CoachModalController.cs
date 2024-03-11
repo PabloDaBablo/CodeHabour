@@ -93,7 +93,7 @@ namespace WMBA_7_2_.Controllers
 					return Json("Coach saved successfully.");
 				}
 
-				return Json("Model validation failed.");
+				return Json("Model validation failed. Ensure all required fields are filled out first!");
 			}
 			catch (Exception ex)
 			{
@@ -175,7 +175,7 @@ namespace WMBA_7_2_.Controllers
 				return Json("Coach updated successfully.");
 			}
 
-			return Json("Model validation failed.");
+			return Json("Model validation failed. Ensure all required fields are filled out!");
 		}
 		/*public JsonResult Delete(int id)
 		{
