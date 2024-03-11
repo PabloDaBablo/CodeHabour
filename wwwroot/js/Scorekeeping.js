@@ -190,6 +190,7 @@ function fetchLineup(gameId) {
             data.forEach(player => {
                 var option = new Option(player.playerLastName, player.id);
                 lineupDropdown.options.add(option);
+                incrementGamesPlayed(player.id);
             });
 
             playersData = data; 
@@ -205,6 +206,7 @@ function placeFirstPlayer() {
         addPlayerToField(firstPlayerId, playersData[0].playerLastName, playersData[0].playerNumber, getBaseCoordinates(0).x, getBaseCoordinates(0).y);
         logAction('PlayerPlaced', { playerId: firstPlayerId, baseIndex: 0 })
         drawField();
+        incrementPlateAppearances(playerPositions[0]);
         saveGameState();
     }
 }
@@ -703,7 +705,7 @@ function loadPlayerOntoHomeBase() {
         if (playerToLoad) {
             playerPositions[0] = playerToLoad.id; 
             addPlayerToField(playerToLoad.id, playerToLoad.playerLastName, playerToLoad.playerNumber, getBaseCoordinates(0).x, getBaseCoordinates(0).y);
-            
+            incrementPlateAppearances(playerToLoad.id);
         }
     }
 }
@@ -767,3 +769,40 @@ function undoLastActionCont() {
         })
         .catch(error => console.error('Error undoing last action:', error));
 };
+
+function incrementGamesPlayed(playerId) {
+    fetch('/Scorekeeping/GamesPlayed', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ PlayerId: playerId })
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                console.log(`Games Played incremented for player ${playerId}.`);
+            } else {
+                console.error(`Failed to increment Games Played for player ${playerId}: ${data.message}`);
+            }
+        })
+        .catch(error => console.error('Error incrementing Games Played:', error));
+}
+
+function incrementPlateAppearances(playerId) {
+    console.log(`Attempting to increment PA for player ${playerId}`); 
+    fetch('/Scorekeeping/PlateAppearances', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ PlayerId: playerId })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(`Plate Appearances incremented for player ${playerId}.`, data);
+    })
+    .catch(error => {
+        console.error(`Error incrementing Plate Appearances for player ${playerId}:`, error);
+    });
+}

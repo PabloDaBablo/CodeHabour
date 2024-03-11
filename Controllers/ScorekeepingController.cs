@@ -190,6 +190,84 @@ namespace WMBA_7_2_.Controllers
             }
         }
 
+        public async Task<IActionResult> GamesPlayed([FromBody] PlayerScoredDto dto)
+        {
+            if (dto == null)
+            {
+                return BadRequest("Invalid request");
+            }
+
+            var playerExists = await _context.Players.AnyAsync(p => p.ID == dto.PlayerId);
+            if (!playerExists)
+            {
+                return NotFound($"Player with ID {dto.PlayerId} not found.");
+            }
+
+            var playerStats = await _context.PlayerStats
+                                           .FirstOrDefaultAsync(ps => ps.PlayerID == dto.PlayerId);
+
+            if (playerStats == null)
+            {
+
+                playerStats = new PlayerStats
+                {
+                    PlayerID = dto.PlayerId,
+                    GP = 1
+                };
+                _context.PlayerStats.Add(playerStats);
+            }
+            else
+            {
+
+                playerStats.GP++;
+
+            }
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> PlateAppearances([FromBody] PlayerActionDto dto)
+        {
+            if (dto == null)
+            {
+                return BadRequest("Invalid request");
+            }
+
+            var playerStats = await _context.PlayerStats.FirstOrDefaultAsync(ps => ps.PlayerID == dto.PlayerId);
+
+            if (playerStats.PA == null)
+            {
+                playerStats = new PlayerStats
+                {
+                    PlayerID = dto.PlayerId,
+                    PA = 1 
+                };
+                _context.PlayerStats.Add(playerStats);
+            }
+            else
+            {
+                playerStats.PA += 1; 
+            }
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }//doesnt work
 
 
         [HttpGet]
