@@ -26,8 +26,7 @@
 <body>
 @*     Inning count, out count, teams playing based on game here displayed here *@
 
-
-        <div class="container">
+<div class="container">
 
         
             <div class="row">
@@ -67,9 +66,19 @@
                 <span id="teamsPlaying">Select a game...</span>
             </div>
         </div>
-        <div id="score">Home Score: 0</div>
-        <button id="undo-button" class="btn btn-danger">Undo</button>
-    </div>
+        <div class="row">
+            <div class="col">
+                <div id="score">Home Score: 0</div>
+                <button id="undo-button" class="btn btn-danger">Undo</button>
+            </div>
+            <div class="col">
+            <button id="undoAwayButton" class="custom-btn">Undo</button>
+            </div>
+            <div class="col">
+                <button id="addToAwayScore" class="custom-btn">Add Run to Away Team</button>
+                <div id="awayScoreText">Away Score:&nbsp; <span id="awayScoreNumber">0</span></div>
+            </div>
+        </div>
 
     <div class="svg-container">
 

@@ -49,7 +49,7 @@ namespace WMBA_7_2_.Data.WMBAMigrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ActionLog");
+                    b.ToTable("ActionLogs");
                 });
 
             modelBuilder.Entity("WMBA_7_2_.Models.Club", b =>
@@ -131,6 +131,12 @@ namespace WMBA_7_2_.Data.WMBAMigrations
                     b.Property<int>("AwayTeamID")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("AwayTeamScore")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Ballparks")
+                        .HasColumnType("INTEGER");
+
                     b.Property<DateTime>("GameDate")
                         .HasColumnType("TEXT");
 
@@ -143,6 +149,9 @@ namespace WMBA_7_2_.Data.WMBAMigrations
                         .HasColumnType("TEXT");
 
                     b.Property<int>("HomeTeamID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("HomeTeamScore")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("ID");

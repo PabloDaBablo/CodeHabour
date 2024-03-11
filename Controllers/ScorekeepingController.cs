@@ -19,6 +19,43 @@ namespace WMBA_7_2_.Controllers
             _context = context;
         }
 
+        //Add score to away team
+        [HttpPost]
+        public async Task<IActionResult> AddAwayTeamRun([FromBody] GameScoreUpdateRequest request)
+        {
+            var game = await _context.Games.FindAsync(request.GameId);
+            if (game == null)
+            {
+                return Json(new { success = false, message = "Game not found." });
+            }
+
+            game.AwayTeamScore += 1; // Increment the away team score
+            await _context.SaveChangesAsync();
+
+            return Json(new { success = true });
+        }
+        
+        //Subtract score from away team
+        [HttpPost]
+        public async Task<IActionResult> DecrementAwayTeamRun([FromBody] GameScoreUpdateRequest request)
+        {
+            var game = await _context.Games.FindAsync(request.GameId);
+            if (game == null)
+            {
+                return Json(new { success = false, message = "Game not found." });
+            }
+
+            game.AwayTeamScore = Math.Max(0, game.AwayTeamScore - 1); // Decrement and ensure non-negative
+            await _context.SaveChangesAsync();
+
+            return Json(new { success = true });
+        }
+
+        public class GameScoreUpdateRequest
+        {
+            public int GameId { get; set; }
+        }
+
 
         public IActionResult Index(int gameId)
         {

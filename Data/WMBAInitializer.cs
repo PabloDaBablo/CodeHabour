@@ -163,19 +163,23 @@ namespace WMBA_7_2_.Data
                 },
                 new Team
                 {
-                    TeamName = "Dragons"
+                    TeamName = "Dragons",
+                    DivisionID = 1,
                 },
                 new Team
                 {
-                    TeamName = "Bisons"
+                    TeamName = "Bisons",
+                    DivisionID = 1,
                 },
                 new Team
                 {
-                    TeamName = "Bananas"
+                    TeamName = "Bananas",
+                    DivisionID = 2,
                 },
                 new Team
                 {
-                    TeamName = "Whitecaps"
+                    TeamName = "Whitecaps",
+                    DivisionID = 2,
                 }
                 
                 );
@@ -777,36 +781,33 @@ namespace WMBA_7_2_.Data
                     context.Games.AddRange(
                         new Game
                         {
-                            GameDate = DateTime.Now,
-                            GameTime = DateTime.Now,
-                            //GameSeason = "2024",
+                            GameDate = new DateTime(2023, 6, 1, 12, 30, 0),
+                            GameTime = new DateTime(2023, 6, 1, 12, 30, 0),
                             GameLocation = "Memorial Park Diamond #2",
                             HomeTeamID = 2,
                             AwayTeamID = 3,
+                            
                         },
                         new Game
                         {
-                            GameDate = DateTime.Now,
-                            GameTime = DateTime.Now,
-                            //GameSeason = "2024",
+                            GameDate = new DateTime(2024, 6, 1, 12, 30, 0),
+                            GameTime = new DateTime(2024, 6, 1, 12, 30, 0),
                             GameLocation = "Burger Park Diamond",
                             HomeTeamID = 4,
                             AwayTeamID = 5,
                         },
                         new Game
                         {
-                            GameDate = DateTime.Now,
-                            GameTime = DateTime.Now,
-                            // GameSeason = "2024",
+                            GameDate = new DateTime(2024, 6, 8, 12, 30, 0),
+                            GameTime = new DateTime(2024, 6, 8, 12, 30, 0),
                             GameLocation = "Memorial Park Diamond #3",
                             HomeTeamID = 4,
                             AwayTeamID = 2,
                         },
                         new Game
                         {
-                            GameDate = DateTime.Now,
-                            GameTime = DateTime.Now,
-                            //GameSeason = "2024",
+                            GameDate = new DateTime(2024, 6, 15, 12, 30, 0),
+                            GameTime = new DateTime(2024, 6, 15, 12, 30, 0),
                             GameLocation = "Welland Jackfish Stadium",
                             HomeTeamID = 3,
                             AwayTeamID = 5,
