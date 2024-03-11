@@ -52,24 +52,24 @@ namespace WMBA_7_2_.Controllers
                 }
 
                 //Manually set width of columns
+                //workSheet.Column(1).Width = 15;
                 workSheet.Column(1).Width = 15;
                 workSheet.Column(2).Width = 15;
                 workSheet.Column(3).Width = 15;
-                workSheet.Column(4).Width = 15;
+                workSheet.Column(4).Width = 10;
                 workSheet.Column(5).Width = 10;
-                workSheet.Column(6).Width = 10;
-                workSheet.Column(7).Width = 35;
-                workSheet.Column(8).Width = 20;
+                workSheet.Column(6).Width = 35;
+                workSheet.Column(7).Width = 20;
 
                 //Add headings and a title
-                workSheet.Cells[1, 1].Value = "ID";
-                workSheet.Cells[1, 2].Value = "First Name";
-                workSheet.Cells[1, 3].Value = "Last Name";
-                workSheet.Cells[1, 4].Value = "Member ID";
-                workSheet.Cells[1, 5].Value = "Season";
-                workSheet.Cells[1, 6].Value = "Division";
-                workSheet.Cells[1, 7].Value = "Club";
-                workSheet.Cells[1, 8].Value = "Team";
+               // workSheet.Cells[1, 1].Value = "ID";
+                workSheet.Cells[1, 1].Value = "First Name";
+                workSheet.Cells[1, 2].Value = "Last Name";
+                workSheet.Cells[1, 3].Value = "Member ID";
+                workSheet.Cells[1, 4].Value = "Season";
+                workSheet.Cells[1, 5].Value = "Division";
+                workSheet.Cells[1, 6].Value = "Club";
+                workSheet.Cells[1, 7].Value = "Team";
                 workSheet.Cells[1, 10].Value = "Welland Minor Baseball Association";
 
                 using (ExcelRange Rng = workSheet.Cells[1, 10, 1, 18])
@@ -134,7 +134,7 @@ namespace WMBA_7_2_.Controllers
                     }
                     else
                     {
-                        feedBack = "Error: That file is not an Excel spreadsheet.";
+                        feedBack = "Error: File is not a CSV file or an Excel spreadsheet.";
                     }
                 }
                 else
@@ -147,7 +147,7 @@ namespace WMBA_7_2_.Controllers
                 feedBack = "Error: No file uploaded";
             }
 
-            TempData["Feedback"] = feedBack + "<br /><br />";
+            TempData["Feedback"] = feedBack;
 
             //Note that we are assuming that you are using the Preferred Approach to Lookup Values
             //And the custom LookupsController
@@ -156,7 +156,7 @@ namespace WMBA_7_2_.Controllers
         }
 
 
-        private async Task ReadImportedData(ExcelWorksheet workSheet, string feedBack)
+        private async Task ReadImportedData(ExcelWorksheet workSheet, string success)
         {
             //Prepare the colleciton of imported data
             List<ImportReport> imported = new();
@@ -165,7 +165,7 @@ namespace WMBA_7_2_.Controllers
             var end = workSheet.Dimension.End;
 
             //Test some of the heading cells to help confirm this is the right kind of file.
-            if (workSheet.Cells[1, 1].Text == "ID" &&
+            if (//workSheet.Cells[1, 1].Text == "ID" &&
                 workSheet.Cells[1, 2].Text == "First Name" &&
                 workSheet.Cells[1, 3].Text == "Last Name" &&
                 workSheet.Cells[1, 4].Text == "Member ID" &&
@@ -259,7 +259,7 @@ namespace WMBA_7_2_.Controllers
 
                     if (!teamExists)
                     {
-                        var newClub = new Club () { ClubName = cl };
+                        var newClub = new Club() { ClubName = cl };
                         _context.Clubs.Add(newClub);
                         _context.SaveChanges();
                     }
@@ -290,14 +290,19 @@ namespace WMBA_7_2_.Controllers
                     _context.Players.Add(player);
                 }
                 await _context.SaveChangesAsync();
-            }
+                success = $"{imported.Count()} Players uploaded";
+            }   
+                          
             else
-                {
-                    feedBack = "Error: You may have selected the wrong file to upload.";
-                }
+            {
+                success = "Error: You may have selected the wrong file to upload.";
             }
+            
+            TempData["Success"] = success;
+            //return RedirectToAction("Index", "Report");
         }
-    } 
+    }
+ } 
 
 
 
