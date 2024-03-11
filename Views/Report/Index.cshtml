@@ -1,57 +1,59 @@
-﻿<head>
-
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/css/site.css" asp-append-version="true" />
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Excel Data</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <!-- Your custom CSS -->
+    <link rel="stylesheet" href="/css/site.css" asp-append-version="true">
 </head>
+<body>
 
-<h1>Excel Data:</h1>
-@if (TempData["Success"] != null)
-{
-    <div class="alert alert-success">
-        @TempData["Success"]
-    </div>
-}
-else if (TempData["Feedback"] != null)
-{
-    <div class="alert alert-danger">
-        @TempData["Feedback"]
-    </div>
-    
-}
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-6">
+                <h1>Upload Player Data:</h1>
+                @if (TempData["Success"] != null)
+                {
+                    <div class="alert alert-success">
+                        @TempData["Success"]
+                    </div>
+                }
+                else if (TempData["Feedback"] != null)
+                {
+                    <div class="alert alert-danger">
+                        @TempData["Feedback"]
+                    </div>
+                }
+                <form asp-action="ImportFromExcel" asp-controller="Report" method="post" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="theExcel" class="form-label">Select Excel or CSV File:</label>
+                        <input type="file" class="form-control" id="theExcel" name="theExcel">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Upload Data</button>
+                </form>
 
-
-
-<form asp-action="ImportFromExcel" asp-controller="Report" method="post" enctype="multipart/form-data">
-    <div class="row">
-        <div class="col-md-1"></div>
-        <div class="col-md-4">
-            <div class="form-group">
-                <div class="input-group mb-3">
-                    <input type="file" class="form-control" name="theExcel" id="theExcel">
+                <div class="mt-4">
+                    <h3>excel or csv file details:</h3>
+                    <p>Upload an excel or csv file with the following columns:</p>
+                    <p>First Name | Last Name | MemberID | Division | Club | Season | Team </p>
                 </div>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Upload Data" class="btn btn-primary" />
-              
-            </div>
-            
-        </div>
-        <div class="col-md-7">
-        </div>
-    </div>
-    
-</form>
+            <div class="col-md-6">
+                <h1>Download Sample Excel:</h1>
+                <form asp-action="DownloadSampleExcel" asp-controller="Report" method="post" enctype="multipart/form-data">
+                    <button type="submit" class="btn btn-primary">Download Sample Excel</button>
+                </form>
+                <!-- Download Commentary -->
+                <div class="mt-4">
 
-<form asp-action="DownloadSampleExcel" asp-controller="Report" method="post" enctype="multipart/form-data">
-    <div class="row">
-        <div class="col-md-1"></div>
-        <div class="col-md-4">
-            <div class="form-group">
-                <input type="submit" value="Download Sample Excel" class="btn btn-primary" />
+                    <p>sample download section.</p>
+                </div>
             </div>
         </div>
-        <div class="col-md-7">
-        </div>
     </div>
-</form>
+
+</body>
+</html>
