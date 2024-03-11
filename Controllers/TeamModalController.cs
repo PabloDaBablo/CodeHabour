@@ -61,7 +61,7 @@ namespace WMBA_7_2_.Controllers
 		{
 			if (!ModelState.IsValid)
 			{
-				return Json("Model validation failed.");
+				return Json("Model validation failed. Ensure all required fields are filled out!");
 			}
 
 			var team = new Team
@@ -111,7 +111,7 @@ namespace WMBA_7_2_.Controllers
 
 				if (team == null)
 				{
-					return Json(new { error = "Team not found." });
+					return Json(new { error = "Team not found by given ID. If this issue persists, please see your system administrator." });
 				}
 
 				var result = new
@@ -127,7 +127,7 @@ namespace WMBA_7_2_.Controllers
 			}
 			catch (Exception ex)
 			{
-				return Json(new { error = "An error occurred while processing your request." });
+				return Json(new { error = "An error occurred while processing your request. If this issue persists, please see your system administrator" });
 			}
 		}
 
@@ -136,7 +136,7 @@ namespace WMBA_7_2_.Controllers
 		{
 			if (!ModelState.IsValid)
 			{
-				return Json("Model validation failed.");
+				return Json("Model validation failed. Ensure all required fields are filled out!");
 			}
 
 			var team = await _context.Teams
@@ -181,7 +181,7 @@ namespace WMBA_7_2_.Controllers
 			catch (Exception ex)
 			{
 				
-				return Json(new { error = "An error occurred while updating the team." });
+				return Json(new { error = "An error occurred while updating the team. If this issue persists, please see your system administrator" });
 			}
 		}
 
@@ -198,7 +198,7 @@ namespace WMBA_7_2_.Controllers
 					_context.SaveChanges();
 					return Json("Team deleted successfully.");
 				}
-				return Json("Team not found.");
+				return Json("Team not found by ID.");
 			}
 			catch (Exception ex)
 			{

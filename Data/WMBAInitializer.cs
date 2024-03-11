@@ -1052,7 +1052,7 @@ namespace WMBA_7_2_.Data
 
                     }
 
-					if (!context.PlayerStats.Any())
+					/*if (!context.PlayerStats.Any())
 					{
 						context.PlayerStats.AddRange(
 							new PlayerStats
@@ -1137,8 +1137,9 @@ namespace WMBA_7_2_.Data
                             }
                             
 						);
-						context.SaveChanges();
+					    context.SaveChanges();
 					}
+                    */
 
 
 					foreach (Game game in context.Games)

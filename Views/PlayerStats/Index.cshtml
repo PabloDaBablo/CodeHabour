@@ -21,6 +21,9 @@
     <thead>
         <tr>
             <th>
+                @Html.DisplayNameFor(model => model.GP)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.PA)
             </th>
             <th>
@@ -68,6 +71,16 @@
                 @* @Html.DisplayNameFor(model => model.SAC) *@
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.GO)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PO)
+            </th>
+            <th>
+				@Html.DisplayNameFor(model => model.FO)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Player)
                 <input type="submit" value="Player" class="btn btn-toolbar" />
                 @* @Html.DisplayNameFor(model => model.Player) *@
             </th>
@@ -76,6 +89,9 @@
     <tbody>
 @foreach (var item in Model) {
         <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.GP)
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.PA)
             </td>
@@ -111,6 +127,15 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.SAC)
+            </td>
+            <td>
+				@Html.DisplayFor(modelItem => item.GO)
+            </td>
+            <td>
+				@Html.DisplayFor(modelItem => item.PO)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FO)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Player.PlayerFullName)

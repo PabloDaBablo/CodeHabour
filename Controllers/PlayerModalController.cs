@@ -118,7 +118,7 @@ namespace WMBA_7_2_.Controllers
 
                     return Json("Player saved successfully.");
                 }
-                return Json("Model validation failed.");
+                return Json("Model validation failed. Ensure all required fields are filled out!");
             }
 			catch (DbUpdateException dex)
 			{
@@ -169,7 +169,7 @@ namespace WMBA_7_2_.Controllers
             }
             catch (Exception ex)
             {
-            return Json(new { error = "An error occurred while processing your request." });
+            return Json(new { error = "An error occurred while processing your request. Please try again later or contact your system administrator" });
             }
 		}
 
@@ -186,7 +186,7 @@ namespace WMBA_7_2_.Controllers
 
                     return Json("Player updated successfully.");
                 }
-                return Json("Model validation failed.");
+                return Json("Model validation failed. Ensure all required fields are filled out!");
             }
 			catch (Exception ex)
             {
@@ -207,7 +207,7 @@ namespace WMBA_7_2_.Controllers
                     _context.SaveChanges();
                     return Json("Player deleted successfully.");
                 }
-                return Json("Player not found.");
+                return Json("Player not found by ID. If this issue persists, please see your administrator.");
             }
 			catch (Exception ex)
             {
