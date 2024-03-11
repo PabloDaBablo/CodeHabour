@@ -576,7 +576,7 @@ function updatePlayerBaseHit(playerId, baseHitType) {
     });
 }
 //TImer
-function startTimer(duration, displayElement, messageElement, ballButton, strikeButton) {
+function startTimer(duration, displayElement, messageElement, ballButton, strikeButton, addRunToAwayTeamButton, undoRunToAwayTeamButton) {
     var endTime = new Date(Date.now() + duration);
 
     var timerInterval = setInterval(function () {
@@ -593,6 +593,8 @@ function startTimer(duration, displayElement, messageElement, ballButton, strike
             messageElement.textContent = 'Game Over';
             ballButton.disabled = true;
             strikeButton.disabled = true;
+            addRunToAwayTeamButton.disabled = true;
+            undoRunToAwayTeamButton.disabled = true;
         }
     }, 1000);
 };
@@ -637,8 +639,9 @@ document.addEventListener('DOMContentLoaded', function () {
     var messageElement = document.getElementById('gameOverMessageDisplay');
     var ballButton = document.getElementById('ballNumberButton');
     var strikeButton = document.getElementById('strikeNumberButton');
-
-    startTimer(10000, displayElement, messageElement, ballButton, strikeButton);
+    var addRunToAwayTeamButton = document.getElementById('addToAwayScore');
+    var undoRunToAwayTeamButton = document.getElementById('undoAwayButton');
+    startTimer(10000, displayElement, messageElement, ballButton, strikeButton, addRunToAwayTeamButton, undoRunToAwayTeamButton);
 });
 
 function updatePlayerOutStatistic(playerId, outType) {
@@ -767,3 +770,58 @@ function undoLastActionCont() {
         })
         .catch(error => console.error('Error undoing last action:', error));
 };
+//Add to away team score
+document.getElementById('addToAwayScore').addEventListener('click', function () {
+    // Use the existing gameId variable
+    // Increment the score on the frontend immediately for instant feedback
+    var awayScoreElement = document.getElementById('awayScoreNumber');
+    var currentScore = parseInt(awayScoreElement.textContent, 10);
+    awayScoreElement.textContent = currentScore + 1;
+
+    // Send the updated score to the backend
+    fetch('/Scorekeeping/AddAwayTeamRun', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ GameId: gameId }),
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (!data.success) {
+                // If the backend process failed, revert the score increment on the frontend
+                awayScoreElement.textContent = currentScore;
+                alert('Failed to add run: ' + data.message);
+            }
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+            // Revert the score if there was an error
+            awayScoreElement.textContent = currentScore;
+        });
+});
+//Undo button for away team
+document.getElementById('undoAwayButton').addEventListener('click', function () {
+    // Call backend to decrement the score
+    fetch('/Scorekeeping/DecrementAwayTeamRun', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ GameId: gameId }),
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Decrement the score in the frontend to reflect the change
+                var awayScoreElement = document.getElementById('awayScoreNumber');
+                var currentScore = parseInt(awayScoreElement.textContent, 10);
+                awayScoreElement.textContent = Math.max(0, currentScore - 1); // Prevent negative scores
+            } else {
+                alert('Failed to undo run: ' + data.message);
+            }
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+});

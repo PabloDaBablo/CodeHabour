@@ -1,0 +1,142 @@
+﻿@model WMBA_7_2_.Models.Game 
+
+@{
+    ViewData["Title"] = "Details";
+}
+<head>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/site.css" asp-append-version="true" />
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+</head>
+
+<h1>Scorecard</h1>
+
+<div>
+    
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.GameDate)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.GameDate)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.GameTime)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.GameTime)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.GameLocation)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.GameLocation)
+        </dd>
+    </dl>
+
+    <h3>Home Lineup: @Model.HomeTeam.TeamName</h3>
+    <table class="table table-striped table-bordered table-responsive table-hover">
+        <thead>
+            <tr>
+                <th>Player Name</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.GamePlayers.Where(gp => gp.TeamLineup == TeamLineup.Home))
+            {
+                <tr>
+                    <td>@item.Player.PlayerFullName</td>
+                    <td>
+                        @using (Html.BeginForm("RemovePlayerFromGame", "Game", new { gameId = Model.ID, playerId = item.PlayerID }, FormMethod.Post))
+                        {
+                            <input type="submit" value="Remove" />
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+
+    <h4>Add Player to Home Team</h4>
+    @using (Html.BeginForm("AddPlayerToGame", "Game", FormMethod.Post))
+    {
+        <select name="playerId" id="playerSelectHome">
+            @foreach (var player in ViewBag.AvailablePlayers)
+            {
+                <option value="@player.ID">@player.PlayerFullName</option>
+            }
+        </select>
+        <input type="hidden" name="gameId" value="@Model.ID" />
+        <input type="hidden" name="isHomeTeam" value="true" />
+        <input type="submit" value="Add" />
+    }
+
+    <hr />
+
+    <h3>Away Lineup: @Model.AwayTeam.TeamName</h3>
+    <table class = "table table-striped table-bordered table-responsive table-hover">
+        <thead>
+            <tr>
+                <th>Player Name</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.GamePlayers.Where(gp => gp.TeamLineup == TeamLineup.Away))
+            {
+                <tr>
+                    <td>@item.Player.PlayerFullName</td>
+                    <td>
+                        @using (Html.BeginForm("RemovePlayerFromGame", "Game", new { gameId = Model.ID, playerId = item.PlayerID }, FormMethod.Post))
+                        {
+                            <input type="submit" value="Remove" />
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <h4>Add Player to Away                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   Team</h4>
+    @using (Html.BeginForm("AddPlayerToGame", "Game", FormMethod.Post))
+    {
+        <select name="playerId" id="playerSelect">
+            @foreach (var player in ViewBag.AvailablePlayers)
+            {
+                <option value="@player.ID">@player.PlayerFullName</option>
+            }
+        </select>
+        <input type="hidden" name="gameId" value="@Model.ID" />
+        <input type="hidden" name="isHomeTeam" value="false" />
+        <input type="submit" value="Add" />
+    }
+</div>
+
+
+<div>
+    @*<a asp-action="Edit" asp-route-id="@Model?.ID">Scorecard</a> *@
+    <a asp-action="Index">Back to Schedule</a>
+</div>
+
+
+@section Scripts {
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#playerSelect').select2({
+                placeholder: "Select a player",
+                allowClear: true
+            });
+            $('#playerSelectHome').select2({
+                placeholder: "Select a player",
+                allowClear: true
+            });
+        });
+    </script>
+}
+

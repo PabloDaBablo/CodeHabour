@@ -35,12 +35,20 @@ namespace WMBA_7_2_.Models
         [Display(Name = "Home Team")]
         public Team HomeTeam { get; set; }
 
+        [Display(Name = "Home Team Score")]
+        [Range(0, int.MaxValue, ErrorMessage = "Score must be a non-negative number.")]
+        public int HomeTeamScore { get; set; }
+
         [Display(Name = "Away Team")]
         [Required(ErrorMessage = "You must select the Away Team for the Game.")]
         public int AwayTeamID { get; set; }
 
         [Display(Name = "Away Team")]
         public Team AwayTeam { get; set; }
+
+        [Display(Name = "Away Team Score")]
+        [Range(0, int.MaxValue, ErrorMessage = "Score must be a non-negative number.")]
+        public int AwayTeamScore { get; set; }
 
         public ICollection<Team_Game> Team_Games { get; set; } = new List<Team_Game>();
         public ICollection<Line_Up> Line_Ups { get; set; } = new List<Line_Up>();
