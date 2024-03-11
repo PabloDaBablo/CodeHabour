@@ -207,6 +207,7 @@ function placeFirstPlayer() {
         logAction('PlayerPlaced', { playerId: firstPlayerId, baseIndex: 0 })
         drawField();
         incrementPlateAppearances(playerPositions[0]);
+        
         saveGameState();
     }
 }

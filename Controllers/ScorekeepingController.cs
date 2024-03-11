@@ -235,16 +235,16 @@ namespace WMBA_7_2_.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> PlateAppearances([FromBody] PlayerActionDto dto)
+        public async Task<IActionResult> PlateAppearances([FromBody] PlayerScoredDto dto)
         {
             if (dto == null)
             {
-                return BadRequest("Invalid request");
+                return BadRequest("No player ID sent to the database!");
             }
 
             var playerStats = await _context.PlayerStats.FirstOrDefaultAsync(ps => ps.PlayerID == dto.PlayerId);
 
-            if (playerStats.PA == null)
+            if (playerStats == null)
             {
                 playerStats = new PlayerStats
                 {
@@ -255,7 +255,7 @@ namespace WMBA_7_2_.Controllers
             }
             else
             {
-                playerStats.PA += 1; 
+                playerStats.PA++; 
             }
 
             try
@@ -316,15 +316,21 @@ namespace WMBA_7_2_.Controllers
             {
                 case "1B":
                     playerStats.B1 = (playerStats.B1 ?? 0) + 1;
+                    playerStats.Hits = (playerStats.Hits ?? 0) + 1;
                     break;
                 case "2B":
                     playerStats.B2 = (playerStats.B2 ?? 0) + 1;
+                    playerStats.Hits = (playerStats.Hits ?? 0) + 1;
                     break;
                 case "3B":
                     playerStats.B3 = (playerStats.B3 ?? 0) + 1;
+                    playerStats.Hits = (playerStats.Hits ?? 0) + 1;
                     break;
                 case "HR":
                     playerStats.HR = (playerStats.HR ?? 0) + 1;
+                    playerStats.RBI = (playerStats.RBI ?? 0) + 1;
+                    playerStats.Runs = (playerStats.Runs ?? 0) + 1;
+                    playerStats.Hits = (playerStats.Hits ?? 0) + 1;
                     break;
             }
 
@@ -450,6 +456,7 @@ namespace WMBA_7_2_.Controllers
                             if (playerStat.Runs > 0)
                             {
                                 playerStat.Runs -= 1;
+                                
                                 _context.PlayerStats.Update(playerStat);
                                 await _context.SaveChangesAsync();
                                 await transaction.CommitAsync();
@@ -472,6 +479,7 @@ namespace WMBA_7_2_.Controllers
                             if (playerStat.B1 > 0)
                             {
                                 playerStat.B1 -= 1;
+                                playerStat.Hits -= 1;
                                 _context.PlayerStats.Update(playerStat);
                                 await _context.SaveChangesAsync();
                                 await transaction.CommitAsync();
@@ -494,6 +502,7 @@ namespace WMBA_7_2_.Controllers
                             if (playerStat.B2 > 0)
                             {
                                 playerStat.B2 -= 1;
+                                playerStat.Hits -= 1;
                                 _context.PlayerStats.Update(playerStat);
                                 await _context.SaveChangesAsync();
                                 await transaction.CommitAsync();
@@ -516,6 +525,7 @@ namespace WMBA_7_2_.Controllers
                             if (playerStat.B3 > 0)
                             {
                                 playerStat.B3 -= 1;
+                                playerStat.Hits -= 1;
                                 _context.PlayerStats.Update(playerStat);
                                 await _context.SaveChangesAsync();
                                 await transaction.CommitAsync();
@@ -538,6 +548,9 @@ namespace WMBA_7_2_.Controllers
                             if (playerStat.HR > 0)
                             {
                                 playerStat.HR -= 1;
+                                playerStat.Hits -= 1;
+                                playerStat.RBI -= 1;
+                                playerStat.Runs -= 1;
                                 _context.PlayerStats.Update(playerStat);
                                 await _context.SaveChangesAsync();
                                 await transaction.CommitAsync();
