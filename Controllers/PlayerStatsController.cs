@@ -22,10 +22,14 @@ namespace WMBA_7_2_.Controllers
         }
 
         // GET: PlayerStats
-        public async Task<IActionResult> Index(int? page, string actionButton, string sortDirection = "asc", string sortField = "Runs")
+        public async Task<IActionResult> Index(int? page, string SearchString, string actionButton, string sortDirection = "asc", string sortField = "Runs")
         {
             var wMBAContext = _context.PlayerStats.Include(p => p.Player).AsNoTracking();
 
+            if (!string.IsNullOrEmpty(SearchString))
+            {
+                wMBAContext = wMBAContext.Where(p => p.Player.PlayerFirstName.ToUpper().Contains(SearchString.ToUpper()) || p.Player.PlayerLastName.ToUpper().Contains(SearchString.ToUpper()));
+            }
             //List of sort options.
             string[] sortOptions = new[] { "Runs", "Hits", "Home Runs", "RBI" };
 
@@ -97,6 +101,9 @@ namespace WMBA_7_2_.Controllers
                         .OrderByDescending(p => p.RBI);
                 }
             }
+            
+            //ViewData["playerNameFilter"] = SearchString;
+
             //Set sort for next time
             ViewData["sortField"] = sortField;
             ViewData["sortDirection"] = sortDirection;
