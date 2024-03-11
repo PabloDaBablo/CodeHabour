@@ -18,28 +18,28 @@
 <form asp-action="Index" method="get">
 	<div class="form-horizontal">
 		<div class="row">
-			<div class="form-group col-md-4">
+			<div class="form-group col-md-2">
 				<label class="control-label">Division:</label>
 				@Html.DropDownList("DivisionId", (SelectList)ViewBag.DivisionList, "Select a Division", new { @class = "form-control", id = "divisionId" })
 			</div>
-			<div class="form-group col-md-4">
-				<label class="control-label">First Name:</label>
-				@Html.TextBox("FirstNameSearch", null, new { @class = "form-control", id = "firstNameSearch" })
-			</div>
-			<div class="form-group col-md-4">
-				<label class="control-label">Last Name:</label>
-				@Html.TextBox("LastNameSearch", null, new { @class = "form-control", id = "lastNameSearch" })
-			</div>
-			<div class="form-group col-md-4">
-				<label class="control-label">Number:</label>
-				@Html.TextBox("NumberSearch", null, new { @class = "form-control", id = "numberSearch" })
-			</div>
-			<div class="form-group col-md-4">
+			<div class="form-group col-md-2">
 				<label class="control-label">Team:</label>
 				@Html.DropDownList("TeamId", (SelectList)ViewBag.TeamList, "Select a Team", new { @class = "form-control", id = "teamId" })
 			</div>
+			<div class="form-group col-md-2">
+				<label class="control-label">First Name:</label>
+				@Html.TextBox("FirstNameSearch", null, new { @class = "form-control", id = "firstNameSearch" })
+			</div>
+			<div class="form-group col-md-2">
+				<label class="control-label">Last Name:</label>
+				@Html.TextBox("LastNameSearch", null, new { @class = "form-control", id = "lastNameSearch" })
+			</div>
+			@* <div class="form-group col-md-4">
+				<label class="control-label">Number:</label>
+				@Html.TextBox("NumberSearch", null, new { @class = "form-control", id = "numberSearch" })
+			</div> *@
 			<div class="form-group col-md-4 align-self-end">
-				<button id="filterButton" class="btn btn-primary" value="Filter" name="actionButton">Filter</button>
+				<button id="filterButton" class="btn btn-outline-primary" value="Filter" name="actionButton">Filter</button>
 				<a asp-action="Index" class="btn btn-outline-dark">Clear</a>
 			</div>
 		</div>
