@@ -134,6 +134,9 @@ namespace WMBA_7_2_.Data.WMBAMigrations
                     b.Property<int>("AwayTeamScore")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("Ballparks")
+                        .HasColumnType("INTEGER");
+
                     b.Property<DateTime>("GameDate")
                         .HasColumnType("TEXT");
 
