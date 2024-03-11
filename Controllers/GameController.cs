@@ -22,16 +22,24 @@ namespace WMBA_7_2_.Controllers
 
         // GET: Game
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? divisionID)
         {
-            var games = await _context.Games
-                .Include(g => g.Team_Games)
-                .ThenInclude(g => g.Team)
-                .Include(g => g.AwayTeam)
-                .Include(g => g.HomeTeam)
-                .AsNoTracking()
-                .ToListAsync();
+            
+            var gamesQuery = _context.Games
+            .Include(g => g.Team_Games).ThenInclude(g => g.Team).ThenInclude(g => g.Division)
+            .Include(g => g.AwayTeam).ThenInclude(g => g.Division)
+            .Include(g => g.HomeTeam).ThenInclude(g => g.Division)
+            .AsNoTracking();
 
+            var games = await gamesQuery.ToListAsync();
+
+            if (divisionID.HasValue)
+            {
+                games = games.Where(g => g.HomeTeam.DivisionID == divisionID).ToList();
+            }
+        
+
+            ViewData["DivisionID"] = new SelectList(_context.Divisions, "ID", "DivAge");
             ViewData["HomeTeam"] = new SelectList(_context.Teams, "ID", "TeamName");
             ViewData["AwayTeam"] = new SelectList(_context.Teams, "ID", "TeamName");
 
@@ -80,12 +88,12 @@ namespace WMBA_7_2_.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,GameDate,GameTime,HomeTeamID,AwayTeamID,GameLocation")] Game game)
+        public async Task<IActionResult> Create([Bind("ID,Division,HomeTeamID,AwayTeamID,GameDate,GameTime,GameLocation")] Game game)
         {
 
             ViewData["HomeTeam"] = new SelectList(_context.Teams, "ID", "TeamName");
             ViewData["AwayTeam"] = new SelectList(_context.Teams, "ID", "TeamName");
-
+           
 
 
             if (ModelState.IsValid)
@@ -97,9 +105,12 @@ namespace WMBA_7_2_.Controllers
 
                 _context.Add(game);
                 await _context.SaveChangesAsync();
+                // Set success message in TempData
+                TempData["SuccessMessage"] = "Game was successfully created.";
 				//return RedirectToAction("Details", new { id = game.ID });
-				return RedirectToAction("Index", new { id = game.ID });
+				return RedirectToAction("Create", new { id = game.ID });
 			}
+
 
             return View();
         }
@@ -262,8 +273,19 @@ namespace WMBA_7_2_.Controllers
                     await _context.SaveChangesAsync();
                 }
             }
+
             return RedirectToAction(nameof(Details), new { id = GameID });
         }
+            private SelectList DivisionSelectList(int? selectedId)
+            {
+                return new SelectList(_context.Divisions
+                    .OrderBy(d => d.DivAge), "ID", "DivAge", selectedId);
+            }
+            
+            private void PopulateDropDownLists(Game game = null)
+            {
+                ViewData["DivisonID"] = DivisionSelectList(game?.HomeTeamID);
+            }
 
        
     }
