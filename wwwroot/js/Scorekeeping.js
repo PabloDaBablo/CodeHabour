@@ -1,4 +1,5 @@
 ﻿var selectedPlayerId;
+let actionQueue = [];
 
 $(document).ready(function () {
     GetPlayers(gameId);
@@ -186,32 +187,38 @@ function fetchLineup(gameId) {
         .then(data => {
             var lineupDropdown = document.getElementById('team2Dropdown');
             lineupDropdown.innerHTML = '<option value="0" selected>Select a player...</option>';
+            let gamePlayedPromises = [];
 
             data.forEach(player => {
                 var option = new Option(player.playerLastName, player.id);
                 lineupDropdown.options.add(option);
-                incrementGamesPlayed(player.id);
+                gamePlayedPromises.push(incrementGamesPlayed(player.id));
             });
 
-            playersData = data; 
-            placeFirstPlayer();
+            Promise.all(gamePlayedPromises)
+                .then(() => {
+                    playersData = data;
+                    placeFirstPlayer(); 
+                })
+                .catch(error => console.error('Error incrementing games played for lineup:', error));
         })
-        .catch(error => console.error('Error:', error));
+        .catch(error => console.error('Error fetching lineup:', error));
 }
 
 function placeFirstPlayer() {
     if (playersData.length > 0) {
-        const firstPlayerId = playersData[0].id; 
-        playerPositions[0] = firstPlayerId; 
+        const firstPlayerId = playersData[0].id;
+        playerPositions[0] = firstPlayerId;
         addPlayerToField(firstPlayerId, playersData[0].playerLastName, playersData[0].playerNumber, getBaseCoordinates(0).x, getBaseCoordinates(0).y);
-        logAction('PlayerPlaced', { playerId: firstPlayerId, baseIndex: 0 })
+        logAction('PlayerPlaced', { playerId: firstPlayerId, baseIndex: 0 });
         drawField();
-        incrementPlateAppearances(playerPositions[0]);
-        
         saveGameState();
+
+        incrementPlateAppearances(firstPlayerId)
+            .then(() => console.log('Incremented Plate Appearances for the first player.'))
+            .catch(error => console.error('Error incrementing plate appearances for the first player:', error));
     }
 }
-
 function addPlayerToField(playerId, lastName, number, startX, startY) {
     const svgNs = "http://www.w3.org/2000/svg";
     let svgContainer = document.querySelector("svg");
@@ -674,6 +681,7 @@ function handleOut(outType) {
 
     updatePlayerOutStatistic(playerIdSVG, outType);
     removePlayerFromField();
+    loadPlayerOntoHomeBase();
 
     playerIdSVG = null;
 }
@@ -684,7 +692,15 @@ document.getElementById('triple').addEventListener('click', function () { advanc
 document.getElementById('homerun').addEventListener('click', function () { advancePlayerBaseHit('HR'); });
 
 document.getElementById('advance-player').addEventListener('click', advanceToNextBase);
- 
+
+document.getElementById('runs-batted-in').addEventListener('click', function () { RunsBattedIn(playerIdSVG); logAction('RBI', { playerId: playerIdSVG }) })
+
+document.getElementById('sacrifice').addEventListener('click', function () { Sacrifice(playerIdSVG); logAction('SAC', { playerId: playerIdSVG }) })
+
+document.getElementById('stolen-base').addEventListener('click', function () { StolenBase(playerIdSVG); logAction('SB', { playerId: playerIdSVG }) })
+
+document.getElementById('base-on-balls').addEventListener('click', function () { BaseOnBalls(playerIdSVG);  logAction('BB', { playerId: playerIdSVG }) });
+
 $(document).ready(function () {
     $('#groundout').click(function () { handleOut('GO'); });
     $('#flyout').click(function () { handleOut('FO'); });
@@ -708,8 +724,8 @@ function loadPlayerOntoHomeBase() {
         const playerToLoad = playersData[currentBatterIndex];
         if (playerToLoad) {
             playerPositions[0] = playerToLoad.id; 
-            addPlayerToField(playerToLoad.id, playerToLoad.playerLastName, playerToLoad.playerNumber, getBaseCoordinates(0).x, getBaseCoordinates(0).y);
             incrementPlateAppearances(playerToLoad.id);
+            addPlayerToField(playerToLoad.id, playerToLoad.playerLastName, playerToLoad.playerNumber, getBaseCoordinates(0).x, getBaseCoordinates(0).y);
         }
     }
 }
@@ -830,38 +846,143 @@ document.getElementById('undoAwayButton').addEventListener('click', function () 
 });
 
 function incrementGamesPlayed(playerId) {
-    fetch('/Scorekeeping/GamesPlayed', {
+    return fetch('/Scorekeeping/GamesPlayed', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({ PlayerId: playerId })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                console.log(`Games Played incremented for player ${playerId}.`);
-            } else {
-                console.error(`Failed to increment Games Played for player ${playerId}: ${data.message}`);
-            }
-        })
-        .catch(error => console.error('Error incrementing Games Played:', error))
     })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok.');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (!data.success) {
+                throw new Error(`Failed to increment Games Played for player ${playerId}: ${data.message}`);
+            }
+            console.log(`Games Played incremented for player ${playerId}.`);
+        });
 }
 
 function incrementPlateAppearances(playerId) {
-    console.log(`Attempting to increment PA for player ${playerId}`); 
-    fetch('/Scorekeeping/PlateAppearances', {
+    return fetch('/Scorekeeping/PlateAppearances', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({ PlayerId: playerId })
     })
-    .then(response => response.json())
-    .then(data => {
-        console.log(`Plate Appearances incremented for player ${playerId}.`, data);
-    })
-    .catch(error => {
-        console.error(`Error incrementing Plate Appearances for player ${playerId}:`, error);
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok.');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (!data.success) {
+                throw new Error(`Failed to increment Plate Appearances for player ${playerId}: ${data.message}`);
+            }
+            console.log(`Plate Appearances incremented for player ${playerId}.`);
+        });
+}
+
+function enqueueAction(actionFunc, playerId) {
+    actionQueue.push(() => actionFunc(playerId));
+}
+
+function dequeueAndExecuteActions() {
+    if (actionQueue.length === 0) {
+        console.log('All actions processed.');
+        return;
+    }
+
+    const actionToExecute = actionQueue.shift();
+    const promise = actionToExecute();
+
+    if (promise && promise.then) {
+        promise.then(() => {
+            dequeueAndExecuteActions();
+        }).catch(error => {
+            console.error('Error executing action:', error);
+            dequeueAndExecuteActions();
+        });
+    } else {
+        console.error('The action did not return a promise, check your action functions.');
+    }
+}
+
+function RunsBattedIn(playerId) {
+    $.ajax({
+        url: '/Scorekeeping/RunsBattedIn',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ playerId: playerId }),
+        success: function (response) {
+            console.log('Player RBI update successful', response);
+        },
+        error: function (error) {
+            console.error('Error updating player RBI.', error);
+        }
     });
 }
+
+function Sacrifice (playerId) {
+    $.ajax({
+        url: '/Scorekeeping/Sacrifice',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ playerId: playerId }),
+        success: function (response) {
+            console.log('Player sacrifice update successful', response);
+        },
+        error: function (error) {
+            console.error('Error updating player sacrifice.', error);
+        }
+    });
+};
+
+function StolenBase(playerId) {
+    $.ajax({
+        url: '/Scorekeeping/StolenBase',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ playerId: playerId }),
+        success: function (response) {
+            console.log('Player SB update successful', response);
+        },
+        error: function (error) {
+            console.error('Error updating player SB.', error);
+        }
+    });
+}
+
+function BaseOnBalls(playerId) {
+    $.ajax({
+        url: '/Scorekeeping/BaseOnBalls',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ playerId: playerId }),
+        success: function (response) {
+            console.log('Player SB update successful', response);
+        },
+        error: function (error) {
+            console.error('Error updating player SB.', error);
+        }
+    });
+}
+
+document.getElementById('foulball').addEventListener('click', function () {
+    if (strikeCount < 2) {
+        strikeCount += 1;
+        document.getElementById('strikeCount').textContent = strikeCount;
+    }
+});
+
+document.getElementById('hitByPitch').addEventListener('click', function () {
+    advanceToNextBase();
+    saveGameState();
+    
+});

@@ -58,6 +58,15 @@
                 @Html.DisplayNameFor(model => model.SAC)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.GO)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PO)
+            </th>
+            <th>
+				@Html.DisplayNameFor(model => model.FO)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Player)
             </th>
         </tr>
@@ -103,6 +112,15 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.SAC)
+            </td>
+            <td>
+				@Html.DisplayFor(modelItem => item.GO)
+            </td>
+            <td>
+				@Html.DisplayFor(modelItem => item.PO)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FO)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Player.PlayerFullName)

@@ -6,17 +6,17 @@ namespace WMBA_7_2_.Models
 	{
 		public int ID { get; set; }
 
-		[Display(Name = "Plate Appearances")]//issues but done
+		[Display(Name = "Plate Appearances")]//issues but done(come back to)
 		public int? PA { get; set; }
 
-		[Display(Name = "Games Played")]//issues but done
+		[Display(Name = "Games Played")]//done
 		public int? GP { get; set; }
 
 		[Display(Name = "Runs")]
 		public int? Runs { get; set; }//done
 
 		[Display(Name = "Hits")]
-		public int? Hits { get; set; }
+		public int? Hits { get; set; }//done
 
 		[Display(Name = "Singles")]
 		public int? B1 { get; set; }//done
@@ -31,19 +31,19 @@ namespace WMBA_7_2_.Models
 		public int? HR { get; set; }//done
 
 		[Display(Name = "Runs Batted In")]
-		public int? RBI { get; set; }// not done, conditional, so that if you hit someone else in and they score a run, they get counted as a run, and you get an RBI
+		public int? RBI { get; set; }//done
 
 		[Display(Name = "Base on Balls")]
-		public int? BB { get; set; }// not done, when the pitcher throws four balls, the player is advanced to first base/walks
+		public int? BB { get; set; }//done
 
 		[Display(Name = "Strikeouts")]
 		public int? K { get; set; }//done
 
 		[Display(Name = "Stolen Bases")]	
-		public int? SB { get; set; }//not done
+		public int? SB { get; set; }//done
 
 		[Display(Name = "Sacrifice")]
-		public int? SAC { get; set; } // not done
+		public int? SAC { get; set; } //done
 
 		[Display(Name = "Ground Outs")]
 		public int? GO { get; set; }//done 
