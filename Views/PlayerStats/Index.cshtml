@@ -14,7 +14,9 @@
 
 <h1>Player Stats List</h1>
 <hr />
-
+<form asp-action="Index" method="get">
+    <input type="hidden" name="sortDirection" value="@ViewData["sortDirection"]" />
+    <input type="hidden" name="sortField" value="@ViewData["sortField"]" />
 <table class="table table-striped table-bordered table-responsive table-hover">
     <thead>
         <tr>
@@ -22,40 +24,52 @@
                 @Html.DisplayNameFor(model => model.PA)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Runs)
+                <input type="submit" name="actionButton" value="Runs" class="btn btn-link" />
+               @*  @Html.DisplayNameFor(model => model.Runs) *@
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Hits)
+                <input type="submit" name="actionButton" value="Hits" class="btn btn-link" />
+                @* @Html.DisplayNameFor(model => model.Hits) *@
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.B1)
+               <input type="submit" value="Singles" class="btn btn-toolbar" />
+                @* @Html.DisplayNameFor(model => model.B1) *@
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.B2)
+                <input type="submit" value="Doubles" class="btn btn-toolbar" />
+                @* @Html.DisplayNameFor(model => model.B2) *@
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.B3)
+                <input type="submit" value="Triples" class="btn btn-toolbar" />
+                @* @Html.DisplayNameFor(model => model.B3) *@
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.HR)
+                <input type="submit" name="actionButton" value="Home Runs" class="btn btn-link" />
+                @* @Html.DisplayNameFor(model => model.HR) *@
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.RBI)
+                <input type="submit" name="actionButton" value="RBI" class="btn btn-link" />
+                @* @Html.DisplayNameFor(model => model.RBI) *@
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.BB)
+               <input type="submit" value="Walks" class="btn btn-toolbar" />
+               @*  @Html.DisplayNameFor(model => model.BB) *@
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.K)
+                <input type="submit" value="Strikeouts" class="btn btn-toolbar" />
+                @* @Html.DisplayNameFor(model => model.K) *@
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.SB)
+                <input type="submit" value="Stolen Bases" class="btn btn-toolbar" />
+                @* @Html.DisplayNameFor(model => model.SB) *@
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.SAC)
+                <input type="submit" value="Sacrifice" class="btn btn-toolbar" />
+                @* @Html.DisplayNameFor(model => model.SAC) *@
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Player)
+                <input type="submit" value="Player" class="btn btn-toolbar" />
+                @* @Html.DisplayNameFor(model => model.Player) *@
             </th>
         </tr>
     </thead>
@@ -105,3 +119,4 @@
 }
     </tbody>
 </table>
+</form>

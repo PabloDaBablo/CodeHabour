@@ -163,9 +163,8 @@ namespace WMBA_7_2_.Controllers
 
             var start = workSheet.Dimension.Start;
             var end = workSheet.Dimension.End;
-
             //Test some of the heading cells to help confirm this is the right kind of file.
-            if (//workSheet.Cells[1, 1].Text == "ID" &&
+            if (workSheet.Cells[1, 1].Text == "ID" &&
                 workSheet.Cells[1, 2].Text == "First Name" &&
                 workSheet.Cells[1, 3].Text == "Last Name" &&
                 workSheet.Cells[1, 4].Text == "Member ID" &&
@@ -188,7 +187,7 @@ namespace WMBA_7_2_.Controllers
                         Team = workSheet.Cells[row, 8].Text
                     };
                     //Add if not blank, at least check a couple of properties
-                    if (!(ir.ID == "" || ir.Member_ID == ""))
+                    if (!(ir.Team == "" || ir.Member_ID == ""))
                     {
                         imported.Add(ir);
                     }
@@ -291,18 +290,18 @@ namespace WMBA_7_2_.Controllers
                 }
                 await _context.SaveChangesAsync();
                 success = $"{imported.Count()} Players uploaded";
-            }   
-                          
+            }
+
             else
             {
                 success = "Error: You may have selected the wrong file to upload.";
             }
-            
+
             TempData["Success"] = success;
             //return RedirectToAction("Index", "Report");
         }
     }
- } 
+} 
 
 
 
