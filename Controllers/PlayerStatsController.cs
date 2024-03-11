@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WMBA_7_2_.Data;
 using WMBA_7_2_.Models;
+using WMBA_7_2_.Utilities;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace WMBA_7_2_.Controllers
@@ -21,19 +22,20 @@ namespace WMBA_7_2_.Controllers
         }
 
         // GET: PlayerStats
-        public async Task<IActionResult> Index(string actionButton, string sortDirection = "asc", string sortField = "Runs")
+        public async Task<IActionResult> Index(int? page, string actionButton, string sortDirection = "asc", string sortField = "Runs")
         {
             var wMBAContext = _context.PlayerStats.Include(p => p.Player).AsNoTracking();
 
             //List of sort options.
             string[] sortOptions = new[] { "Runs", "Hits", "Home Runs", "RBI" };
 
-            //if (!String.IsNullOrEmpty(sortDirection)) 
-            //{
-            //the String has an ambiguity error which I cant fix,
-            //but the sort works, so I will deal with it with Stovell later. 
-            //~donaven
-            if (sortOptions.Contains(actionButton))
+            if (!System.String.IsNullOrEmpty(sortDirection))
+            {
+                //String on its own has an ambiguity error so I added System,
+                //the sort works, I will deal with it with Stovell later. 
+                //~donaven
+                page = 1;
+                if (sortOptions.Contains(actionButton))
                 {
                     if (actionButton == sortField)
                     {
@@ -41,7 +43,7 @@ namespace WMBA_7_2_.Controllers
                     }
                     sortField = actionButton;
                 }
-            //}
+            }
 
             if (sortField == "Runs")
             {
@@ -98,8 +100,12 @@ namespace WMBA_7_2_.Controllers
             //Set sort for next time
             ViewData["sortField"] = sortField;
             ViewData["sortDirection"] = sortDirection;
-
-            return View(await wMBAContext.ToListAsync());
+            
+            int pageSize = 10;//Change as required
+            var pagedData = await PaginatedList<PlayerStats>.CreateAsync(wMBAContext.AsNoTracking(), page ?? 1, pageSize);
+            return View(pagedData);
+            
+            //return View(await wMBAContext.ToListAsync());
         }
 
 
