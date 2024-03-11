@@ -207,6 +207,7 @@ function placeFirstPlayer() {
         logAction('PlayerPlaced', { playerId: firstPlayerId, baseIndex: 0 })
         drawField();
         incrementPlateAppearances(playerPositions[0]);
+        
         saveGameState();
     }
 }
@@ -835,17 +836,16 @@ function incrementGamesPlayed(playerId) {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({ PlayerId: playerId })
-         .then(response => response.json())
+        .then(response => response.json())
         .then(data => {
             if (data.success) {
-
                 console.log(`Games Played incremented for player ${playerId}.`);
             } else {
                 console.error(`Failed to increment Games Played for player ${playerId}: ${data.message}`);
             }
         })
-        .catch(error => console.error('Error incrementing Games Played:', error));
-    });
+        .catch(error => console.error('Error incrementing Games Played:', error))
+    })
 }
 
 function incrementPlateAppearances(playerId) {

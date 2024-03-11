@@ -19,6 +19,9 @@
     <thead>
         <tr>
             <th>
+                @Html.DisplayNameFor(model => model.GP)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.PA)
             </th>
             <th>
@@ -62,6 +65,9 @@
     <tbody>
 @foreach (var item in Model) {
         <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.GP)
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.PA)
             </td>
