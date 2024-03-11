@@ -8,6 +8,23 @@ namespace WMBA_7_2_.Models
         Home,
         Away
     }
+
+    public enum Ballparks
+    {
+        [Display(Name = "Memorial Park Diamond #2")]
+        BP1,
+        [Display(Name = "Memorial Park Diamond #3")]
+        BP2,
+        [Display(Name = "Burger Park Diamond")]
+        BP3,
+        [Display(Name = "Welland Jackfish Stadium")]
+        BP4,
+        [Display(Name = "Maple Park Diamond #1")]
+        BP5,
+        [Display(Name = "Maple Park Diamond #2")]
+        BP6
+    }  
+              
     public class Game : IValidatableObject
     {
         public int ID { get; set; }
@@ -50,6 +67,7 @@ namespace WMBA_7_2_.Models
         [Range(0, int.MaxValue, ErrorMessage = "Score must be a non-negative number.")]
         public int AwayTeamScore { get; set; }
 
+        public Ballparks Ballparks { get; set; }
         public ICollection<Team_Game> Team_Games { get; set; } = new List<Team_Game>();
         public ICollection<Line_Up> Line_Ups { get; set; } = new List<Line_Up>();
 
