@@ -564,6 +564,7 @@ namespace WMBA_7_2_.Controllers
         {
             public string ActionType { get; set; }
             public string Data { get; set; }
+            public int GameID { get; set; }
         }
 
         [HttpPost]
@@ -573,7 +574,8 @@ namespace WMBA_7_2_.Controllers
             {
                 ActionType = actionLogDto.ActionType,
                 Data = actionLogDto.Data,
-                Timestamp = DateTime.Now
+                Timestamp = DateTime.Now,
+                GameID = actionLogDto.GameID
             };
             _context.ActionLogs.Add(actionLog);
             _context.SaveChanges();
@@ -879,6 +881,50 @@ namespace WMBA_7_2_.Controllers
                                 return Json(new { success = false, message = "Invalid stat count; cannot decrement." });
                             }
                         }
+                    case "PlayerPlaced":
+                        {
+                            var playerId = actionData.PlayerId;
+                            var playerStat = await _context.PlayerStats.FirstOrDefaultAsync(ps => ps.PlayerID == actionData.PlayerId);
+                            if (playerStat == null)
+                            {
+                                return Json(new { success = false, message = $"Player stat not found for playerId {playerId}." });
+                            }
+
+                            if (playerStat.PA > 0)
+                            {
+                                playerStat.PA -= 1;
+                                _context.PlayerStats.Update(playerStat);
+                                await _context.SaveChangesAsync();
+                                await transaction.CommitAsync();
+                                return Json(new { success = true });
+                            }
+                            else
+                            {
+                                return Json(new { success = false, message = "Invalid stat count; cannot decrement." });
+                            }
+                        }
+                    case "GamePlayed":
+                        {
+                            var playerId = actionData.PlayerId;
+                            var playerStat = await _context.PlayerStats.FirstOrDefaultAsync(ps => ps.PlayerID == actionData.PlayerId);
+                            if (playerStat == null)
+                            {
+                                return Json(new { success = false, message = $"Player stat not found for playerId {playerId}." });
+                            }
+
+                            if (playerStat.GP > 0)
+                            {
+                                playerStat.GP -= 1;
+                                _context.PlayerStats.Update(playerStat);
+                                await _context.SaveChangesAsync();
+                                await transaction.CommitAsync();
+                                return Json(new { success = true });
+                            }
+                            else
+                            {
+                                return Json(new { success = false, message = "Invalid stat count; cannot decrement." });
+                            }
+                        }
 
                 }
 
@@ -890,6 +936,113 @@ namespace WMBA_7_2_.Controllers
                 return Json(new { success = false, message = ex.Message });
             }
         }
+
+
+
+        [HttpPost]
+        public async Task<IActionResult> UndoAllActionsForGame(int gameId)
+        {
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                // Fetch all actions for the specified game ordered by Timestamp descending
+                var actionLogs = await _context.ActionLogs
+                                                .Where(a => a.GameID == gameId) // Assuming you added GameId to ActionLogs
+                                                .OrderByDescending(a => a.Timestamp)
+                                                .ToListAsync();
+
+                if (!actionLogs.Any())
+                {
+                    return Json(new { success = false, message = "No actions found for this game." });
+                }
+
+                foreach (var actionLog in actionLogs)
+                {
+                    var actionData = JsonConvert.DeserializeObject<PlayerActionDto>(actionLog.Data);
+                    if (actionData == null)
+                    {
+                        continue;
+                    }
+
+                    var playerStat = await _context.PlayerStats.FirstOrDefaultAsync(ps => ps.PlayerID == actionData.PlayerId);
+                    if (playerStat == null)
+                    {
+                        continue; 
+                    }
+
+                    switch (actionLog.ActionType)
+                    {
+                        case "Run":
+                            if (playerStat.Runs > 0) playerStat.Runs -= 1;
+                            break;
+                        case "Single":
+                            if (playerStat.B1 > 0) playerStat.B1 -= 1;
+                            if (playerStat.Hits > 0) playerStat.Hits -= 1;
+                            break;
+                        case "Double":
+                            if (playerStat.B2 > 0) playerStat.B2 -= 1;
+                            if (playerStat.Hits > 0) playerStat.Hits -= 1;
+                            break;
+                        case "Triple":
+                            if (playerStat.B3 > 0) playerStat.B3 -= 1;
+                            if (playerStat.Hits > 0) playerStat.Hits -= 1;
+                            break;
+                        case "HomeRun":
+                            if (playerStat.HR > 0) playerStat.HR -= 1;
+                            if (playerStat.RBI > 0) playerStat.RBI -= 1;
+                            if (playerStat.Runs > 0) playerStat.Runs -= 1;
+                            if (playerStat.Hits > 0) playerStat.Hits -= 1;
+                            break;
+                        case "GO":
+                            if (playerStat.GO > 0) playerStat.GO -= 1;
+                            break;
+                        case "FO":
+                            if (playerStat.FO > 0) playerStat.FO -= 1;
+                            break;
+                        case "PO":
+                            if (playerStat.PO > 0) playerStat.PO -= 1;
+                            break;
+                        case "RBI":
+                            if (playerStat.RBI > 0) playerStat.RBI -= 1;
+                            break;
+                        case "SAC":
+                            if (playerStat.SAC > 0) playerStat.SAC -= 1;
+                            break;
+                        case "SB":
+                            if (playerStat.SB > 0) playerStat.SB -= 1;
+                            break;
+                        case "BB":
+                            if (playerStat.BB > 0) playerStat.BB -= 1;
+                            break;
+                        case "PlayerPlaced":
+                            if (playerStat.PA > 0) playerStat.PA -= 1;
+                            break;
+                        case "GamePlayed":
+                            if (playerStat.GP > 0) playerStat.GP -= 1;
+                            break;
+
+                    }
+
+                    _context.ActionLogs.Remove(actionLog);
+                }
+
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+                return Json(new { success = true, message = "All actions for the game have been successfully undone." });
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return Json(new { success = false, message = $"An error occurred while undoing actions: {ex.Message}" });
+            }
+        }
+
+
     }
+
 }
+
+
+
+
     

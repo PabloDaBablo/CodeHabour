@@ -193,6 +193,8 @@ function fetchLineup(gameId) {
                 var option = new Option(player.playerLastName, player.id);
                 lineupDropdown.options.add(option);
                 gamePlayedPromises.push(incrementGamesPlayed(player.id));
+                logAction('GamePlayed', { playerId: player.id }, gameId);
+                saveGameState();
             });
 
             Promise.all(gamePlayedPromises)
@@ -210,7 +212,7 @@ function placeFirstPlayer() {
         const firstPlayerId = playersData[0].id;
         playerPositions[0] = firstPlayerId;
         addPlayerToField(firstPlayerId, playersData[0].playerLastName, playersData[0].playerNumber, getBaseCoordinates(0).x, getBaseCoordinates(0).y);
-        logAction('PlayerPlaced', { playerId: firstPlayerId, baseIndex: 0 });
+        logAction('PlayerPlaced', { playerId: firstPlayerId }, gameId);
         drawField();
         saveGameState();
 
@@ -301,22 +303,22 @@ function advancePlayerBaseHit(hitType) {
     switch (hitType) {
         case '1B':
             newPositionIndex = 1; 
-            logAction('Single', { playerId: playerIdSVG })
+            logAction('Single', { playerId: playerIdSVG }, gameId)
             updatePlayerBaseHit(playerIdSVG, hitType)
             break;
         case '2B':
             newPositionIndex = 2; 
-            logAction('Double', { playerId: playerIdSVG })
+            logAction('Double', { playerId: playerIdSVG }, gameId)
             updatePlayerBaseHit(playerIdSVG, hitType)
             break;
         case '3B':
             newPositionIndex = 3; 
-            logAction('Triple', { playerId: playerIdSVG })
+            logAction('Triple', { playerId: playerIdSVG }, gameId)
             updatePlayerBaseHit(playerIdSVG, hitType)
             break;
         case 'HR':
             newPositionIndex = 0; 
-            logAction('HomeRun', { playerId: playerIdSVG })
+            logAction('HomeRun', { playerId: playerIdSVG }, gameId)
             handleHomeRun(playerIdSVG); 
             break;
         default:
@@ -343,6 +345,7 @@ function handleHomeRun(playerId) {
     updatePlayerBaseHit(playerId, 'HR');
     removePlayerSVG(playerId);
     score++
+    saveGameState();
     document.getElementById('score').textContent = `Home Score: ${score}`;  
 }
 
@@ -627,8 +630,9 @@ function advanceToNextBase() {
     if (nextPositionIndex > 3) {
 
         nextPositionIndex = 0;
-        logAction('Run', { playerId: playerIdSVG })
+        logAction('Run', { playerId: playerIdSVG }, gameId)
         playerScored(playerIdSVG);
+        saveGameState();
     }
 
 
@@ -672,7 +676,7 @@ function updatePlayerOutStatistic(playerId, outType) {
 
 function handleOut(outType) {
     saveGameState();
-    logAction(outType , { playerId: playerIdSVG});
+    logAction(outType , { playerId: playerIdSVG}, gameId);
 
     if (!playerIdSVG) {
         alert("No player selected!");
@@ -693,13 +697,13 @@ document.getElementById('homerun').addEventListener('click', function () { advan
 
 document.getElementById('advance-player').addEventListener('click', advanceToNextBase);
 
-document.getElementById('runs-batted-in').addEventListener('click', function () { RunsBattedIn(playerIdSVG); logAction('RBI', { playerId: playerIdSVG }) })
+document.getElementById('runs-batted-in').addEventListener('click', function () { RunsBattedIn(playerIdSVG); logAction('RBI', { playerId: playerIdSVG }, gameId); saveGameState(); })
 
-document.getElementById('sacrifice').addEventListener('click', function () { Sacrifice(playerIdSVG); logAction('SAC', { playerId: playerIdSVG }) })
+document.getElementById('sacrifice').addEventListener('click', function () { Sacrifice(playerIdSVG); logAction('SAC', { playerId: playerIdSVG }, gameId); saveGameState(); })
 
-document.getElementById('stolen-base').addEventListener('click', function () { StolenBase(playerIdSVG); logAction('SB', { playerId: playerIdSVG }) })
+document.getElementById('stolen-base').addEventListener('click', function () { StolenBase(playerIdSVG); logAction('SB', { playerId: playerIdSVG }, gameId); saveGameState(); })
 
-document.getElementById('base-on-balls').addEventListener('click', function () { BaseOnBalls(playerIdSVG);  logAction('BB', { playerId: playerIdSVG }) });
+document.getElementById('base-on-balls').addEventListener('click', function () { BaseOnBalls(playerIdSVG); logAction('BB', { playerId: playerIdSVG }, gameId); saveGameState(); });
 
 $(document).ready(function () {
     $('#groundout').click(function () { handleOut('GO'); });
@@ -725,6 +729,8 @@ function loadPlayerOntoHomeBase() {
         if (playerToLoad) {
             playerPositions[0] = playerToLoad.id; 
             incrementPlateAppearances(playerToLoad.id);
+            logAction('PlayerPlaced', { playerId: playerToLoad.id }, gameId)
+            saveGameState();
             addPlayerToField(playerToLoad.id, playerToLoad.playerLastName, playerToLoad.playerNumber, getBaseCoordinates(0).x, getBaseCoordinates(0).y);
         }
     }
@@ -759,13 +765,13 @@ function undoLastAction() {
 
 document.getElementById('undo-button').addEventListener('click', undoLastAction);
 
-function logAction(actionType, data) {
+function logAction(actionType, data, gameID) {
     fetch('/Scorekeeping/LogAction', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ actionType, data: JSON.stringify(data) }) 
+        body: JSON.stringify({ actionType, data: JSON.stringify(data), gameID }) 
     })
         .then(response => response.json())
         .then(result => console.log(result))
@@ -986,3 +992,29 @@ document.getElementById('hitByPitch').addEventListener('click', function () {
     saveGameState();
     
 });
+
+document.getElementById('undo-button').addEventListener('click', function () {
+    const undoAll = document.getElementById('undo-all-checkbox').checked;
+    if (undoAll) {
+        undoAllActionsForGame();
+    } else {
+        undoLastAction();
+    }
+});
+
+function undoAllActionsForGame() {
+    fetch(`/Scorekeeping/UndoAllActionsForGame?gameId=${gameId}`, { 
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('All actions for the game were undone successfully.');
+            } else {
+                alert('Failed to undo all actions for the game:', data.message);
+            }
+        })
+}
