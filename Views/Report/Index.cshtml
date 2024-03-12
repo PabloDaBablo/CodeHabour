@@ -29,10 +29,10 @@
                 }
                 <form asp-action="ImportFromExcel" asp-controller="Report" method="post" enctype="multipart/form-data">
                     <div class="mb-3">
-                        <label for="theExcel" class="form-label">Select Excel or CSV File:</label>
+                        @* <label for="theExcel" class="form-label">Select Excel or CSV File:</label> *@
                         <input type="file" class="form-control" id="theExcel" name="theExcel">
                     </div>
-                    <button type="submit" class="btn btn-primary">Upload Data</button>
+                    <button type="submit" class="btn btn-primary">Upload</button>
                 </form>
 
                 <div class="mt-4">
@@ -42,15 +42,11 @@
                 </div>
             </div>
             <div class="col-md-6">
-                <h1>Download Sample Excel:</h1>
+                <h1>Download Sample Excel Sheet:</h1>
                 <form asp-action="DownloadSampleExcel" asp-controller="Report" method="post" enctype="multipart/form-data">
-                    <button type="submit" class="btn btn-primary">Download Sample Excel</button>
+                    <button type="submit" class="btn btn-primary">Download</button>
                 </form>
-                <!-- Download Commentary -->
-                <div class="mt-4">
-
-                    <p>sample download section.</p>
-                </div>
+               
             </div>
         </div>
     </div>
