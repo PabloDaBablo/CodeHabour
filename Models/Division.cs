@@ -9,7 +9,7 @@ namespace WMBA_7_2_.Models
         [Key]
         public int ID { get; set; }
 
-        [Display(Name = "Division Age")]
+        [Display(Name = "Division")]
         [Required(ErrorMessage = "Division Age cannot be empty.")]
         public string DivAge { get; set; }
 

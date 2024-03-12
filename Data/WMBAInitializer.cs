@@ -781,8 +781,8 @@ namespace WMBA_7_2_.Data
                     context.Games.AddRange(
                         new Game
                         {
-                            GameDate = new DateTime(2023, 6, 1, 12, 30, 0),
-                            GameTime = new DateTime(2023, 6, 1, 12, 30, 0),
+                            GameDate = new DateTime(2024, 6, 1, 12, 30, 0),
+                            GameTime = new DateTime(2024, 6, 1, 12, 30, 0),
                             GameLocation = "Memorial Park Diamond #2",
                             HomeTeamID = 2,
                             AwayTeamID = 3,
@@ -801,13 +801,95 @@ namespace WMBA_7_2_.Data
                             GameDate = new DateTime(2024, 6, 8, 12, 30, 0),
                             GameTime = new DateTime(2024, 6, 8, 12, 30, 0),
                             GameLocation = "Memorial Park Diamond #3",
-                            HomeTeamID = 4,
+                            HomeTeamID = 3,
                             AwayTeamID = 2,
                         },
                         new Game
                         {
                             GameDate = new DateTime(2024, 6, 15, 12, 30, 0),
                             GameTime = new DateTime(2024, 6, 15, 12, 30, 0),
+                            GameLocation = "Welland Jackfish Stadium",
+                            HomeTeamID = 5,
+                            AwayTeamID = 4,
+                        },
+                        new Game
+                        {
+                            GameDate = new DateTime(2024, 6, 16, 12, 30, 0),
+                            GameTime = new DateTime(2024, 6, 16, 12, 30, 0),
+                            GameLocation = "Memorial Park Diamond #2",
+                            HomeTeamID = 2,
+                            AwayTeamID = 3,
+
+                        },
+                        new Game
+                        {
+                            GameDate = new DateTime(2024, 6, 19, 12, 30, 0),
+                            GameTime = new DateTime(2024, 6, 19, 12, 30, 0),
+                            GameLocation = "Burger Park Diamond",
+                            HomeTeamID = 4,
+                            AwayTeamID = 5,
+                        },
+                        new Game
+                        {
+                            GameDate = new DateTime(2024, 6, 19, 12, 30, 0),
+                            GameTime = new DateTime(2024, 6, 19, 12, 30, 0),
+                            GameLocation = "Memorial Park Diamond #3",
+                            HomeTeamID = 3,
+                            AwayTeamID = 2,
+                        },
+                        new Game
+                        {
+                            GameDate = new DateTime(2024, 6, 19, 12, 30, 0),
+                            GameTime = new DateTime(2024, 6, 19, 12, 30, 0),
+                            GameLocation = "Welland Jackfish Stadium",
+                            HomeTeamID = 5,
+                            AwayTeamID = 4,
+                        },
+                        new Game
+                        {
+                            GameDate = new DateTime(2024, 6, 21, 12, 30, 0),
+                            GameTime = new DateTime(2024, 6, 21, 12, 30, 0),
+                            GameLocation = "Burger Park Diamond",
+                            HomeTeamID = 4,
+                            AwayTeamID = 5,
+                        },
+                        new Game
+                        {
+                            GameDate = new DateTime(2024, 6, 28, 12, 30, 0),
+                            GameTime = new DateTime(2024, 6, 28, 12, 30, 0),
+                            GameLocation = "Memorial Park Diamond #3",
+                            HomeTeamID = 4,
+                            AwayTeamID = 2,
+                        },
+                        new Game
+                        {
+                            GameDate = new DateTime(2023, 7, 1, 12, 30, 0),
+                            GameTime = new DateTime(2023, 7, 1, 12, 30, 0),
+                            GameLocation = "Memorial Park Diamond #2",
+                            HomeTeamID = 2,
+                            AwayTeamID = 3,
+
+                        },
+                        new Game
+                        {
+                            GameDate = new DateTime(2024, 7, 1, 12, 30, 0),
+                            GameTime = new DateTime(2024, 7, 1, 12, 30, 0),
+                            GameLocation = "Burger Park Diamond",
+                            HomeTeamID = 4,
+                            AwayTeamID = 5,
+                        },
+                        new Game
+                        {
+                            GameDate = new DateTime(2024, 7, 15, 12, 30, 0),
+                            GameTime = new DateTime(2024, 7, 15, 12, 30, 0),
+                            GameLocation = "Welland Jackfish Stadium",
+                            HomeTeamID = 3,
+                            AwayTeamID = 5,
+                        },
+                        new Game
+                        {
+                            GameDate = new DateTime(2024, 7, 15, 12, 30, 0),
+                            GameTime = new DateTime(2024, 7, 15, 12, 30, 0),
                             GameLocation = "Welland Jackfish Stadium",
                             HomeTeamID = 3,
                             AwayTeamID = 5,

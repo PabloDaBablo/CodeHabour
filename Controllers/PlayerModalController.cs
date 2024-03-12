@@ -48,18 +48,18 @@ namespace WMBA_7_2_.Controllers
 
 				if (!string.IsNullOrEmpty(firstNameSearch))
 				{
-					query = query.Where(p => p.PlayerFirstName.Contains(firstNameSearch));
+					query = query.Where(p => p.PlayerFirstName.ToUpper().Contains(firstNameSearch.ToUpper()));
 				}
 
 				if (!string.IsNullOrEmpty(lastNameSearch))
 				{
-					query = query.Where(p => p.PlayerLastName.Contains(lastNameSearch));
+					query = query.Where(p => p.PlayerLastName.ToUpper().Contains(lastNameSearch.ToUpper()));
 				}
 
-				if (!string.IsNullOrEmpty(numberSearch) && int.TryParse(numberSearch, out int number))
-				{
-					query = query.Where(p => p.PlayerNumber == number);
-				}
+				//if (!string.IsNullOrEmpty(numberSearch) && int.TryParse(numberSearch, out int number))
+				//{
+				//	query = query.Where(p => p.PlayerNumber == number);
+				//}
 
 				if (teamId.HasValue)
 				{
