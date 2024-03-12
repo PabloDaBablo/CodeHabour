@@ -588,29 +588,24 @@ function updatePlayerBaseHit(playerId, baseHitType) {
         }
     });
 }
-//TImer
-function startTimer(duration, displayElement, messageElement, ballButton, strikeButton, addRunToAwayTeamButton, undoRunToAwayTeamButton) {
-    var endTime = new Date(Date.now() + duration);
+//Timer
+function startTimer(clock) {
+    var startTime = Date.now()
 
     var timerInterval = setInterval(function () {
-        var remainingTime = endTime - Date.now();
-        var hours = Math.floor((remainingTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        var minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
-        var seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
+        var elapsedTime = Date.now() - startTime;
+        var hours = Math.floor((elapsedTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        var minutes = Math.floor((elapsedTime % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((elapsedTime % (1000 * 60)) / 1000);
 
-        displayElement.textContent = `${hours}h ${minutes}m ${seconds}s`;
+        clock.innerHTML = `<span style="font-weight: bold; font-size: 1.4em; ">${hours}h ${minutes}m ${seconds}s`;
 
-        if (remainingTime < 0) {
-            clearInterval(timerInterval);
-            displayElement.textContent = 'Time Up!';
-            messageElement.textContent = 'Game Over';
-            ballButton.disabled = true;
-            strikeButton.disabled = true;
-            addRunToAwayTeamButton.disabled = true;
-            undoRunToAwayTeamButton.disabled = true;
-        }
     }, 1000);
+    return timerInterval;
 };
+
+var clock = document.getElementById('timerDisplay');
+startTimer(clock);
 
 function advanceToNextBase() {
     saveGameState();
