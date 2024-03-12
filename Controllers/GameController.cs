@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using WMBA_7_2_.CustomControllers;
 using WMBA_7_2_.Data;
 using WMBA_7_2_.Models;
+using WMBA_7_2_.Utilities;
 
 namespace WMBA_7_2_.Controllers
 {
@@ -42,7 +43,7 @@ namespace WMBA_7_2_.Controllers
             ViewData["DivisionID"] = new SelectList(_context.Divisions, "ID", "DivAge");
             ViewData["HomeTeam"] = new SelectList(_context.Teams, "ID", "TeamName");
             ViewData["AwayTeam"] = new SelectList(_context.Teams, "ID", "TeamName");
-
+            
             return View(games);
         }
 
@@ -106,7 +107,7 @@ namespace WMBA_7_2_.Controllers
                 _context.Add(game);
                 await _context.SaveChangesAsync();
                 // Set success message in TempData
-                TempData["SuccessMessage"] = "Game was successfully created.";
+                TempData["SuccessMessage"] = "Game was added to schedule.";
 				//return RedirectToAction("Details", new { id = game.ID });
 				return RedirectToAction("Create", new { id = game.ID });
 			}
@@ -145,8 +146,8 @@ namespace WMBA_7_2_.Controllers
         {
 
 
-            ViewData["HomeTeam"] = new SelectList(_context.Teams, "ID", "TeamName", game.HomeTeam);
-            ViewData["AwayTeam"] = new SelectList(_context.Teams, "ID", "TeamName", game.AwayTeam);
+            ViewData["HomeTeam"] = new SelectList(_context.Teams, "ID", "TeamName");
+            ViewData["AwayTeam"] = new SelectList(_context.Teams, "ID", "TeamName");
 
             if (id != game.ID)
             {
