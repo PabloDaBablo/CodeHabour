@@ -6,5 +6,7 @@
         public string ActionType { get; set; }
         public string Data { get; set; } 
         public DateTime Timestamp { get; set; }
+
+        public int? GameID { get; set; }
     }
 }
