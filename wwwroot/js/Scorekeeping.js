@@ -671,7 +671,7 @@ function updatePlayerOutStatistic(playerId, outType) {
 
 function handleOut(outType) {
     saveGameState();
-    logAction(outType , { playerId: playerIdSVG}, gameId);
+    logAction(outType, { playerId: playerIdSVG }, gameId);
 
     if (!playerIdSVG) {
         alert("No player selected!");
@@ -680,9 +680,54 @@ function handleOut(outType) {
 
     updatePlayerOutStatistic(playerIdSVG, outType);
     removePlayerFromField();
+
+    var outCount = parseInt(document.getElementById("outNumber").textContent, 10);
+    outCount++;
+
+    if (outCount >= 3) {
+        outCount = 0;
+        if (document.getElementById("inningTopOrBottom").textContent === "Top of") {
+            document.getElementById("inningTopOrBottom").textContent = "Bottom of";
+        } else {
+            var inningNumber = parseInt(document.getElementById("inningNumber").textContent, 10);
+            inningNumber++;
+            document.getElementById("inningNumber").textContent = inningNumber;
+            document.getElementById("inningTopOrBottom").textContent = "Top of";
+        }
+    }
+
+    document.getElementById("outNumber").textContent = outCount;
+
     loadPlayerOntoHomeBase();
 
     playerIdSVG = null;
+
+    checkGameEnd();
+}
+
+function checkGameEnd() {
+    var inningLimit = 7;
+    var currentInning = parseInt(document.getElementById("inningNumber").textContent, 10);
+    if (currentInning > inningLimit ||
+        (currentInning === inningLimit && document.getElementById("inningTopOrBottom").textContent === "Bottom of")) {
+        document.getElementById("gameOverMessageDisplay").textContent = "Game Over";
+        disableGameControls();
+    }
+}
+
+function disableGameControls() {
+    document.getElementById('strikeNumberButton').disabled = true;
+    document.getElementById('ballNumberButton').disabled = true;
+    document.getElementById('groundout').disabled = true;
+    document.getElementById('flyout').disabled = true;
+    document.getElementById('popout').disabled = true;
+    document.getElementById('homerun').disabled = true;
+    document.getElementById('single').disabled = true;
+    document.getElementById('double').disabled = true;
+    document.getElementById('triple').disabled = true;
+    document.getElementById('addToAwayScore').disabled = true;
+    document.getElementById('undoAwayButton').disabled = true;
+    document.getElementById('popup-menu').style.display = 'none';
 }
 
 document.getElementById('single').addEventListener('click', function () { advancePlayerBaseHit('1B'); });
