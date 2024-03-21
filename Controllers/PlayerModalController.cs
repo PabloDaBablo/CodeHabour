@@ -66,7 +66,7 @@ namespace WMBA_7_2_.Controllers
 					query = query.Where(p => p.TeamID == teamId.Value);
 				}
 
-				/*if (sortColumn == "teamName")
+				if (sortColumn == "teamName")
 				{
 					query = sortDirection == "asc" ? query.OrderBy(p => p.Team.TeamName) : query.OrderByDescending(p => p.Team.TeamName);
 				}
@@ -74,7 +74,7 @@ namespace WMBA_7_2_.Controllers
 				{
 					query = sortDirection == "asc" ? query.OrderBy(p => p.Division.DivAge) : query.OrderByDescending(p => p.Division.DivAge);
 				}
-				*/
+				
 
 				var totalRecords = query.Count();
 				var totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
@@ -118,7 +118,7 @@ namespace WMBA_7_2_.Controllers
 
                     return Json("Player saved successfully.");
                 }
-                return Json("Model validation failed. Ensure all required fields are filled out!");
+                return Json("Error! Ensure all required fields are filled out!");
             }
 			catch (DbUpdateException dex)
 			{
@@ -186,7 +186,7 @@ namespace WMBA_7_2_.Controllers
 
                     return Json("Player updated successfully.");
                 }
-                return Json("Model validation failed. Ensure all required fields are filled out!");
+                return Json("Error! Ensure all required fields are filled out!");
             }
 			catch (Exception ex)
             {

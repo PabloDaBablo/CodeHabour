@@ -79,6 +79,9 @@ namespace WMBA_7_2_.Data
             modelBuilder.Entity<Coach>()
                 .HasIndex(p => p.CoachMemberID).IsUnique();
 
+            modelBuilder.Entity<Division>()
+                .HasIndex(p => p.DivAge).IsUnique();
+
 			modelBuilder.Entity<Player>()
 	            .HasIndex(p => new { p.PlayerNumber, p.TeamID }) //this should work instead, yes?
 	            .IsUnique();
