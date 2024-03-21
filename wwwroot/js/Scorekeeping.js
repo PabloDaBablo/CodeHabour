@@ -342,11 +342,30 @@ function advancePlayerBaseHit(hitType) {
 }
 
 function handleHomeRun(playerId) {
+    
     updatePlayerBaseHit(playerId, 'HR');
     removePlayerSVG(playerId);
-    score++
+
+    let runsScored = 1;
+
+    playerPositions.forEach((position, index) => {
+        if (position && index > 0) { 
+            removePlayerSVG(position);
+            playerScored(position);
+            runsScored++;
+            playerPositions[index] = null; 
+        }
+    });
+
+    score += runsScored;
+    document.getElementById('score').textContent = `Home Score: ${score}`;
+
+    playerPositions = [null, null, null, null];
+
+    logAction('HomeRun', { playerId: playerId }, gameId);
     saveGameState();
-    document.getElementById('score').textContent = `Home Score: ${score}`;  
+
+    drawField();
 }
 
 function movePlayerToBase(playerId, baseIndex) {
@@ -451,14 +470,11 @@ function playerStrikedOut(playerId) {
     });
 }
 function playerScored(playerId) {
-    score++;
-    document.getElementById('score').textContent = `Home Score: ${score}`;
-
     $.ajax({
         url: '/Scorekeeping/PlayerScored',
         type: 'POST',
-        contentType: 'application/json', 
-        data: JSON.stringify({ PlayerId: playerId }), 
+        contentType: 'application/json',
+        data: JSON.stringify({ PlayerId: playerId }),
         success: function (response) {
             console.log('Player scored a run.', response);
         },
@@ -1058,3 +1074,78 @@ function undoAllActionsForGame() {
             }
         })
 }
+
+
+$(document).ready(function () {
+    $('#popup-menu > ul > li').on('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        $('.submenu').not($(this).children(".submenu")).hide();
+
+        $(this).children(".submenu").toggle();
+    });
+
+    $(document).click(function () {
+        $('.submenu').hide();
+    });
+
+    $('.submenu').click(function (e) {
+        e.stopPropagation();
+    });
+
+    $('#popup-menu > ul > li').on('touchend', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        $('.submenu').not($(this).children(".submenu")).hide();
+        $(this).children(".submenu").toggle();
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    var baseballImage = document.getElementById('baseball-image');
+    var popupMenu = document.getElementById('popup-menu');
+
+    baseballImage.addEventListener('click', function (event) {
+        event.preventDefault();
+
+        var isMobile = window.innerWidth <= 1000; 
+
+        var posX = event.clientX;
+        var posY = event.clientY;
+
+        var menuWidth = popupMenu.offsetWidth;
+        var menuHeight = popupMenu.offsetHeight;
+
+        var windowWidth = window.innerWidth;
+        var windowHeight = window.innerHeight;
+
+        if (isMobile) {
+            if (posX - menuWidth > 0) {
+                posX -= menuWidth;
+            } else if (posX + menuWidth > windowWidth) {
+                posX = windowWidth - menuWidth - 20;
+            }
+        } else {
+            if (posX + menuWidth > windowWidth) {
+                posX -= (posX + menuWidth - windowWidth + 20);
+            }
+        }
+
+        if (posY + menuHeight > windowHeight) {
+            posY = windowHeight - menuHeight - 20;
+        }
+
+        popupMenu.style.left = posX + 'px';
+        popupMenu.style.top = posY + 'px';
+        popupMenu.style.display = 'block';
+    });
+
+    document.addEventListener('click', function (e) {
+        if (!popupMenu.contains(e.target) && e.target !== baseballImage) {
+            popupMenu.style.display = 'none';
+        }
+    });
+});
+

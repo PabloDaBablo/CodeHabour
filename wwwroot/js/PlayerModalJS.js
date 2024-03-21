@@ -1,7 +1,7 @@
 ﻿ var currentSortColumn = 'divAge';
 var currentSortDirection = 'asc';
 var currentPage = 1;
-var pageSize = 10;
+var pageSize = 15;
 var totalPages = 0;
 
 function GetPlayers(page) {
@@ -41,6 +41,17 @@ function GetPlayers(page) {
         }
     });
 }
+
+function sortData(sortColumn) {
+    if (currentSortColumn === sortColumn) {
+        currentSortDirection = currentSortDirection === "asc" ? "desc" : "asc";
+    } else {
+        currentSortColumn = sortColumn;
+        currentSortDirection = "asc";
+    }
+    GetPlayers(currentPage);
+}
+
 
 
 $(document).ready(function () {

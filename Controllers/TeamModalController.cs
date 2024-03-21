@@ -61,7 +61,7 @@ namespace WMBA_7_2_.Controllers
 		{
 			if (!ModelState.IsValid)
 			{
-				return Json("Model validation failed. Ensure all required fields are filled out!");
+				return Json("Error! Ensure all required fields are filled out!");
 			}
 
 			var team = new Team
@@ -136,7 +136,7 @@ namespace WMBA_7_2_.Controllers
 		{
 			if (!ModelState.IsValid)
 			{
-				return Json("Model validation failed. Ensure all required fields are filled out!");
+				return Json("Error! Ensure all required fields are filled out!");
 			}
 
 			var team = await _context.Teams

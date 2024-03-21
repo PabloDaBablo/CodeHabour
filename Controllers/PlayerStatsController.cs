@@ -108,7 +108,7 @@ namespace WMBA_7_2_.Controllers
             ViewData["sortField"] = sortField;
             ViewData["sortDirection"] = sortDirection;
             
-            int pageSize = 10;//Change as required
+            int pageSize = 15;//Change as required
             var pagedData = await PaginatedList<PlayerStats>.CreateAsync(wMBAContext.AsNoTracking(), page ?? 1, pageSize);
             return View(pagedData);
             

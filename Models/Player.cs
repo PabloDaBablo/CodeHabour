@@ -44,7 +44,7 @@ namespace WMBA_7_2_.Models
         public string PlayerFullName => $"{PlayerFirstName} {PlayerLastName}";
 
         [Display(Name = "Status")]
-        public bool IsActive { get; set; }
+        public bool IsActive { get; set; } = true;
 
         public ICollection<Line_Up_Player> LineUps { get; set; } = new HashSet<Line_Up_Player>();
 
