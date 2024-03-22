@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -21,6 +22,7 @@ namespace WMBA_7_2_.Controllers
         }
 
         // GET: Division
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
 
@@ -31,6 +33,7 @@ namespace WMBA_7_2_.Controllers
         }
 
         // GET: Division/Details/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Divisions == null)
@@ -49,6 +52,7 @@ namespace WMBA_7_2_.Controllers
         }
 
         // GET: Division/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
 
@@ -61,7 +65,8 @@ namespace WMBA_7_2_.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-		public async Task<IActionResult> Create([Bind("ID,DivAge,DivisionTeams,LeagueTypeID")] Division division)
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Create([Bind("ID,DivAge,DivisionTeams,LeagueTypeID")] Division division)
 		{
 			try
 			{
@@ -92,8 +97,9 @@ namespace WMBA_7_2_.Controllers
 			}
 		}
 
-		// GET: Division/Edit/5
-		public async Task<IActionResult> Edit(int? id)
+        // GET: Division/Edit/5
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Divisions == null)
             {
@@ -115,6 +121,7 @@ namespace WMBA_7_2_.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, [Bind("ID,DivAge,LeagueTypeID")] Division division)
         {
             if (id != division.ID)
@@ -166,6 +173,7 @@ namespace WMBA_7_2_.Controllers
         }
 
         // GET: Division/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Divisions == null)
@@ -205,6 +213,7 @@ namespace WMBA_7_2_.Controllers
         // POST: Division/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.Divisions == null)

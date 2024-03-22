@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +15,7 @@ namespace WMBA_7_2_.Controllers
 {
     public class GameController : CognizantController
     {
+
         private readonly WMBAContext _context;
 
         public GameController(WMBAContext context)
@@ -23,6 +25,7 @@ namespace WMBA_7_2_.Controllers
 
         // GET: Game
         [HttpGet]
+        [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
         public async Task<IActionResult> Index(int? divisionID)
         {
             
@@ -49,6 +52,7 @@ namespace WMBA_7_2_.Controllers
 
         // GET: Game/Details/5
         [HttpGet]
+        [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
         public async Task<IActionResult> Details(int? id)
         {
 
@@ -76,6 +80,7 @@ namespace WMBA_7_2_.Controllers
 
         // GET: Game/Create
         [HttpGet]
+        [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
         public IActionResult Create()
         {
 
@@ -88,6 +93,7 @@ namespace WMBA_7_2_.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ID,Division,HomeTeamID,AwayTeamID,GameDate,GameTime,GameLocation")] Game game)
         {
@@ -119,6 +125,7 @@ namespace WMBA_7_2_.Controllers
 
 
         // GET: Game/Edit/5
+        [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Games == null)
@@ -142,6 +149,7 @@ namespace WMBA_7_2_.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
         public async Task<IActionResult> Edit(int id, [Bind("ID,GameDate,GameTime,HomeTeamID,AwayTeamID,GameLocation")] Game game)
         {
 
@@ -199,6 +207,7 @@ namespace WMBA_7_2_.Controllers
         // POST: Game/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.Games == null)
@@ -244,6 +253,7 @@ namespace WMBA_7_2_.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
         public async Task<IActionResult> RemovePlayerFromGame(int gameId, int playerId)
         {
             var gamePlayer = await _context.GamePlayers.FirstOrDefaultAsync(gp => gp.GameID == gameId && gp.PlayerID == playerId);
@@ -256,6 +266,7 @@ namespace WMBA_7_2_.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
         public async Task<IActionResult> AddPlayerToGame(int GameID, int PlayerID, bool isHomeTeam)
         {
             var existingGamePlayer = await _context.GamePlayers.FirstOrDefaultAsync(gp => gp.GameID == GameID && gp.PlayerID == PlayerID);
@@ -277,13 +288,13 @@ namespace WMBA_7_2_.Controllers
 
             return RedirectToAction(nameof(Details), new { id = GameID });
         }
-            private SelectList DivisionSelectList(int? selectedId)
+        private SelectList DivisionSelectList(int? selectedId)
             {
                 return new SelectList(_context.Divisions
                     .OrderBy(d => d.DivAge), "ID", "DivAge", selectedId);
             }
             
-            private void PopulateDropDownLists(Game game = null)
+        private void PopulateDropDownLists(Game game = null)
             {
                 ViewData["DivisonID"] = DivisionSelectList(game?.HomeTeamID);
             }

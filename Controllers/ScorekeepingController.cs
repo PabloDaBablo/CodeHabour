@@ -292,7 +292,7 @@ namespace WMBA_7_2_.Controllers
                 await _context.SaveChangesAsync();
                 return Json(new { success = true, message = "Player stats created and plate appearances recorded." });
             }
-        }//doesnt work. tried to use SQL to update the PA but it did not work. gonna need instructor help for this one idk why it wont work ):
+        }
 
         [HttpPost]
         public async Task<IActionResult> RunsBattedIn([FromBody] PlayerScoredDto dto)

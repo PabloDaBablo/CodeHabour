@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
@@ -19,6 +20,7 @@ namespace WMBA_7_2_.Controllers
             _context = context;
         }
 
+		[Authorize(Roles = "Admin, Convenor, Scorekeeper, Coaches")]
         public IActionResult Index()
         {
 
@@ -57,7 +59,8 @@ namespace WMBA_7_2_.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> Insert([FromBody] TeamVM model)
+        [Authorize(Roles = "Admin, Convenor, Scorekeeper, Coaches")]
+        public async Task<IActionResult> Insert([FromBody] TeamVM model)
 		{
 			if (!ModelState.IsValid)
 			{
@@ -98,7 +101,8 @@ namespace WMBA_7_2_.Controllers
 
 
 		[HttpGet]
-		public JsonResult Edit(int? id)
+        [Authorize(Roles = "Admin, Convenor, Scorekeeper, Coaches")]
+        public JsonResult Edit(int? id)
 		{
 			try
 			{
@@ -132,7 +136,8 @@ namespace WMBA_7_2_.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> Update([FromBody] TeamVM model)
+        [Authorize(Roles = "Admin, Convenor, Scorekeeper, Coaches")]
+        public async Task<IActionResult> Update([FromBody] TeamVM model)
 		{
 			if (!ModelState.IsValid)
 			{
@@ -186,7 +191,8 @@ namespace WMBA_7_2_.Controllers
 		}
 
 		[HttpPost]
-		public JsonResult Delete(int id)
+        [Authorize(Roles = "Admin, Convenor, Scorekeeper, Coaches")]
+        public JsonResult Delete(int id)
 		{
 			try
 			{
@@ -207,7 +213,8 @@ namespace WMBA_7_2_.Controllers
 		}
 
 		[HttpGet]
-		public async Task<IActionResult> Details(int id)
+        [Authorize(Roles = "Admin, Convenor, Scorekeeper, Coaches")]
+        public async Task<IActionResult> Details(int id)
 		{
 			try
 			{
