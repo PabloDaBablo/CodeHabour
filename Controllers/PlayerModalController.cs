@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
@@ -17,8 +18,9 @@ namespace WMBA_7_2_.Controllers
         public PlayerModalController(WMBAContext context)
         {
             _context = context;
-        }   
+        }
 
+		[Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
         public IActionResult Index()
         {
 
@@ -28,7 +30,8 @@ namespace WMBA_7_2_.Controllers
         }
 
 		[HttpGet]
-		public JsonResult GetPlayers(int page = 1, int pageSize = 10, string sortColumn = "divAge", string sortDirection = "asc",
+        [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
+        public JsonResult GetPlayers(int page = 1, int pageSize = 10, string sortColumn = "divAge", string sortDirection = "asc",
 							 int? divisionId = null, string firstNameSearch = "", string lastNameSearch = "",
 							 string numberSearch = "", int? teamId = null)
 		{
@@ -104,7 +107,8 @@ namespace WMBA_7_2_.Controllers
 			}
 		}
 
-			[HttpPost]
+		[HttpPost]
+        [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
         public JsonResult Insert(Player model)
         {
             try
@@ -139,7 +143,8 @@ namespace WMBA_7_2_.Controllers
         }
 
 		[HttpGet]
-		public JsonResult Edit(int? id)
+        [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
+        public JsonResult Edit(int? id)
 		{
             try
             {
@@ -174,7 +179,8 @@ namespace WMBA_7_2_.Controllers
 		}
 
 		[HttpPost]
-		public JsonResult Update(Player model)
+        [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
+        public JsonResult Update(Player model)
 		{
             try
             {
@@ -195,6 +201,7 @@ namespace WMBA_7_2_.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
         public JsonResult Delete(int id)
         {
             try
@@ -221,7 +228,8 @@ namespace WMBA_7_2_.Controllers
 		}
 
 		[HttpPost]
-		public IActionResult ToggleStatus([FromBody] PlayerStatusUpdateModel model)
+        [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
+        public IActionResult ToggleStatus([FromBody] PlayerStatusUpdateModel model)
 		{
 			var player = _context.Players.FirstOrDefault(p => p.ID == model.Id);
 			if (player != null)
@@ -233,7 +241,8 @@ namespace WMBA_7_2_.Controllers
 			return Json(new { success = false });
 		}
 
-		public async Task<IActionResult> PlayerDetails(int playerId)
+        [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
+        public async Task<IActionResult> PlayerDetails(int playerId)
 		{
 			var player = await _context.Players
 										.Include(p => p.PlayerStats)

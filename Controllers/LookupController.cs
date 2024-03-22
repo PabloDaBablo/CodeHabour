@@ -16,13 +16,17 @@ namespace WMBA_7_2_.Controllers
         {
             _context = context;
         }
+
+        [Authorize(Roles = "Admin")]
         public IActionResult Index(string Tab = "Specialty-Tab")
         {
             
             ViewData["Tab"] = Tab;
             return View();
         }
-       
+
+
+        [Authorize(Roles = "Admin")]
         public PartialViewResult Upload()
         {
             ViewData["Excel/CSV Upload"] = new

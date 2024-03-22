@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -22,6 +23,7 @@ namespace WMBA_7_2_.Controllers
         }
 
         // GET: PlayerStats
+        [Authorize(Roles = "Admin, Coaches, Convenor, Scorekeeper")]
         public async Task<IActionResult> Index(int? page, string SearchString, string actionButton, string sortDirection = "asc", string sortField = "Runs")
         {
             var wMBAContext = _context.PlayerStats.Include(p => p.Player).AsNoTracking();

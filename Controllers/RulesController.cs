@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -22,6 +23,7 @@ namespace WMBA_7_2_.Controllers
         }
 
         // GET: Rules
+        [Authorize(Roles = "Admin, Convenor, Scorekeeper, Coaches")]
         public IActionResult Index()
         {
             ViewBag.Rules = _context.Rules.ToList();
@@ -29,6 +31,7 @@ namespace WMBA_7_2_.Controllers
         }
 
         // GET: Rules/Details/5
+        [Authorize(Roles = "Admin, Convenor, Scorekeeper, Coaches")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Rules == null)
@@ -47,6 +50,7 @@ namespace WMBA_7_2_.Controllers
         }
 
         // GET: Rules/Create
+        [Authorize(Roles = "Admin, Convenor, Scorekeeper, Coaches")]
         public IActionResult Create()
         {
             return View();
@@ -57,6 +61,7 @@ namespace WMBA_7_2_.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, Convenor, Scorekeeper, Coaches")]
         public async Task<IActionResult> Create([Bind("ID,RuleName,RuleDescription")] Rules rules)
         {
             if (ModelState.IsValid)
@@ -69,6 +74,7 @@ namespace WMBA_7_2_.Controllers
         }
 
         // GET: Rules/Edit/5
+        [Authorize(Roles = "Admin, Convenor, Scorekeeper, Coaches")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Rules == null)
@@ -89,6 +95,7 @@ namespace WMBA_7_2_.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, Convenor, Scorekeeper, Coaches")]
         public async Task<IActionResult> Edit(int id, [Bind("ID,RuleName,RuleDescription")] Rules rules)
         {
             if (id != rules.ID)
@@ -120,6 +127,7 @@ namespace WMBA_7_2_.Controllers
         }
 
         // GET: Rules/Delete/5
+        [Authorize(Roles = "Admin, Convenor, Scorekeeper, Coaches")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Rules == null)
@@ -140,6 +148,7 @@ namespace WMBA_7_2_.Controllers
         // POST: Rules/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, Convenor, Scorekeeper, Coaches")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.Rules == null)
