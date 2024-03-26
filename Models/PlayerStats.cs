@@ -54,6 +54,9 @@ namespace WMBA_7_2_.Models
 		[Display(Name = "Fly Outs")]
 		public int? FO { get; set; }//done
 
+		[Display(Name = "Hit By Pitch")]
+		public int? HBP { get; set; }//done
+
 		[Display(Name = "Player")]
 		public int PlayerID { get; set; }
 

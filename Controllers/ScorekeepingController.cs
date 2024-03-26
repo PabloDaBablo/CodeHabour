@@ -434,7 +434,42 @@ namespace WMBA_7_2_.Controllers
             }
         }
 
-        [HttpGet]
+		[HttpPost]
+		public async Task<IActionResult> HBP([FromBody] PlayerScoredDto dto)
+		{
+			if (dto == null || dto.PlayerId <= 0)
+			{
+				return BadRequest("Invalid request");
+			}
+
+			var playerExists = await _context.Players.AnyAsync(p => p.ID == dto.PlayerId);
+			if (!playerExists)
+			{
+				return NotFound($"Player with ID {dto.PlayerId} not found.");
+			}
+
+			var result = await _context.Database.ExecuteSqlRawAsync(
+							   "UPDATE PlayerStats SET HBP = COALESCE(BB, 0) + 1 WHERE PlayerID = {0};",
+											  dto.PlayerId);
+
+			if (result > 0)
+			{
+				return Json(new { success = true, message = "Hit By pitch updated successfully." });
+			}
+			else
+			{
+				var newStats = new PlayerStats
+				{
+					PlayerID = dto.PlayerId,
+					HBP = 1
+				};
+				await _context.PlayerStats.AddAsync(newStats);
+				await _context.SaveChangesAsync();
+				return Json(new { success = true, message = "Player stats created and HBP recorded." });
+			}
+		}
+
+		[HttpGet]
         public async Task<IActionResult> GetGameDetails(int gameId)
         {
             var game = await _context.Games
@@ -925,8 +960,30 @@ namespace WMBA_7_2_.Controllers
                                 return Json(new { success = false, message = "Invalid stat count; cannot decrement." });
                             }
                         }
+					case "HBP":
+						{
+							var playerId = actionData.PlayerId;
+							var playerStat = await _context.PlayerStats.FirstOrDefaultAsync(ps => ps.PlayerID == actionData.PlayerId);
+							if (playerStat == null)
+							{
+								return Json(new { success = false, message = $"Player stat not found for playerId {playerId}." });
+							}
 
-                }
+							if (playerStat.HBP > 0)
+							{
+								playerStat.HBP -= 1;
+								_context.PlayerStats.Update(playerStat);
+								await _context.SaveChangesAsync();
+								await transaction.CommitAsync();
+								return Json(new { success = true });
+							}
+							else
+							{
+								return Json(new { success = false, message = "Invalid stat count; cannot decrement." });
+							}
+						}
+
+				}
 
                 return Json(new { success = false, message = "Unhandled action type." });
             }

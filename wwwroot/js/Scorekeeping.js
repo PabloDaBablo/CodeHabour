@@ -1043,9 +1043,27 @@ document.getElementById('foulball').addEventListener('click', function () {
     }
 });
 
+function HBP(playerId) {
+    $.ajax({
+        url: '/Scorekeeping/HBP',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ playerId: playerId }),
+        success: function (response) {
+            console.log('Player HBP stat update successful', response);
+        },
+        error: function (error) {
+            console.error('Error updating player HBP Stat.', error);
+        }
+    });
+};
+
+
 document.getElementById('hitByPitch').addEventListener('click', function () {
     advanceToNextBase();
     saveGameState();
+    logAction('HBP', { playerId: playerIdSVG }, gameId);
+    HBP(playerIdSVG);
     
 });
 

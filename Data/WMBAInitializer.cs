@@ -1134,57 +1134,74 @@ namespace WMBA_7_2_.Data
 
                     }
 
-					/*if (!context.PlayerStats.Any())
+					if (!context.PlayerStats.Any())
 					{
-						context.PlayerStats.AddRange(
-							new PlayerStats
-							{
-								PlayerID = 1,
-								PA = 250,
-								Runs = 60,
-								Hits = 70,
-								B1 = 45,
-								B2 = 15,
-								B3 = 5,
-								HR = 5,
-								RBI = 55,
-								BB = 50,
-								K = 75,
-								SB = 20,
-								SAC = 3
-							},
-							new PlayerStats
-							{
-								PlayerID = 2,
-								PA = 200,
-								Runs = 40,
-								Hits = 50,
-								B1 = 35,
-								B2 = 10,
-								B3 = 3,
-								HR = 2,
-								RBI = 30,
-								BB = 25,
-								K = 50,
-								SB = 15,
-								SAC = 2
-							},
-							new PlayerStats
-							{
-								PlayerID = 3,
-								PA = 300,
-								Runs = 80,
-								Hits = 90,
-								B1 = 60,
-								B2 = 20,
-								B3 = 7,
-								HR = 3,
-								RBI = 70,
-								BB = 60,
-								K = 80,
-								SB = 25,
-								SAC = 4
-							},
+                        context.PlayerStats.AddRange(
+                            new PlayerStats
+                            {
+                                PlayerID = 1,
+                                PA = 250,
+                                Runs = 60,
+                                Hits = 70,
+                                B1 = 45,
+                                B2 = 15,
+                                B3 = 5,
+                                HR = 5,
+                                RBI = 55,
+                                BB = 50,
+                                K = 75,
+                                SB = 20,
+                                SAC = 3,
+                                HBP = 4,
+                                GP = 10,
+                                GO = 3,
+                                PO = 10,
+                                FO = 3
+                            },
+                            new PlayerStats
+                            {
+                                PlayerID = 2,
+                                PA = 200,
+                                Runs = 40,
+                                Hits = 50,
+                                B1 = 35,
+                                B2 = 10,
+                                B3 = 3,
+                                HR = 2,
+                                RBI = 30,
+                                BB = 25,
+                                K = 50,
+                                SB = 15,
+                                SAC = 2,
+                                HBP = 3,
+                                GP = 3,
+                                GO = 4,
+                                PO = 3,
+                                FO = 10
+
+                            },
+                            new PlayerStats
+                            {
+                                PlayerID = 3,
+                                PA = 300,
+                                Runs = 80,
+                                Hits = 90,
+                                B1 = 60,
+                                B2 = 20,
+                                B3 = 7,
+                                HR = 3,
+                                RBI = 70,
+                                BB = 60,
+                                K = 80,
+                                SB = 25,
+                                SAC = 4,
+                                HBP = 5,
+                                GP = 15,
+                                GO = 8,
+                                PO = 15,
+                                FO = 10
+
+                            },
                             new PlayerStats
                             {
                                 PlayerID = 4,
@@ -1199,7 +1216,12 @@ namespace WMBA_7_2_.Data
                                 BB = 50,
                                 K = 75,
                                 SB = 20,
-                                SAC = 3
+                                SAC = 3,
+                                HBP = 4,
+                                GP = 4,
+                                GO = 1,
+                                PO = 7,
+                                FO = 4
                             },
                             new PlayerStats
                             {
@@ -1215,13 +1237,19 @@ namespace WMBA_7_2_.Data
                                 BB = 25,
                                 K = 50,
                                 SB = 15,
-                                SAC = 2
+                                SAC = 2,
+                                HBP = 3,
+                                GP = 5,
+                                GO = 9,
+                                PO = 10,
+                                FO = 6
+
                             }
-                            
-						);
+
+                        ) ;
 					    context.SaveChanges();
 					}
-                    */
+                    
 
 
 					foreach (Game game in context.Games)
