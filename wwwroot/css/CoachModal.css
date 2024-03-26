@@ -83,7 +83,6 @@ table.table-hover tbody tr:nth-child(even) {
     .form-control {
         height: calc(1.5625rem + 2px);
     }
-
     .form-select {
         height: calc(1.8125rem + 2px);
     }
@@ -127,14 +126,14 @@ table.table-hover tbody tr:nth-child(even) {
     padding: .375rem .75rem;
 }
 
-    .select2-container--bootstrap .select2-selection--multiple .select2-selection__choice {
-        background-color: #007bff;
-        border-radius: .25rem;
-        color: #fff;
-        padding: 0 .5rem;
-        margin-right: .5rem;
-    }
+.select2-container--bootstrap .select2-selection--multiple .select2-selection__choice {
+    background-color: #007bff;
+    border-radius: .25rem;
+    color: #fff;
+    padding: 0 .5rem;
+    margin-right: .5rem;
+}
 
-    .select2-container--bootstrap .select2-selection--multiple .select2-selection__choice__remove {
-        color: #fff;
-    }
+.select2-container--bootstrap .select2-selection--multiple .select2-selection__choice__remove {
+    color: #fff;
+}

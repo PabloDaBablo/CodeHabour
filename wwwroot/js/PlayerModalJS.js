@@ -322,9 +322,31 @@ function updateTable(players) {
                     <td>
                         <button class="btn btn-primary btn-sm edit" data-id="${player.id}">Edit</button>
                     </td>
+                    <td>
+                        <button class="btn btn-primary btn-sm calc-stats" data-id="${player.id}">Calculate Stats</button>
+                    </td>
                 </tr>
             `;
         $tableBody.append(row);
+    });
+
+    $('.calc-stats').click(function () {
+        var playerID = $(this).data('id');
+        var url = '/PlayerModal/CalculatePlayerStats?playerID=' + playerID;
+        $.post(url, function (data) {
+            if (data.stats) {
+                var tbody = $('#calculatedStats tbody');
+                tbody.empty();
+                $.each(data.stats, function (index, value) {
+                    var row = $('<tr/>').append(
+                        $('<td/>').text(index),
+                        $('<td/>').text(value)
+                    );
+                    tbody.append(row);
+                });
+                $('#calculatedStats').show();
+            }
+        });
     });
 }
 

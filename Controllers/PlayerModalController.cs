@@ -6,6 +6,7 @@ using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
 using WMBA_7_2_.CustomControllers;
 using WMBA_7_2_.Data;
 using WMBA_7_2_.Models;
+using WMBA_7_2_.Utilities;
 using WMBA_7_2_.ViewModels;
 
 namespace WMBA_7_2_.Controllers
@@ -256,6 +257,53 @@ namespace WMBA_7_2_.Controllers
 			return View(player);
 		}
 
+        public PlayerStats GetPlayerStats(int playerID)
+        {
+            return _context.PlayerStats.FirstOrDefault(ps => ps.PlayerID == playerID);
+        }
 
-	}
+        [HttpPost]
+        public JsonResult CalculatePlayerStats(int playerID)
+        {
+            var playerStats = _context.PlayerStats
+                .Include(ps => ps.Player)
+                .FirstOrDefault(ps => ps.PlayerID == playerID);
+
+            if (playerStats == null || !(playerStats.PA.HasValue && playerStats.Hits.HasValue))
+            {
+                return Json(new { error = "Invalid or missing stats data for player." });
+            }
+
+            int atBats = (int)(playerStats.PA.Value - playerStats.BB.Value - playerStats.HBP.Value - playerStats.SAC.Value);
+
+            if (atBats <= 0)
+            {
+                return Json(new { error = "Invalid or missing AB data for player." });
+            }
+
+            decimal avg = CalculatedStats.CalculateAVG((int)(playerStats.Hits.Value), atBats);
+
+            int onBaseEvents = (int)(playerStats.Hits.Value + playerStats.BB.Value + playerStats.HBP.Value);
+            decimal obp = CalculatedStats.CalculateOBP(onBaseEvents, playerStats.BB.Value, playerStats.HBP.Value, playerStats.PA.Value, playerStats.SAC.Value);
+
+            decimal slg = CalculatedStats.CalculateSLG((int?)playerStats.B1, (int?)playerStats.B2, (int?)playerStats.B3, (int?)playerStats.HR, (int?)playerStats.PA);
+
+            decimal ops = CalculatedStats.CalculateOPS((int)(playerStats.Hits.Value), playerStats.BB.Value, playerStats.HBP.Value, playerStats.PA.Value, playerStats.SAC.Value,
+                                                      (int?)playerStats.B1, (int?)playerStats.B2, (int?)playerStats.B3, (int?)playerStats.HR);
+
+            var result = new
+            {
+                error = false,
+                stats = new
+                {
+                    AVG = avg,
+                    OBP = obp,
+                    SLG = slg,
+                    OPS = ops
+                }
+            };
+
+            return Json(result);
+        }
+    }
 }
