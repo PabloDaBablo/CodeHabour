@@ -74,33 +74,33 @@
         background-color: #f0f0f0;
     }
 
+#toggleButton {
+    display: none;
+}
+
 @media (max-width: 768px) {
-    .svg-container {
-        padding: 5px;
-    }
-
-    svg {
-        max-width: 100%;
-    }
-
-    #popup-menu {
+    #toggleButton {
+        display: block;
         width: 100%;
+        margin-bottom: 10px;
     }
 
-        #popup-menu ul {
-            width: 100%;
-        }
-
-            #popup-menu ul li {
-                padding: 8px;
-                border-bottom: 1px solid #eee;
-            }
-
-    .submenu {
-        width: 100%;
+    #collapse-on-mobile {
+        display: none;
     }
+}
 
-        .submenu li {
-            padding: 8px;
-        }
+#popup-menu {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    border-radius: 8px;
+    width: 200px;
+    font-family: Arial, sans-serif;
+    z-index: 1000;
 }

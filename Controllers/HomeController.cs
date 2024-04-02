@@ -6,6 +6,7 @@ using System.Diagnostics;
 using WMBA_7_2_.CustomControllers;
 using WMBA_7_2_.Data;
 using WMBA_7_2_.Models;
+using WMBA_7_2_.ViewModels;
 
 namespace WMBA_7_2_.Controllers
 {
@@ -24,18 +25,22 @@ namespace WMBA_7_2_.Controllers
         [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
         public async Task<IActionResult> Index()
         {
-            var games = await _context.Games
+            var dashboardViewModels = await _context.Games
                 .Include(g => g.Team_Games)
                 .ThenInclude(g => g.Team)
                 .Include(g => g.AwayTeam)
                 .Include(g => g.HomeTeam)
-                .AsNoTracking()
+                .Select(g => new DashboardViewModel
+                {
+                    GameDate = g.GameDate,
+                    GameTime = g.GameTime,
+                    GameLocation = g.GameLocation,
+                    AwayTeam = g.AwayTeam,
+                    HomeTeam = g.HomeTeam
+                })
                 .ToListAsync();
 
-            ViewData["HomeTeam"] = new SelectList(_context.Teams, "ID", "TeamName");
-            ViewData["AwayTeam"] = new SelectList(_context.Teams, "ID", "TeamName");
-
-            return View(games);
+            return View(dashboardViewModels);
         }
 
         // GET: Game/Details/5
