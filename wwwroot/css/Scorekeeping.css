@@ -89,3 +89,34 @@
         max-width: 100%;
     }
 }
+
+#toggleButton {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    #toggleButton {
+        display: block;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    #collapse-on-mobile {
+        display: none;
+    }
+}
+
+#popup-menu {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0; 
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    border-radius: 8px;
+    width: 200px;
+    font-family: Arial, sans-serif;
+    z-index: 1000;
+}

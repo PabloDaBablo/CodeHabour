@@ -6,6 +6,7 @@ using System.Diagnostics;
 using WMBA_7_2_.CustomControllers;
 using WMBA_7_2_.Data;
 using WMBA_7_2_.Models;
+using WMBA_7_2_.ViewModels;
 
 namespace WMBA_7_2_.Controllers
 {
@@ -31,10 +32,12 @@ namespace WMBA_7_2_.Controllers
                 .AsNoTracking()
                 .ToListAsync();
 
+            var gameViewModels = games.Select(game => new DashboardViewModel(game)).ToList();
+
             ViewData["HomeTeam"] = new SelectList(_context.Teams, "ID", "TeamName");
             ViewData["AwayTeam"] = new SelectList(_context.Teams, "ID", "TeamName");
 
-            return View(games);
+            return View(gameViewModels);
         }
 
         // GET: Game/Details/5
@@ -48,158 +51,30 @@ namespace WMBA_7_2_.Controllers
                 return NotFound();
             }
 
-            var game = await _context.Games
+            var gameEntity = await _context.Games
                 .Include(g => g.GamePlayers).ThenInclude(p => p.Player)
                 .Include(g => g.AwayTeam)
                 .Include(g => g.HomeTeam)
                 .FirstOrDefaultAsync(m => m.ID == id);
 
-            ViewBag.AvailablePlayers = _context.Players.Where(p => p.IsActive && !game.GamePlayers.Select(gp => gp.PlayerID).Contains(p.ID)).ToList();
-
-            if (game == null)
+            if (gameEntity == null)
             {
                 return NotFound();
             }
 
-            return View(game);
+            var gameViewModel = new DashboardViewModel(gameEntity);
+
+            ViewBag.AvailablePlayers = _context.Players
+                .Where(p => p.IsActive && !gameEntity.GamePlayers.Select(gp => gp.PlayerID).Contains(p.ID))
+                .ToList();
+
+            return View(gameViewModel);
         }
 
-        // GET: Game/Create
-        [HttpGet]
-        public IActionResult Create()
+        // Method to redirect to the Game Create view
+        public IActionResult RedirectToCreateGame()
         {
-
-            ViewData["HomeTeam"] = new SelectList(_context.Teams, "ID", "TeamName");
-            ViewData["AwayTeam"] = new SelectList(_context.Teams, "ID", "TeamName");
-            return View();
-        }
-
-        // POST: Game/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,GameDate,GameTime,HomeTeamID,AwayTeamID,GameLocation")] Game game)
-        {
-
-            ViewData["HomeTeam"] = new SelectList(_context.Teams, "ID", "TeamName");
-            ViewData["AwayTeam"] = new SelectList(_context.Teams, "ID", "TeamName");
-
-
-
-            if (ModelState.IsValid)
-            {
-                game.HomeTeam = _context.Teams.Include(t => t.Players).FirstOrDefault(t => t.ID == game.HomeTeamID);
-                game.AwayTeam = _context.Teams.Include(t => t.Players).FirstOrDefault(t => t.ID == game.AwayTeamID);
-
-                FillLineupsWithTeams(game);
-
-                _context.Add(game);
-                await _context.SaveChangesAsync();
-                //return RedirectToAction("Details", new { id = game.ID });
-                return RedirectToAction("Index", new { id = game.ID });
-            }
-
-            return View();
-        }
-
-
-
-        // GET: Game/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null || _context.Games == null)
-            {
-                return NotFound();
-            }
-
-            var game = await _context.Games.FindAsync(id);
-            if (game == null)
-            {
-                return NotFound();
-            }
-
-            ViewData["HomeTeam"] = new SelectList(_context.Teams, "ID", "TeamName");
-            ViewData["AwayTeam"] = new SelectList(_context.Teams, "ID", "TeamName");
-            return View(game);
-        }
-
-        // POST: Game/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,GameDate,GameTime,HomeTeamID,AwayTeamID,GameLocation")] Game game)
-        {
-
-
-            ViewData["HomeTeam"] = new SelectList(_context.Teams, "ID", "TeamName", game.HomeTeam);
-            ViewData["AwayTeam"] = new SelectList(_context.Teams, "ID", "TeamName", game.AwayTeam);
-
-            if (id != game.ID)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(game);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!GameExists(game.ID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-
-            return View(game);
-        }
-
-        // GET: Game/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null || _context.Games == null)
-            {
-                return NotFound();
-            }
-
-            var game = await _context.Games
-                .FirstOrDefaultAsync(m => m.ID == id);
-            if (game == null)
-            {
-                return NotFound();
-            }
-
-            return View(game);
-        }
-
-        // POST: Game/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            if (_context.Games == null)
-            {
-                return Problem("Entity set 'WMBAContext.Schedules'  is null.");
-            }
-            var game = await _context.Games.FindAsync(id);
-            if (game != null)
-            {
-                _context.Games.Remove(game);
-            }
-
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Create", "Game");
         }
 
         private bool GameExists(int id)
@@ -263,8 +138,5 @@ namespace WMBA_7_2_.Controllers
             }
             return RedirectToAction(nameof(Details), new { id = GameID });
         }
-
-
-
     }
 }
