@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using WMBA_7_2_.CustomControllers;
 using WMBA_7_2_.Data;
@@ -15,14 +16,16 @@ namespace WMBA_7_2_.Controllers
 			_context = context;
 		}
 
-		public IActionResult Index(string tab = "Division-Tab")
+        [Authorize(Roles = "Admin")]
+        public IActionResult Index(string tab = "Division-Tab")
 		{
 
 			ViewData["Tab"] = tab;
 			return View();
 		}
 
-		public PartialViewResult Division()
+        [Authorize(Roles = "Admin")]
+        public PartialViewResult Division()
 		{
 			ViewData["DivisionID"] = new
 				SelectList(_context.Divisions
@@ -30,6 +33,7 @@ namespace WMBA_7_2_.Controllers
 			return PartialView("_Division");
 		}
 
+        [Authorize(Roles = "Admin")]
         public PartialViewResult League()
         {
             ViewData["LeagueID"] = new

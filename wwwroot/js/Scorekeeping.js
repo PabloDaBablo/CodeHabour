@@ -1,4 +1,5 @@
 ﻿var selectedPlayerId;
+let actionQueue = [];
 
 $(document).ready(function () {
     GetPlayers(gameId);
@@ -186,29 +187,40 @@ function fetchLineup(gameId) {
         .then(data => {
             var lineupDropdown = document.getElementById('team2Dropdown');
             lineupDropdown.innerHTML = '<option value="0" selected>Select a player...</option>';
+            let gamePlayedPromises = [];
 
             data.forEach(player => {
                 var option = new Option(player.playerLastName, player.id);
                 lineupDropdown.options.add(option);
+                gamePlayedPromises.push(incrementGamesPlayed(player.id));
+                logAction('GamePlayed', { playerId: player.id }, gameId);
+                saveGameState();
             });
 
-            playersData = data; 
-            placeFirstPlayer();
+            Promise.all(gamePlayedPromises)
+                .then(() => {
+                    playersData = data;
+                    placeFirstPlayer(); 
+                })
+                .catch(error => console.error('Error incrementing games played for lineup:', error));
         })
-        .catch(error => console.error('Error:', error));
+        .catch(error => console.error('Error fetching lineup:', error));
 }
 
 function placeFirstPlayer() {
     if (playersData.length > 0) {
-        const firstPlayerId = playersData[0].id; 
-        playerPositions[0] = firstPlayerId; 
+        const firstPlayerId = playersData[0].id;
+        playerPositions[0] = firstPlayerId;
         addPlayerToField(firstPlayerId, playersData[0].playerLastName, playersData[0].playerNumber, getBaseCoordinates(0).x, getBaseCoordinates(0).y);
-        logAction('PlayerPlaced', { playerId: firstPlayerId, baseIndex: 0 })
+        logAction('PlayerPlaced', { playerId: firstPlayerId }, gameId);
         drawField();
         saveGameState();
+
+        incrementPlateAppearances(firstPlayerId)
+            .then(() => console.log('Incremented Plate Appearances for the first player.'))
+            .catch(error => console.error('Error incrementing plate appearances for the first player:', error));
     }
 }
-
 function addPlayerToField(playerId, lastName, number, startX, startY) {
     const svgNs = "http://www.w3.org/2000/svg";
     let svgContainer = document.querySelector("svg");
@@ -291,22 +303,22 @@ function advancePlayerBaseHit(hitType) {
     switch (hitType) {
         case '1B':
             newPositionIndex = 1; 
-            logAction('Single', { playerId: playerIdSVG })
+            logAction('Single', { playerId: playerIdSVG }, gameId)
             updatePlayerBaseHit(playerIdSVG, hitType)
             break;
         case '2B':
             newPositionIndex = 2; 
-            logAction('Double', { playerId: playerIdSVG })
+            logAction('Double', { playerId: playerIdSVG }, gameId)
             updatePlayerBaseHit(playerIdSVG, hitType)
             break;
         case '3B':
             newPositionIndex = 3; 
-            logAction('Triple', { playerId: playerIdSVG })
+            logAction('Triple', { playerId: playerIdSVG }, gameId)
             updatePlayerBaseHit(playerIdSVG, hitType)
             break;
         case 'HR':
             newPositionIndex = 0; 
-            logAction('HomeRun', { playerId: playerIdSVG })
+            logAction('HomeRun', { playerId: playerIdSVG }, gameId)
             handleHomeRun(playerIdSVG); 
             break;
         default:
@@ -330,10 +342,30 @@ function advancePlayerBaseHit(hitType) {
 }
 
 function handleHomeRun(playerId) {
+    
     updatePlayerBaseHit(playerId, 'HR');
     removePlayerSVG(playerId);
-    score++
-    document.getElementById('score').textContent = `Home Score: ${score}`;  
+
+    let runsScored = 1;
+
+    playerPositions.forEach((position, index) => {
+        if (position && index > 0) { 
+            removePlayerSVG(position);
+            playerScored(position);
+            runsScored++;
+            playerPositions[index] = null; 
+        }
+    });
+
+    score += runsScored;
+    document.getElementById('score').textContent = `Home Score: ${score}`;
+
+    playerPositions = [null, null, null, null];
+
+    logAction('HomeRun', { playerId: playerId }, gameId);
+    saveGameState();
+
+    drawField();
 }
 
 function movePlayerToBase(playerId, baseIndex) {
@@ -438,14 +470,11 @@ function playerStrikedOut(playerId) {
     });
 }
 function playerScored(playerId) {
-    score++;
-    document.getElementById('score').textContent = `Home Score: ${score}`;
-
     $.ajax({
         url: '/Scorekeeping/PlayerScored',
         type: 'POST',
-        contentType: 'application/json', 
-        data: JSON.stringify({ PlayerId: playerId }), 
+        contentType: 'application/json',
+        data: JSON.stringify({ PlayerId: playerId }),
         success: function (response) {
             console.log('Player scored a run.', response);
         },
@@ -575,29 +604,24 @@ function updatePlayerBaseHit(playerId, baseHitType) {
         }
     });
 }
-//TImer
-function startTimer(duration, displayElement, messageElement, ballButton, strikeButton, addRunToAwayTeamButton, undoRunToAwayTeamButton) {
-    var endTime = new Date(Date.now() + duration);
+//Timer
+function startTimer(clock) {
+    var startTime = Date.now()
 
     var timerInterval = setInterval(function () {
-        var remainingTime = endTime - Date.now();
-        var hours = Math.floor((remainingTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        var minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
-        var seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
+        var elapsedTime = Date.now() - startTime;
+        var hours = Math.floor((elapsedTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        var minutes = Math.floor((elapsedTime % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((elapsedTime % (1000 * 60)) / 1000);
 
-        displayElement.textContent = `${hours}h ${minutes}m ${seconds}s`;
+        clock.innerHTML = `<span style="font-weight: bold; font-size: 1.4em; ">${hours}h ${minutes}m ${seconds}s`;
 
-        if (remainingTime < 0) {
-            clearInterval(timerInterval);
-            displayElement.textContent = 'Time Up!';
-            messageElement.textContent = 'Game Over';
-            ballButton.disabled = true;
-            strikeButton.disabled = true;
-            addRunToAwayTeamButton.disabled = true;
-            undoRunToAwayTeamButton.disabled = true;
-        }
     }, 1000);
+    return timerInterval;
 };
+
+var clock = document.getElementById('timerDisplay');
+startTimer(clock);
 
 function advanceToNextBase() {
     saveGameState();
@@ -617,8 +641,9 @@ function advanceToNextBase() {
     if (nextPositionIndex > 3) {
 
         nextPositionIndex = 0;
-        logAction('Run', { playerId: playerIdSVG })
+        logAction('Run', { playerId: playerIdSVG }, gameId)
         playerScored(playerIdSVG);
+        saveGameState();
     }
 
 
@@ -662,7 +687,7 @@ function updatePlayerOutStatistic(playerId, outType) {
 
 function handleOut(outType) {
     saveGameState();
-    logAction(outType , { playerId: playerIdSVG});
+    logAction(outType, { playerId: playerIdSVG }, gameId);
 
     if (!playerIdSVG) {
         alert("No player selected!");
@@ -672,7 +697,53 @@ function handleOut(outType) {
     updatePlayerOutStatistic(playerIdSVG, outType);
     removePlayerFromField();
 
+    var outCount = parseInt(document.getElementById("outNumber").textContent, 10);
+    outCount++;
+
+    if (outCount >= 3) {
+        outCount = 0;
+        if (document.getElementById("inningTopOrBottom").textContent === "Top of") {
+            document.getElementById("inningTopOrBottom").textContent = "Bottom of";
+        } else {
+            var inningNumber = parseInt(document.getElementById("inningNumber").textContent, 10);
+            inningNumber++;
+            document.getElementById("inningNumber").textContent = inningNumber;
+            document.getElementById("inningTopOrBottom").textContent = "Top of";
+        }
+    }
+
+    document.getElementById("outNumber").textContent = outCount;
+
+    loadPlayerOntoHomeBase();
+
     playerIdSVG = null;
+
+    checkGameEnd();
+}
+
+function checkGameEnd() {
+    var inningLimit = 7;
+    var currentInning = parseInt(document.getElementById("inningNumber").textContent, 10);
+    if (currentInning > inningLimit ||
+        (currentInning === inningLimit && document.getElementById("inningTopOrBottom").textContent === "Bottom of")) {
+        document.getElementById("gameOverMessageDisplay").textContent = "Game Over";
+        disableGameControls();
+    }
+}
+
+function disableGameControls() {
+    document.getElementById('strikeNumberButton').disabled = true;
+    document.getElementById('ballNumberButton').disabled = true;
+    document.getElementById('groundout').disabled = true;
+    document.getElementById('flyout').disabled = true;
+    document.getElementById('popout').disabled = true;
+    document.getElementById('homerun').disabled = true;
+    document.getElementById('single').disabled = true;
+    document.getElementById('double').disabled = true;
+    document.getElementById('triple').disabled = true;
+    document.getElementById('addToAwayScore').disabled = true;
+    document.getElementById('undoAwayButton').disabled = true;
+    document.getElementById('popup-menu').style.display = 'none';
 }
 
 document.getElementById('single').addEventListener('click', function () { advancePlayerBaseHit('1B'); });
@@ -681,7 +752,15 @@ document.getElementById('triple').addEventListener('click', function () { advanc
 document.getElementById('homerun').addEventListener('click', function () { advancePlayerBaseHit('HR'); });
 
 document.getElementById('advance-player').addEventListener('click', advanceToNextBase);
- 
+
+document.getElementById('runs-batted-in').addEventListener('click', function () { RunsBattedIn(playerIdSVG); logAction('RBI', { playerId: playerIdSVG }, gameId); saveGameState(); })
+
+document.getElementById('sacrifice').addEventListener('click', function () { Sacrifice(playerIdSVG); logAction('SAC', { playerId: playerIdSVG }, gameId); saveGameState(); })
+
+document.getElementById('stolen-base').addEventListener('click', function () { StolenBase(playerIdSVG); logAction('SB', { playerId: playerIdSVG }, gameId); saveGameState(); })
+
+document.getElementById('base-on-balls').addEventListener('click', function () { BaseOnBalls(playerIdSVG); logAction('BB', { playerId: playerIdSVG }, gameId); saveGameState(); });
+
 $(document).ready(function () {
     $('#groundout').click(function () { handleOut('GO'); });
     $('#flyout').click(function () { handleOut('FO'); });
@@ -705,8 +784,10 @@ function loadPlayerOntoHomeBase() {
         const playerToLoad = playersData[currentBatterIndex];
         if (playerToLoad) {
             playerPositions[0] = playerToLoad.id; 
+            incrementPlateAppearances(playerToLoad.id);
+            logAction('PlayerPlaced', { playerId: playerToLoad.id }, gameId)
+            saveGameState();
             addPlayerToField(playerToLoad.id, playerToLoad.playerLastName, playerToLoad.playerNumber, getBaseCoordinates(0).x, getBaseCoordinates(0).y);
-            
         }
     }
 }
@@ -740,13 +821,13 @@ function undoLastAction() {
 
 document.getElementById('undo-button').addEventListener('click', undoLastAction);
 
-function logAction(actionType, data) {
+function logAction(actionType, data, gameID) {
     fetch('/Scorekeeping/LogAction', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ actionType, data: JSON.stringify(data) }) 
+        body: JSON.stringify({ actionType, data: JSON.stringify(data), gameID }) 
     })
         .then(response => response.json())
         .then(result => console.log(result))
@@ -825,3 +906,264 @@ document.getElementById('undoAwayButton').addEventListener('click', function () 
             console.error('Error:', error);
         });
 });
+
+function incrementGamesPlayed(playerId) {
+    return fetch('/Scorekeeping/GamesPlayed', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ PlayerId: playerId })
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok.');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (!data.success) {
+                throw new Error(`Failed to increment Games Played for player ${playerId}: ${data.message}`);
+            }
+            console.log(`Games Played incremented for player ${playerId}.`);
+        });
+}
+
+function incrementPlateAppearances(playerId) {
+    return fetch('/Scorekeeping/PlateAppearances', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ PlayerId: playerId })
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok.');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (!data.success) {
+                throw new Error(`Failed to increment Plate Appearances for player ${playerId}: ${data.message}`);
+            }
+            console.log(`Plate Appearances incremented for player ${playerId}.`);
+        });
+}
+
+function enqueueAction(actionFunc, playerId) {
+    actionQueue.push(() => actionFunc(playerId));
+}
+
+function dequeueAndExecuteActions() {
+    if (actionQueue.length === 0) {
+        console.log('All actions processed.');
+        return;
+    }
+
+    const actionToExecute = actionQueue.shift();
+    const promise = actionToExecute();
+
+    if (promise && promise.then) {
+        promise.then(() => {
+            dequeueAndExecuteActions();
+        }).catch(error => {
+            console.error('Error executing action:', error);
+            dequeueAndExecuteActions();
+        });
+    } else {
+        console.error('The action did not return a promise, check your action functions.');
+    }
+}
+
+function RunsBattedIn(playerId) {
+    $.ajax({
+        url: '/Scorekeeping/RunsBattedIn',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ playerId: playerId }),
+        success: function (response) {
+            console.log('Player RBI update successful', response);
+        },
+        error: function (error) {
+            console.error('Error updating player RBI.', error);
+        }
+    });
+}
+
+function Sacrifice (playerId) {
+    $.ajax({
+        url: '/Scorekeeping/Sacrifice',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ playerId: playerId }),
+        success: function (response) {
+            console.log('Player sacrifice update successful', response);
+        },
+        error: function (error) {
+            console.error('Error updating player sacrifice.', error);
+        }
+    });
+};
+
+function StolenBase(playerId) {
+    $.ajax({
+        url: '/Scorekeeping/StolenBase',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ playerId: playerId }),
+        success: function (response) {
+            console.log('Player SB update successful', response);
+        },
+        error: function (error) {
+            console.error('Error updating player SB.', error);
+        }
+    });
+}
+
+function BaseOnBalls(playerId) {
+    $.ajax({
+        url: '/Scorekeeping/BaseOnBalls',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ playerId: playerId }),
+        success: function (response) {
+            console.log('Player SB update successful', response);
+        },
+        error: function (error) {
+            console.error('Error updating player SB.', error);
+        }
+    });
+}
+
+document.getElementById('foulball').addEventListener('click', function () {
+    if (strikeCount < 2) {
+        strikeCount += 1;
+        document.getElementById('strikeCount').textContent = strikeCount;
+    }
+});
+
+function HBP(playerId) {
+    $.ajax({
+        url: '/Scorekeeping/HBP',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ playerId: playerId }),
+        success: function (response) {
+            console.log('Player HBP stat update successful', response);
+        },
+        error: function (error) {
+            console.error('Error updating player HBP Stat.', error);
+        }
+    });
+};
+
+
+document.getElementById('hitByPitch').addEventListener('click', function () {
+    advanceToNextBase();
+    saveGameState();
+    logAction('HBP', { playerId: playerIdSVG }, gameId);
+    HBP(playerIdSVG);
+    
+});
+
+document.getElementById('undo-button').addEventListener('click', function () {
+    const undoAll = document.getElementById('undo-all-checkbox').checked;
+    if (undoAll) {
+        undoAllActionsForGame();
+    } else {
+        undoLastAction();
+    }
+});
+
+function undoAllActionsForGame() {
+    fetch(`/Scorekeeping/UndoAllActionsForGame?gameId=${gameId}`, { 
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('All actions for the game were undone successfully.');
+            } else {
+                alert('Failed to undo all actions for the game:', data.message);
+            }
+        })
+}
+
+
+$(document).ready(function () {
+    $('#popup-menu > ul > li').on('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        $('.submenu').not($(this).children(".submenu")).hide();
+
+        $(this).children(".submenu").toggle();
+    });
+
+    $(document).click(function () {
+        $('.submenu').hide();
+    });
+
+    $('.submenu').click(function (e) {
+        e.stopPropagation();
+    });
+
+    $('#popup-menu > ul > li').on('touchend', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        $('.submenu').not($(this).children(".submenu")).hide();
+        $(this).children(".submenu").toggle();
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    var baseballImage = document.getElementById('baseball-image');
+    var popupMenu = document.getElementById('popup-menu');
+
+    baseballImage.addEventListener('click', function (event) {
+        event.preventDefault();
+
+        var isMobile = window.innerWidth <= 1000; 
+
+        var posX = event.clientX;
+        var posY = event.clientY;
+
+        var menuWidth = popupMenu.offsetWidth;
+        var menuHeight = popupMenu.offsetHeight;
+
+        var windowWidth = window.innerWidth;
+        var windowHeight = window.innerHeight;
+
+        if (isMobile) {
+            if (posX - menuWidth > 0) {
+                posX -= menuWidth;
+            } else if (posX + menuWidth > windowWidth) {
+                posX = windowWidth - menuWidth - 20;
+            }
+        } else {
+            if (posX + menuWidth > windowWidth) {
+                posX -= (posX + menuWidth - windowWidth + 20);
+            }
+        }
+
+        if (posY + menuHeight > windowHeight) {
+            posY = windowHeight - menuHeight - 20;
+        }
+
+        popupMenu.style.left = posX + 'px';
+        popupMenu.style.top = posY + 'px';
+        popupMenu.style.display = 'block';
+    });
+
+    document.addEventListener('click', function (e) {
+        if (!popupMenu.contains(e.target) && e.target !== baseballImage) {
+            popupMenu.style.display = 'none';
+        }
+    });
+});
+

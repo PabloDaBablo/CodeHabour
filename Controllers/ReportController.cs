@@ -12,6 +12,7 @@ using WMBA_7_2_.CustomControllers;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using WMBA_7_2_.ViewModels;
 using System.Numerics;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WMBA_7_2_.Controllers
 {
@@ -25,16 +26,21 @@ namespace WMBA_7_2_.Controllers
         }
 
         // GET: Excel Data
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
             return View();
         }
+
+        [Authorize(Roles = "Admin")]
         public IActionResult Reports()
         {
             var report = _context.Reports.AsNoTracking();
 
             return View(report);
         }
+
+        [Authorize(Roles = "Admin")]
         public IActionResult DownloadSampleExcel()
         {
             //Create a new spreadsheet from scratch.
@@ -95,6 +101,7 @@ namespace WMBA_7_2_.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ImportFromExcel(IFormFile theExcel)
         {
             string feedBack = string.Empty;
@@ -155,7 +162,7 @@ namespace WMBA_7_2_.Controllers
             return RedirectToAction("Index", "Report");
         }
 
-
+        [Authorize(Roles = "Admin")]
         private async Task ReadImportedData(ExcelWorksheet workSheet, string success)
         {
             //Prepare the colleciton of imported data
@@ -163,9 +170,8 @@ namespace WMBA_7_2_.Controllers
 
             var start = workSheet.Dimension.Start;
             var end = workSheet.Dimension.End;
-
             //Test some of the heading cells to help confirm this is the right kind of file.
-            if (//workSheet.Cells[1, 1].Text == "ID" &&
+            if (workSheet.Cells[1, 1].Text == "ID" &&
                 workSheet.Cells[1, 2].Text == "First Name" &&
                 workSheet.Cells[1, 3].Text == "Last Name" &&
                 workSheet.Cells[1, 4].Text == "Member ID" &&
@@ -188,7 +194,7 @@ namespace WMBA_7_2_.Controllers
                         Team = workSheet.Cells[row, 8].Text
                     };
                     //Add if not blank, at least check a couple of properties
-                    if (!(ir.ID == "" || ir.Member_ID == ""))
+                    if (!(ir.Team == "" || ir.Member_ID == ""))
                     {
                         imported.Add(ir);
                     }
@@ -291,18 +297,18 @@ namespace WMBA_7_2_.Controllers
                 }
                 await _context.SaveChangesAsync();
                 success = $"{imported.Count()} Players uploaded";
-            }   
-                          
+            }
+
             else
             {
                 success = "Error: You may have selected the wrong file to upload.";
             }
-            
+
             TempData["Success"] = success;
             //return RedirectToAction("Index", "Report");
         }
     }
- } 
+} 
 
 
 

@@ -30,9 +30,9 @@
 
         
             <div class="row">
-                <div class="col d-flex align-items-center justify-content-center" id="gameOverMessageDiv">
+                @* <div class="col d-flex align-items-center justify-content-center" id="gameOverMessageDiv">
                     <span id="gameOverMessageDisplay">Game On!</span>
-                </div>
+                </div> *@
                 <div class="col d-flex align-items-center justify-content-center" id="clockDiv">
                     <span><p id="clock"></p></span>
                 </div>
@@ -68,17 +68,34 @@
         </div>
         <div class="row">
             <div class="col">
+                
+                <button id="undo-button" class="custom-btn">Undo Action</button>
+
+                <label for="undo-all-checkbox">Undo All Actions for This Game</label>
+                <input type="checkbox" id="undo-all-checkbox">
+
                 <div id="score">Home Score: 0</div>
-                <button id="undo-button" class="btn btn-danger">Undo</button>
             </div>
             <div class="col">
-            <button id="undoAwayButton" class="custom-btn">Undo</button>
+            <button id="undoAwayButton" class="custom-btn">Undo Run to Away Team</button>
             </div>
             <div class="col">
                 <button id="addToAwayScore" class="custom-btn">Add Run to Away Team</button>
                 <div id="awayScoreText">Away Score:&nbsp; <span id="awayScoreNumber">0</span></div>
             </div>
         </div>
+        <div class="row">
+            <div class="col">
+                <label for="team2Dropdown">Home Lineup:</label>
+                <select id="team2Dropdown" class="form-control">
+                    <option value="0" selected>Your lineup...</option>
+                    <option value="1">Player X</option>
+                    <option value="2">Player Y</option>
+                    <option value="3">Player Z</option>
+                </select>
+            </div>
+        </div>
+
 
     <div class="svg-container">
 
@@ -121,20 +138,7 @@
         </svg>
     </div>
 
-@*     Games and Lineup menus *@
-    <div class="container">
-        <div class="row">
-            <div class="col">
-                <label for="team2Dropdown">Lineup:</label>
-                <select id="team2Dropdown" class="form-control">
-                    <option value="0" selected>Your lineup...</option>
-                    <option value="1">Player X</option>
-                    <option value="2">Player Y</option>
-                    <option value="3">Player Z</option>
-                </select>
-            </div>
-        </div>
-    </div>
+
 
     <div id="popup-menu">
         <ul>
@@ -145,6 +149,9 @@
                     <li id="triple">Triple</li>
                     <li id="homerun">HomeRun</li>
                     <li id="advance-player">Advance Player</li>
+                    <li id="stolen-base">Stolen Base</li>
+                    <li id="runs-batted-in">Runs Batted In</li>
+                    <li id="base-on-balls">Base on Balls</li>
                 </ul>
             </li>
             <li >Out Options >
@@ -152,10 +159,17 @@
                     <li id="groundout">Groundout</li>
                     <li id="flyout">Flyout</li>
                     <li id="popout">Popout</li>
-                    <li id="player-out">Player Out</li>
+                    <li id="player-out">Skip Current `Player</li>
                 </ul>
             </li>
-            <li>Option 3</li>
+            <li>Pitch Options > 
+                <ul class="submenu">
+                    <li id="foulball">Foul ball</li>
+                    <li id="hitByPitch">Hit by pitch</li>
+                    <li id="sacrifice">Sacrifice</li>
+
+                </ul>
+            </li>
         </ul>
     </div>
 

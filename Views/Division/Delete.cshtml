@@ -3,10 +3,14 @@
 @{
     ViewData["Title"] = "Delete";
 }
+
+
 <head>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/css/site.css" asp-append-version="true" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
+
 
 
 <h1>Delete</h1>
@@ -14,6 +18,7 @@
 <h3>Are you sure you want to delete this?</h3>
 <div>
     <h4>Division</h4>
+    <div asp-validation-summary="ModelOnly" id-="error-message" class="text-danger error-message"></div>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -23,16 +28,25 @@
             @Html.DisplayFor(model => model.DivAge)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.LeagueTypeID)
+            @Html.DisplayNameFor(model => model.League.LeagueType)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.LeagueTypeID)
+            @Html.DisplayFor(model => model.League.LeagueType)
         </dd>
     </dl>
     
     <form asp-action="Delete">
         <input type="hidden" asp-for="ID" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <input type="submit" value="Delete" class="btn btn-danger" id="deleteButton" />
         <a href="/" class="btn btn-danger" >Back to Home</a>
     </form>
 </div>
+<script>
+        $(document).ready(function () {
+            var hasErrors = $(".error-message").length > 0;
+
+            if (hasErrors) {
+                $("#deleteButton").prop('disabled', true);
+            }
+        });
+</script>

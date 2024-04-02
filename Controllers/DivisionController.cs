@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using WMBA_7_2_.Data;
 using WMBA_7_2_.Models;
 
@@ -20,6 +22,7 @@ namespace WMBA_7_2_.Controllers
         }
 
         // GET: Division
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
 
@@ -30,6 +33,7 @@ namespace WMBA_7_2_.Controllers
         }
 
         // GET: Division/Details/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Divisions == null)
@@ -48,6 +52,7 @@ namespace WMBA_7_2_.Controllers
         }
 
         // GET: Division/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
 
@@ -60,20 +65,40 @@ namespace WMBA_7_2_.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("ID,DivAge,DivisionTeams,LeagueTypeID")] Division division)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(division);
-                await _context.SaveChangesAsync();
-                return RedirectToAction("Index", "ManageLookup");
-            }
+		{
+			try
+			{
+				if (ModelState.IsValid)
+				{
+					_context.Add(division);
+					await _context.SaveChangesAsync();
+					return RedirectToAction("Index", "ManageLookup");
+				}
 
-            ViewData["LeagueTypeID"] = new SelectList(_context.Leagues, "ID", "LeagueType");
-            return View(division);
-        }
+				ViewData["LeagueTypeID"] = new SelectList(_context.Leagues, "ID", "LeagueType");
+				return View(division);
+			}
+			catch (DbUpdateException dex)
+			{
+				if (dex.InnerException?.Message.Contains("UNIQUE") == true)
+				{
+					ModelState.AddModelError("", "Division already exists in the database.");
+				}
+				else
+				{
+					ModelState.AddModelError("", "An error occurred saving changes. Please try again.");
+				}
+
+				ViewData["LeagueTypeID"] = new SelectList(_context.Leagues, "ID", "LeagueType", division.LeagueTypeID);
+
+				return View(division);
+			}
+		}
 
         // GET: Division/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Divisions == null)
@@ -96,6 +121,7 @@ namespace WMBA_7_2_.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, [Bind("ID,DivAge,LeagueTypeID")] Division division)
         {
             if (id != division.ID)
@@ -103,32 +129,51 @@ namespace WMBA_7_2_.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            try
             {
-                try
-                {
-                    _context.Update(division);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!DivisionExists(division.ID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
 
-            ViewData["LeagueTypeID"] = new SelectList(_context.Leagues, "ID", "LeagueType", division.LeagueTypeID);
-            return View(division);
+                if (ModelState.IsValid)
+                {
+                    try
+                    {
+                        _context.Update(division);
+                        await _context.SaveChangesAsync();
+                    }
+                    catch (DbUpdateConcurrencyException)
+                    {
+                        if (!DivisionExists(division.ID))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
+                    }
+                    return RedirectToAction(nameof(Index));
+                }
+
+                ViewData["LeagueTypeID"] = new SelectList(_context.Leagues, "ID", "LeagueType", division.LeagueTypeID);
+                return View(division);
+            }
+            catch (DbUpdateException dex)
+            {
+                if (dex.InnerException?.Message.Contains("UNIQUE") == true)
+                {
+                    ModelState.AddModelError("", "Division already exists in the database.");
+                }
+                else
+                {
+                    ModelState.AddModelError("", "An error occurred saving changes. Please try again.");
+                }
+
+                ViewData["LeagueTypeID"] = new SelectList(_context.Leagues, "ID", "LeagueType", division.LeagueTypeID);
+                return View(division);
+            }
         }
 
         // GET: Division/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Divisions == null)
@@ -142,14 +187,33 @@ namespace WMBA_7_2_.Controllers
             {
                 return NotFound();
             }
-            ViewData["LeagueTypeID"] = new SelectList(_context.Leagues, "ID", "LeagueType", division.LeagueTypeID);
 
-            return View(division);
+            try
+            {
+                _context.Divisions.Remove(division);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index)); 
+            }
+            catch (DbUpdateException ex)
+            {
+                if (ex.InnerException?.Message.Contains("FOREIGN") == true ||
+                    ex.InnerException?.Message.Contains("constraint") == true)
+                {
+                    ModelState.AddModelError("", "Cannot delete this division because it is referenced by other entities.");
+                }
+                else
+                {
+                    ModelState.AddModelError("", "An error occurred while attempting to delete the division. Please try again.");
+                }
+
+                return View(division);
+            }
         }
 
         // POST: Division/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.Divisions == null)

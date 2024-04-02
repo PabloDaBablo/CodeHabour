@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
@@ -19,6 +20,7 @@ namespace WMBA_7_2_.Controllers
             _context = context;
         }
 
+		[Authorize(Roles = "Admin, Convenor, Scorekeeper, Coaches")]
         public IActionResult Index()
         {
 
@@ -57,11 +59,12 @@ namespace WMBA_7_2_.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> Insert([FromBody] TeamVM model)
+        [Authorize(Roles = "Admin, Convenor, Scorekeeper, Coaches")]
+        public async Task<IActionResult> Insert([FromBody] TeamVM model)
 		{
 			if (!ModelState.IsValid)
 			{
-				return Json("Model validation failed.");
+				return Json("Error! Ensure all required fields are filled out!");
 			}
 
 			var team = new Team
@@ -98,7 +101,8 @@ namespace WMBA_7_2_.Controllers
 
 
 		[HttpGet]
-		public JsonResult Edit(int? id)
+        [Authorize(Roles = "Admin, Convenor, Scorekeeper, Coaches")]
+        public JsonResult Edit(int? id)
 		{
 			try
 			{
@@ -111,7 +115,7 @@ namespace WMBA_7_2_.Controllers
 
 				if (team == null)
 				{
-					return Json(new { error = "Team not found." });
+					return Json(new { error = "Team not found by given ID. If this issue persists, please see your system administrator." });
 				}
 
 				var result = new
@@ -127,16 +131,17 @@ namespace WMBA_7_2_.Controllers
 			}
 			catch (Exception ex)
 			{
-				return Json(new { error = "An error occurred while processing your request." });
+				return Json(new { error = "An error occurred while processing your request. If this issue persists, please see your system administrator" });
 			}
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> Update([FromBody] TeamVM model)
+        [Authorize(Roles = "Admin, Convenor, Scorekeeper, Coaches")]
+        public async Task<IActionResult> Update([FromBody] TeamVM model)
 		{
 			if (!ModelState.IsValid)
 			{
-				return Json("Model validation failed.");
+				return Json("Error! Ensure all required fields are filled out!");
 			}
 
 			var team = await _context.Teams
@@ -181,12 +186,13 @@ namespace WMBA_7_2_.Controllers
 			catch (Exception ex)
 			{
 				
-				return Json(new { error = "An error occurred while updating the team." });
+				return Json(new { error = "An error occurred while updating the team. If this issue persists, please see your system administrator" });
 			}
 		}
 
 		[HttpPost]
-		public JsonResult Delete(int id)
+        [Authorize(Roles = "Admin, Convenor, Scorekeeper, Coaches")]
+        public JsonResult Delete(int id)
 		{
 			try
 			{
@@ -198,7 +204,7 @@ namespace WMBA_7_2_.Controllers
 					_context.SaveChanges();
 					return Json("Team deleted successfully.");
 				}
-				return Json("Team not found.");
+				return Json("Team not found by ID.");
 			}
 			catch (Exception ex)
 			{
@@ -207,7 +213,8 @@ namespace WMBA_7_2_.Controllers
 		}
 
 		[HttpGet]
-		public async Task<IActionResult> Details(int id)
+        [Authorize(Roles = "Admin, Convenor, Scorekeeper, Coaches")]
+        public async Task<IActionResult> Details(int id)
 		{
 			try
 			{

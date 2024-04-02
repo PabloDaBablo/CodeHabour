@@ -15,7 +15,7 @@ namespace WMBA_7_2_.Data.WMBAMigrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "7.0.16");
+            modelBuilder.HasAnnotation("ProductVersion", "7.0.17");
 
             modelBuilder.Entity("GameLine_Up", b =>
                 {
@@ -43,6 +43,9 @@ namespace WMBA_7_2_.Data.WMBAMigrations
 
                     b.Property<string>("Data")
                         .HasColumnType("TEXT");
+
+                    b.Property<int?>("GameID")
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("Timestamp")
                         .HasColumnType("TEXT");
@@ -116,6 +119,9 @@ namespace WMBA_7_2_.Data.WMBAMigrations
                         .HasColumnType("INTEGER");
 
                     b.HasKey("ID");
+
+                    b.HasIndex("DivAge")
+                        .IsUnique();
 
                     b.HasIndex("LeagueID");
 
@@ -327,25 +333,25 @@ namespace WMBA_7_2_.Data.WMBAMigrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<decimal>("AVG")
+                    b.Property<decimal?>("AVG")
                         .HasColumnType("TEXT");
 
                     b.Property<int?>("GameID")
                         .HasColumnType("INTEGER");
 
-                    b.Property<decimal>("OBP")
+                    b.Property<decimal?>("OBP")
                         .HasColumnType("TEXT");
 
-                    b.Property<decimal>("OPS")
+                    b.Property<decimal?>("OPS")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("PlayerID")
+                    b.Property<int?>("PlayerID")
                         .HasColumnType("INTEGER");
 
-                    b.Property<decimal>("SLG")
+                    b.Property<decimal?>("SLG")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("StatsID")
+                    b.Property<int?>("StatsID")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("ID");
@@ -402,6 +408,9 @@ namespace WMBA_7_2_.Data.WMBAMigrations
                         .HasColumnType("INTEGER");
 
                     b.Property<int?>("GP")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("HBP")
                         .HasColumnType("INTEGER");
 
                     b.Property<int?>("HR")
@@ -768,15 +777,11 @@ namespace WMBA_7_2_.Data.WMBAMigrations
 
                     b.HasOne("WMBA_7_2_.Models.Player", "Player")
                         .WithMany("PlayerGameStats")
-                        .HasForeignKey("PlayerID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PlayerID");
 
                     b.HasOne("WMBA_7_2_.Models.Stats", "Stats")
                         .WithMany("PlayerGameStats")
-                        .HasForeignKey("StatsID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("StatsID");
 
                     b.Navigation("Player");
 

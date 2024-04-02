@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
@@ -9,6 +10,7 @@ using WMBA_7_2_.ViewModels;
 
 namespace WMBA_7_2_.Controllers
 {
+    [AllowAnonymous]
     public class HomeController : CognizantController
     {
         private readonly WMBAContext _context;

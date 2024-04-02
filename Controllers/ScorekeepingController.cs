@@ -185,6 +185,40 @@ namespace WMBA_7_2_.Controllers
         [HttpPost]
         public async Task<IActionResult> PlayerStruckOut([FromBody] PlayerScoredDto dto)
         {
+            if (dto == null || dto.PlayerId <= 0)
+            {
+                return BadRequest("Invalid request");
+            }
+
+            var playerExists = await _context.Players.AnyAsync(p => p.ID == dto.PlayerId);
+            if (!playerExists)
+            {
+                return NotFound($"Player with ID {dto.PlayerId} not found.");
+            }
+
+            var result = await _context.Database.ExecuteSqlRawAsync(
+                "UPDATE PlayerStats SET K = COALESCE(K, 0) + 1 WHERE PlayerID = {0};",
+                dto.PlayerId);
+
+            if (result > 0)
+            {
+                return Json(new { success = true, message = "Strikeout updated successfully." });
+            }
+            else
+            {
+                var newStats = new PlayerStats
+                {
+                    PlayerID = dto.PlayerId,
+                    K = 1
+                };
+                await _context.PlayerStats.AddAsync(newStats);
+                await _context.SaveChangesAsync();
+                return Json(new { success = true, message = "Player stats created and strikeout recorded." });
+            }
+        }
+
+        public async Task<IActionResult> GamesPlayed([FromBody] PlayerScoredDto dto)
+        {
             if (dto == null)
             {
                 return BadRequest("Invalid request");
@@ -201,19 +235,17 @@ namespace WMBA_7_2_.Controllers
 
             if (playerStats == null)
             {
-
                 playerStats = new PlayerStats
                 {
                     PlayerID = dto.PlayerId,
-                    K = 1
+                    GP = 1 
                 };
                 _context.PlayerStats.Add(playerStats);
             }
             else
             {
-
-                playerStats.K++;
-
+                playerStats.GP++;
+                _context.PlayerStats.Update(playerStats); 
             }
 
             try
@@ -227,9 +259,217 @@ namespace WMBA_7_2_.Controllers
             }
         }
 
+        [HttpPost]
+        public async Task<IActionResult> PlateAppearances([FromBody] PlayerScoredDto dto)
+        {
+            if (dto == null || dto.PlayerId <= 0)
+            {
+                return BadRequest("Invalid request");
+            }
 
+            var playerExists = await _context.Players.AnyAsync(p => p.ID == dto.PlayerId);
+            if (!playerExists)
+            {
+                return NotFound($"Player with ID {dto.PlayerId} not found.");
+            }
 
-        [HttpGet]
+            var result = await _context.Database.ExecuteSqlRawAsync(
+                "UPDATE PlayerStats SET PA = COALESCE(PA, 0) + 1 WHERE PlayerID = {0};",
+                dto.PlayerId);
+
+            if (result > 0)
+            {
+                return Json(new { success = true, message = "Plate Appearances updated successfully." });
+            }
+            else
+            {
+                var newStats = new PlayerStats
+                {
+                    PlayerID = dto.PlayerId,
+                    PA = 1
+                };
+                await _context.PlayerStats.AddAsync(newStats);
+                await _context.SaveChangesAsync();
+                return Json(new { success = true, message = "Player stats created and plate appearances recorded." });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RunsBattedIn([FromBody] PlayerScoredDto dto)
+        {
+            if (dto == null || dto.PlayerId <= 0)
+            {
+                return BadRequest("Invalid request");
+            }
+
+            var playerExists = await _context.Players.AnyAsync(p => p.ID == dto.PlayerId);
+            if (!playerExists)
+            {
+                return NotFound($"Player with ID {dto.PlayerId} not found.");
+            }
+
+            var result = await _context.Database.ExecuteSqlRawAsync(
+                "UPDATE PlayerStats SET RBI = COALESCE(RBI, 0) + 1 WHERE PlayerID = {0};",
+                dto.PlayerId);
+
+            if (result > 0)
+            {
+                return Json(new { success = true, message = "RBI updated successfully." });
+            }
+            else
+            {
+                var newStats = new PlayerStats
+                {
+                    PlayerID = dto.PlayerId,
+                    RBI = 1
+                };
+                await _context.PlayerStats.AddAsync(newStats);
+                await _context.SaveChangesAsync();
+                return Json(new { success = true, message = "Player stats created and RBI recorded." });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Sacrifice([FromBody] PlayerScoredDto dto)
+        {
+            if (dto == null || dto.PlayerId <= 0)
+            {
+                return BadRequest("Invalid request");
+            }
+
+            var playerExists = await _context.Players.AnyAsync(p => p.ID == dto.PlayerId);
+            if (!playerExists)
+            {
+                return NotFound($"Player with ID {dto.PlayerId} not found.");
+            }
+
+            var result = await _context.Database.ExecuteSqlRawAsync(
+                               "UPDATE PlayerStats SET SAC = COALESCE(SAC, 0) + 1 WHERE PlayerID = {0};",
+                                              dto.PlayerId);
+
+            if (result > 0)
+            {
+                return Json(new { success = true, message = "Sacrifice updated successfully." });
+            }
+            else
+            {
+                var newStats = new PlayerStats
+                {
+                    PlayerID = dto.PlayerId,
+                    SAC = 1
+                };
+                await _context.PlayerStats.AddAsync(newStats);
+                await _context.SaveChangesAsync();
+                return Json(new { success = true, message = "Player stats created and Sacrifice recorded." });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> StolenBase([FromBody] PlayerScoredDto dto)
+        {
+            if (dto == null || dto.PlayerId <= 0)
+            {
+                return BadRequest("Invalid request");
+            }
+
+            var playerExists = await _context.Players.AnyAsync(p => p.ID == dto.PlayerId);
+            if (!playerExists)
+            {
+                return NotFound($"Player with ID {dto.PlayerId} not found.");
+            }
+
+            var result = await _context.Database.ExecuteSqlRawAsync(
+                               "UPDATE PlayerStats SET SB = COALESCE(SB, 0) + 1 WHERE PlayerID = {0};",
+                                              dto.PlayerId);
+
+            if (result > 0)
+            {
+                return Json(new { success = true, message = "Sacrifice updated successfully." });
+            }
+            else
+            {
+                var newStats = new PlayerStats
+                {
+                    PlayerID = dto.PlayerId,
+                    SB = 1
+                };
+                await _context.PlayerStats.AddAsync(newStats);
+                await _context.SaveChangesAsync();
+                return Json(new { success = true, message = "Player stats created and Sacrifice recorded." });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> BaseOnBalls([FromBody] PlayerScoredDto dto)
+        {
+            if (dto == null || dto.PlayerId <= 0)
+            {
+                return BadRequest("Invalid request");
+            }
+
+            var playerExists = await _context.Players.AnyAsync(p => p.ID == dto.PlayerId);
+            if (!playerExists)
+            {
+                return NotFound($"Player with ID {dto.PlayerId} not found.");
+            }
+
+            var result = await _context.Database.ExecuteSqlRawAsync(
+                               "UPDATE PlayerStats SET BB = COALESCE(BB, 0) + 1 WHERE PlayerID = {0};",
+                                              dto.PlayerId);
+
+            if (result > 0)
+            {
+                return Json(new { success = true, message = "Sacrifice updated successfully." });
+            }
+            else
+            {
+                var newStats = new PlayerStats
+                {
+                    PlayerID = dto.PlayerId,
+                    BB = 1
+                };
+                await _context.PlayerStats.AddAsync(newStats);
+                await _context.SaveChangesAsync();
+                return Json(new { success = true, message = "Player stats created and Sacrifice recorded." });
+            }
+        }
+
+		[HttpPost]
+		public async Task<IActionResult> HBP([FromBody] PlayerScoredDto dto)
+		{
+			if (dto == null || dto.PlayerId <= 0)
+			{
+				return BadRequest("Invalid request");
+			}
+
+			var playerExists = await _context.Players.AnyAsync(p => p.ID == dto.PlayerId);
+			if (!playerExists)
+			{
+				return NotFound($"Player with ID {dto.PlayerId} not found.");
+			}
+
+			var result = await _context.Database.ExecuteSqlRawAsync(
+							   "UPDATE PlayerStats SET HBP = COALESCE(BB, 0) + 1 WHERE PlayerID = {0};",
+											  dto.PlayerId);
+
+			if (result > 0)
+			{
+				return Json(new { success = true, message = "Hit By pitch updated successfully." });
+			}
+			else
+			{
+				var newStats = new PlayerStats
+				{
+					PlayerID = dto.PlayerId,
+					HBP = 1
+				};
+				await _context.PlayerStats.AddAsync(newStats);
+				await _context.SaveChangesAsync();
+				return Json(new { success = true, message = "Player stats created and HBP recorded." });
+			}
+		}
+
+		[HttpGet]
         public async Task<IActionResult> GetGameDetails(int gameId)
         {
             var game = await _context.Games
@@ -275,15 +515,21 @@ namespace WMBA_7_2_.Controllers
             {
                 case "1B":
                     playerStats.B1 = (playerStats.B1 ?? 0) + 1;
+                    playerStats.Hits = (playerStats.Hits ?? 0) + 1;
                     break;
                 case "2B":
                     playerStats.B2 = (playerStats.B2 ?? 0) + 1;
+                    playerStats.Hits = (playerStats.Hits ?? 0) + 1;
                     break;
                 case "3B":
                     playerStats.B3 = (playerStats.B3 ?? 0) + 1;
+                    playerStats.Hits = (playerStats.Hits ?? 0) + 1;
                     break;
                 case "HR":
                     playerStats.HR = (playerStats.HR ?? 0) + 1;
+                    playerStats.RBI = (playerStats.RBI ?? 0) + 1;
+                    playerStats.Runs = (playerStats.Runs ?? 0) + 1;
+                    playerStats.Hits = (playerStats.Hits ?? 0) + 1;
                     break;
             }
 
@@ -353,6 +599,7 @@ namespace WMBA_7_2_.Controllers
         {
             public string ActionType { get; set; }
             public string Data { get; set; }
+            public int GameID { get; set; }
         }
 
         [HttpPost]
@@ -362,7 +609,8 @@ namespace WMBA_7_2_.Controllers
             {
                 ActionType = actionLogDto.ActionType,
                 Data = actionLogDto.Data,
-                Timestamp = DateTime.Now
+                Timestamp = DateTime.Now,
+                GameID = actionLogDto.GameID
             };
             _context.ActionLogs.Add(actionLog);
             _context.SaveChanges();
@@ -409,6 +657,7 @@ namespace WMBA_7_2_.Controllers
                             if (playerStat.Runs > 0)
                             {
                                 playerStat.Runs -= 1;
+                                
                                 _context.PlayerStats.Update(playerStat);
                                 await _context.SaveChangesAsync();
                                 await transaction.CommitAsync();
@@ -431,6 +680,7 @@ namespace WMBA_7_2_.Controllers
                             if (playerStat.B1 > 0)
                             {
                                 playerStat.B1 -= 1;
+                                playerStat.Hits -= 1;
                                 _context.PlayerStats.Update(playerStat);
                                 await _context.SaveChangesAsync();
                                 await transaction.CommitAsync();
@@ -453,6 +703,7 @@ namespace WMBA_7_2_.Controllers
                             if (playerStat.B2 > 0)
                             {
                                 playerStat.B2 -= 1;
+                                playerStat.Hits -= 1;
                                 _context.PlayerStats.Update(playerStat);
                                 await _context.SaveChangesAsync();
                                 await transaction.CommitAsync();
@@ -475,6 +726,7 @@ namespace WMBA_7_2_.Controllers
                             if (playerStat.B3 > 0)
                             {
                                 playerStat.B3 -= 1;
+                                playerStat.Hits -= 1;
                                 _context.PlayerStats.Update(playerStat);
                                 await _context.SaveChangesAsync();
                                 await transaction.CommitAsync();
@@ -497,6 +749,9 @@ namespace WMBA_7_2_.Controllers
                             if (playerStat.HR > 0)
                             {
                                 playerStat.HR -= 1;
+                                playerStat.Hits -= 1;
+                                playerStat.RBI -= 1;
+                                playerStat.Runs -= 1;
                                 _context.PlayerStats.Update(playerStat);
                                 await _context.SaveChangesAsync();
                                 await transaction.CommitAsync();
@@ -573,8 +828,162 @@ namespace WMBA_7_2_.Controllers
                                 return Json(new { success = false, message = "Invalid stat count; cannot decrement." });
                             }
                         }
+                    case "RBI":
+                        {
+                            var playerId = actionData.PlayerId;
+                            var playerStat = await _context.PlayerStats.FirstOrDefaultAsync(ps => ps.PlayerID == actionData.PlayerId);
+                            if (playerStat == null)
+                            {
+                                return Json(new { success = false, message = $"Player stat not found for playerId {playerId}." });
+                            }
 
-                }
+                            if (playerStat.RBI > 0)
+                            {
+                                playerStat.RBI -= 1;
+                                _context.PlayerStats.Update(playerStat);
+                                await _context.SaveChangesAsync();
+                                await transaction.CommitAsync();
+                                return Json(new { success = true });
+                            }
+                            else
+                            {
+                                return Json(new { success = false, message = "Invalid stat count; cannot decrement." });
+                            }
+                        }
+                    case "SAC":
+                        {
+                            var playerId = actionData.PlayerId;
+                            var playerStat = await _context.PlayerStats.FirstOrDefaultAsync(ps => ps.PlayerID == actionData.PlayerId);
+                            if (playerStat == null)
+                            {
+                                return Json(new { success = false, message = $"Player stat not found for playerId {playerId}." });
+                            }
+
+                            if (playerStat.SAC > 0)
+                            {
+                                playerStat.SAC -= 1;
+                                _context.PlayerStats.Update(playerStat);
+                                await _context.SaveChangesAsync();
+                                await transaction.CommitAsync();
+                                return Json(new { success = true });
+                            }
+                            else
+                            {
+                                return Json(new { success = false, message = "Invalid stat count; cannot decrement." });
+                            }
+                        }
+                    case "SB":
+                        {
+                            var playerId = actionData.PlayerId;
+                            var playerStat = await _context.PlayerStats.FirstOrDefaultAsync(ps => ps.PlayerID == actionData.PlayerId);
+                            if (playerStat == null)
+                            {
+                                return Json(new { success = false, message = $"Player stat not found for playerId {playerId}." });
+                            }
+
+                            if (playerStat.SB > 0)
+                            {
+                                playerStat.SB -= 1;
+                                _context.PlayerStats.Update(playerStat);
+                                await _context.SaveChangesAsync();
+                                await transaction.CommitAsync();
+                                return Json(new { success = true });
+                            }
+                            else
+                            {
+                                return Json(new { success = false, message = "Invalid stat count; cannot decrement." });
+                            }
+                        }
+                    case "BB" :
+                        {
+                            var playerId = actionData.PlayerId;
+                            var playerStat = await _context.PlayerStats.FirstOrDefaultAsync(ps => ps.PlayerID == actionData.PlayerId);
+                            if (playerStat == null)
+                            {
+                                return Json(new { success = false, message = $"Player stat not found for playerId {playerId}." });
+                            }
+
+                            if (playerStat.BB > 0)
+                            {
+                                playerStat.BB -= 1;
+                                _context.PlayerStats.Update(playerStat);
+                                await _context.SaveChangesAsync();
+                                await transaction.CommitAsync();
+                                return Json(new { success = true });
+                            }
+                            else
+                            {
+                                return Json(new { success = false, message = "Invalid stat count; cannot decrement." });
+                            }
+                        }
+                    case "PlayerPlaced":
+                        {
+                            var playerId = actionData.PlayerId;
+                            var playerStat = await _context.PlayerStats.FirstOrDefaultAsync(ps => ps.PlayerID == actionData.PlayerId);
+                            if (playerStat == null)
+                            {
+                                return Json(new { success = false, message = $"Player stat not found for playerId {playerId}." });
+                            }
+
+                            if (playerStat.PA > 0)
+                            {
+                                playerStat.PA -= 1;
+                                _context.PlayerStats.Update(playerStat);
+                                await _context.SaveChangesAsync();
+                                await transaction.CommitAsync();
+                                return Json(new { success = true });
+                            }
+                            else
+                            {
+                                return Json(new { success = false, message = "Invalid stat count; cannot decrement." });
+                            }
+                        }
+                    case "GamePlayed":
+                        {
+                            var playerId = actionData.PlayerId;
+                            var playerStat = await _context.PlayerStats.FirstOrDefaultAsync(ps => ps.PlayerID == actionData.PlayerId);
+                            if (playerStat == null)
+                            {
+                                return Json(new { success = false, message = $"Player stat not found for playerId {playerId}." });
+                            }
+
+                            if (playerStat.GP > 0)
+                            {
+                                playerStat.GP -= 1;
+                                _context.PlayerStats.Update(playerStat);
+                                await _context.SaveChangesAsync();
+                                await transaction.CommitAsync();
+                                return Json(new { success = true });
+                            }
+                            else
+                            {
+                                return Json(new { success = false, message = "Invalid stat count; cannot decrement." });
+                            }
+                        }
+					case "HBP":
+						{
+							var playerId = actionData.PlayerId;
+							var playerStat = await _context.PlayerStats.FirstOrDefaultAsync(ps => ps.PlayerID == actionData.PlayerId);
+							if (playerStat == null)
+							{
+								return Json(new { success = false, message = $"Player stat not found for playerId {playerId}." });
+							}
+
+							if (playerStat.HBP > 0)
+							{
+								playerStat.HBP -= 1;
+								_context.PlayerStats.Update(playerStat);
+								await _context.SaveChangesAsync();
+								await transaction.CommitAsync();
+								return Json(new { success = true });
+							}
+							else
+							{
+								return Json(new { success = false, message = "Invalid stat count; cannot decrement." });
+							}
+						}
+
+				}
 
                 return Json(new { success = false, message = "Unhandled action type." });
             }
@@ -584,6 +993,113 @@ namespace WMBA_7_2_.Controllers
                 return Json(new { success = false, message = ex.Message });
             }
         }
+
+
+
+        [HttpPost]
+        public async Task<IActionResult> UndoAllActionsForGame(int gameId)
+        {
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                // Fetch all actions for the specified game ordered by Timestamp descending
+                var actionLogs = await _context.ActionLogs
+                                                .Where(a => a.GameID == gameId) // Assuming you added GameId to ActionLogs
+                                                .OrderByDescending(a => a.Timestamp)
+                                                .ToListAsync();
+
+                if (!actionLogs.Any())
+                {
+                    return Json(new { success = false, message = "No actions found for this game." });
+                }
+
+                foreach (var actionLog in actionLogs)
+                {
+                    var actionData = JsonConvert.DeserializeObject<PlayerActionDto>(actionLog.Data);
+                    if (actionData == null)
+                    {
+                        continue;
+                    }
+
+                    var playerStat = await _context.PlayerStats.FirstOrDefaultAsync(ps => ps.PlayerID == actionData.PlayerId);
+                    if (playerStat == null)
+                    {
+                        continue; 
+                    }
+
+                    switch (actionLog.ActionType)
+                    {
+                        case "Run":
+                            if (playerStat.Runs > 0) playerStat.Runs -= 1;
+                            break;
+                        case "Single":
+                            if (playerStat.B1 > 0) playerStat.B1 -= 1;
+                            if (playerStat.Hits > 0) playerStat.Hits -= 1;
+                            break;
+                        case "Double":
+                            if (playerStat.B2 > 0) playerStat.B2 -= 1;
+                            if (playerStat.Hits > 0) playerStat.Hits -= 1;
+                            break;
+                        case "Triple":
+                            if (playerStat.B3 > 0) playerStat.B3 -= 1;
+                            if (playerStat.Hits > 0) playerStat.Hits -= 1;
+                            break;
+                        case "HomeRun":
+                            if (playerStat.HR > 0) playerStat.HR -= 1;
+                            if (playerStat.RBI > 0) playerStat.RBI -= 1;
+                            if (playerStat.Runs > 0) playerStat.Runs -= 1;
+                            if (playerStat.Hits > 0) playerStat.Hits -= 1;
+                            break;
+                        case "GO":
+                            if (playerStat.GO > 0) playerStat.GO -= 1;
+                            break;
+                        case "FO":
+                            if (playerStat.FO > 0) playerStat.FO -= 1;
+                            break;
+                        case "PO":
+                            if (playerStat.PO > 0) playerStat.PO -= 1;
+                            break;
+                        case "RBI":
+                            if (playerStat.RBI > 0) playerStat.RBI -= 1;
+                            break;
+                        case "SAC":
+                            if (playerStat.SAC > 0) playerStat.SAC -= 1;
+                            break;
+                        case "SB":
+                            if (playerStat.SB > 0) playerStat.SB -= 1;
+                            break;
+                        case "BB":
+                            if (playerStat.BB > 0) playerStat.BB -= 1;
+                            break;
+                        case "PlayerPlaced":
+                            if (playerStat.PA > 0) playerStat.PA -= 1;
+                            break;
+                        case "GamePlayed":
+                            if (playerStat.GP > 0) playerStat.GP -= 1;
+                            break;
+
+                    }
+
+                    _context.ActionLogs.Remove(actionLog);
+                }
+
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+                return Json(new { success = true, message = "All actions for the game have been successfully undone." });
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return Json(new { success = false, message = $"An error occurred while undoing actions: {ex.Message}" });
+            }
+        }
+
+
     }
+
 }
+
+
+
+
     

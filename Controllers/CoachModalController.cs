@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WMBA_7_2_.Data;
@@ -17,6 +18,7 @@ namespace WMBA_7_2_.Controllers
 			_context = context;
 		}
 
+		[Authorize(Roles = "Admin, Convenor")]
 		public IActionResult Index()
 		{
 			var teams = _context.Teams
@@ -32,7 +34,8 @@ namespace WMBA_7_2_.Controllers
 
 
 		[HttpGet]
-		public JsonResult GetCoaches()
+        [Authorize(Roles = "Admin, Convenor")]
+        public JsonResult GetCoaches()
 		{
 			var coaches = _context.Coaches
 				.Include(c => c.TeamCoach)
@@ -53,7 +56,8 @@ namespace WMBA_7_2_.Controllers
 		}
 
 		[HttpPost]
-		public JsonResult Insert([FromBody]CoachViewModel viewModel)
+        [Authorize(Roles = "Admin, Convenor")]
+        public JsonResult Insert([FromBody]CoachViewModel viewModel)
 		{
 			try
 			{
@@ -93,7 +97,7 @@ namespace WMBA_7_2_.Controllers
 					return Json("Coach saved successfully.");
 				}
 
-				return Json("Model validation failed.");
+				return Json("Error! Ensure all required fields are filled out first!");
 			}
 			catch (Exception ex)
 			{
@@ -103,7 +107,8 @@ namespace WMBA_7_2_.Controllers
 
 
 		[HttpGet]
-		public JsonResult Edit(int? id)
+        [Authorize(Roles = "Admin, Convenor")]
+        public JsonResult Edit(int? id)
 		{
 			var coaches = _context.Coaches
 								 .Include(p => p.TeamCoach)
@@ -133,7 +138,8 @@ namespace WMBA_7_2_.Controllers
 		}
 
 		[HttpPost]
-		public JsonResult Update([FromBody] CoachViewModel viewModel)
+        [Authorize(Roles = "Admin, Convenor")]
+        public JsonResult Update([FromBody] CoachViewModel viewModel)
 		{
 			if (ModelState.IsValid)
 			{
@@ -175,8 +181,10 @@ namespace WMBA_7_2_.Controllers
 				return Json("Coach updated successfully.");
 			}
 
-			return Json("Model validation failed.");
-		}
+			return Json("Error! Ensure all required fields are filled out!");
+		}  
+
+
 		/*public JsonResult Delete(int id)
 		{
 			var coaches = _context.Coaches.Find(id);

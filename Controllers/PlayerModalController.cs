@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
 using WMBA_7_2_.CustomControllers;
 using WMBA_7_2_.Data;
 using WMBA_7_2_.Models;
+using WMBA_7_2_.Utilities;
 using WMBA_7_2_.ViewModels;
 
 namespace WMBA_7_2_.Controllers
@@ -17,8 +19,9 @@ namespace WMBA_7_2_.Controllers
         public PlayerModalController(WMBAContext context)
         {
             _context = context;
-        }   
+        }
 
+		[Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
         public IActionResult Index()
         {
 
@@ -28,7 +31,8 @@ namespace WMBA_7_2_.Controllers
         }
 
 		[HttpGet]
-		public JsonResult GetPlayers(int page = 1, int pageSize = 10, string sortColumn = "divAge", string sortDirection = "asc",
+        [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
+        public JsonResult GetPlayers(int page = 1, int pageSize = 10, string sortColumn = "divAge", string sortDirection = "asc",
 							 int? divisionId = null, string firstNameSearch = "", string lastNameSearch = "",
 							 string numberSearch = "", int? teamId = null)
 		{
@@ -48,25 +52,25 @@ namespace WMBA_7_2_.Controllers
 
 				if (!string.IsNullOrEmpty(firstNameSearch))
 				{
-					query = query.Where(p => p.PlayerFirstName.Contains(firstNameSearch));
+					query = query.Where(p => p.PlayerFirstName.ToUpper().Contains(firstNameSearch.ToUpper()));
 				}
 
 				if (!string.IsNullOrEmpty(lastNameSearch))
 				{
-					query = query.Where(p => p.PlayerLastName.Contains(lastNameSearch));
+					query = query.Where(p => p.PlayerLastName.ToUpper().Contains(lastNameSearch.ToUpper()));
 				}
 
-				if (!string.IsNullOrEmpty(numberSearch) && int.TryParse(numberSearch, out int number))
-				{
-					query = query.Where(p => p.PlayerNumber == number);
-				}
+				//if (!string.IsNullOrEmpty(numberSearch) && int.TryParse(numberSearch, out int number))
+				//{
+				//	query = query.Where(p => p.PlayerNumber == number);
+				//}
 
 				if (teamId.HasValue)
 				{
 					query = query.Where(p => p.TeamID == teamId.Value);
 				}
 
-				/*if (sortColumn == "teamName")
+				if (sortColumn == "teamName")
 				{
 					query = sortDirection == "asc" ? query.OrderBy(p => p.Team.TeamName) : query.OrderByDescending(p => p.Team.TeamName);
 				}
@@ -74,7 +78,7 @@ namespace WMBA_7_2_.Controllers
 				{
 					query = sortDirection == "asc" ? query.OrderBy(p => p.Division.DivAge) : query.OrderByDescending(p => p.Division.DivAge);
 				}
-				*/
+				
 
 				var totalRecords = query.Count();
 				var totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
@@ -104,7 +108,8 @@ namespace WMBA_7_2_.Controllers
 			}
 		}
 
-			[HttpPost]
+		[HttpPost]
+        [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
         public JsonResult Insert(Player model)
         {
             try
@@ -118,7 +123,7 @@ namespace WMBA_7_2_.Controllers
 
                     return Json("Player saved successfully.");
                 }
-                return Json("Model validation failed.");
+                return Json("Error! Ensure all required fields are filled out!");
             }
 			catch (DbUpdateException dex)
 			{
@@ -139,7 +144,8 @@ namespace WMBA_7_2_.Controllers
         }
 
 		[HttpGet]
-		public JsonResult Edit(int? id)
+        [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
+        public JsonResult Edit(int? id)
 		{
             try
             {
@@ -169,12 +175,13 @@ namespace WMBA_7_2_.Controllers
             }
             catch (Exception ex)
             {
-            return Json(new { error = "An error occurred while processing your request." });
+            return Json(new { error = "An error occurred while processing your request. Please try again later or contact your system administrator" });
             }
 		}
 
 		[HttpPost]
-		public JsonResult Update(Player model)
+        [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
+        public JsonResult Update(Player model)
 		{
             try
             {
@@ -186,7 +193,7 @@ namespace WMBA_7_2_.Controllers
 
                     return Json("Player updated successfully.");
                 }
-                return Json("Model validation failed.");
+                return Json("Error! Ensure all required fields are filled out!");
             }
 			catch (Exception ex)
             {
@@ -195,6 +202,7 @@ namespace WMBA_7_2_.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
         public JsonResult Delete(int id)
         {
             try
@@ -207,7 +215,7 @@ namespace WMBA_7_2_.Controllers
                     _context.SaveChanges();
                     return Json("Player deleted successfully.");
                 }
-                return Json("Player not found.");
+                return Json("Player not found by ID. If this issue persists, please see your administrator.");
             }
 			catch (Exception ex)
             {
@@ -221,7 +229,8 @@ namespace WMBA_7_2_.Controllers
 		}
 
 		[HttpPost]
-		public IActionResult ToggleStatus([FromBody] PlayerStatusUpdateModel model)
+        [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
+        public IActionResult ToggleStatus([FromBody] PlayerStatusUpdateModel model)
 		{
 			var player = _context.Players.FirstOrDefault(p => p.ID == model.Id);
 			if (player != null)
@@ -233,7 +242,8 @@ namespace WMBA_7_2_.Controllers
 			return Json(new { success = false });
 		}
 
-		public async Task<IActionResult> PlayerDetails(int playerId)
+        [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
+        public async Task<IActionResult> PlayerDetails(int playerId)
 		{
 			var player = await _context.Players
 										.Include(p => p.PlayerStats)
@@ -247,6 +257,53 @@ namespace WMBA_7_2_.Controllers
 			return View(player);
 		}
 
+        public PlayerStats GetPlayerStats(int playerID)
+        {
+            return _context.PlayerStats.FirstOrDefault(ps => ps.PlayerID == playerID);
+        }
 
-	}
+        [HttpPost]
+        public JsonResult CalculatePlayerStats(int playerID)
+        {
+            var playerStats = _context.PlayerStats
+                .Include(ps => ps.Player)
+                .FirstOrDefault(ps => ps.PlayerID == playerID);
+
+            if (playerStats == null || !(playerStats.PA.HasValue && playerStats.Hits.HasValue))
+            {
+                return Json(new { error = "Invalid or missing stats data for player." });
+            }
+
+            int atBats = (int)(playerStats.PA.Value - playerStats.BB.Value - playerStats.HBP.Value - playerStats.SAC.Value);
+
+            if (atBats <= 0)
+            {
+                return Json(new { error = "Invalid or missing AB data for player." });
+            }
+
+            decimal avg = CalculatedStats.CalculateAVG((int)(playerStats.Hits.Value), atBats);
+
+            int onBaseEvents = (int)(playerStats.Hits.Value + playerStats.BB.Value + playerStats.HBP.Value);
+            decimal obp = CalculatedStats.CalculateOBP(onBaseEvents, playerStats.BB.Value, playerStats.HBP.Value, playerStats.PA.Value, playerStats.SAC.Value);
+
+            decimal slg = CalculatedStats.CalculateSLG((int?)playerStats.B1, (int?)playerStats.B2, (int?)playerStats.B3, (int?)playerStats.HR, (int?)playerStats.PA);
+
+            decimal ops = CalculatedStats.CalculateOPS((int)(playerStats.Hits.Value), playerStats.BB.Value, playerStats.HBP.Value, playerStats.PA.Value, playerStats.SAC.Value,
+                                                      (int?)playerStats.B1, (int?)playerStats.B2, (int?)playerStats.B3, (int?)playerStats.HR);
+
+            var result = new
+            {
+                error = false,
+                stats = new
+                {
+                    AVG = avg,
+                    OBP = obp,
+                    SLG = slg,
+                    OPS = ops
+                }
+            };
+
+            return Json(result);
+        }
+    }
 }
