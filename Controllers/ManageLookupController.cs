@@ -16,7 +16,7 @@ namespace WMBA_7_2_.Controllers
 			_context = context;
 		}
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, Convenor")]
         public IActionResult Index(string tab = "Division-Tab")
 		{
 
@@ -24,7 +24,7 @@ namespace WMBA_7_2_.Controllers
 			return View();
 		}
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, Convenor")]
         public PartialViewResult Division()
 		{
 			ViewData["DivisionID"] = new
@@ -33,7 +33,7 @@ namespace WMBA_7_2_.Controllers
 			return PartialView("_Division");
 		}
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, Convenor")]
         public PartialViewResult League()
         {
             ViewData["LeagueID"] = new

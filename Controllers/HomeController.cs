@@ -21,6 +21,7 @@ namespace WMBA_7_2_.Controllers
 
         // GET: Game
         [HttpGet]
+        [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
         public async Task<IActionResult> Index()
         {
             var games = await _context.Games
@@ -39,6 +40,7 @@ namespace WMBA_7_2_.Controllers
 
         // GET: Game/Details/5
         [HttpGet]
+        [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
         public async Task<IActionResult> Details(int? id)
         {
 
@@ -66,6 +68,7 @@ namespace WMBA_7_2_.Controllers
 
         // GET: Game/Create
         [HttpGet]
+        [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
         public IActionResult Create()
         {
 
@@ -79,6 +82,7 @@ namespace WMBA_7_2_.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
         public async Task<IActionResult> Create([Bind("ID,GameDate,GameTime,HomeTeamID,AwayTeamID,GameLocation")] Game game)
         {
 
@@ -106,6 +110,7 @@ namespace WMBA_7_2_.Controllers
 
 
         // GET: Game/Edit/5
+        [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Games == null)
@@ -129,6 +134,7 @@ namespace WMBA_7_2_.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
         public async Task<IActionResult> Edit(int id, [Bind("ID,GameDate,GameTime,HomeTeamID,AwayTeamID,GameLocation")] Game game)
         {
 
@@ -165,7 +171,8 @@ namespace WMBA_7_2_.Controllers
             return View(game);
         }
 
-        // GET: Game/Delete/5
+        // GET: Game/Delete/5\
+        [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Games == null)
@@ -186,6 +193,7 @@ namespace WMBA_7_2_.Controllers
         // POST: Game/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.Games == null)
@@ -202,11 +210,13 @@ namespace WMBA_7_2_.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
         private bool GameExists(int id)
         {
             return _context.Games.Any(e => e.ID == id);
         }
 
+        [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
         private void FillLineupsWithTeams(Game game)
         {
             foreach (Player player in game.HomeTeam.Players)
@@ -231,6 +241,7 @@ namespace WMBA_7_2_.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
         public async Task<IActionResult> RemovePlayerFromGame(int gameId, int playerId)
         {
             var gamePlayer = await _context.GamePlayers.FirstOrDefaultAsync(gp => gp.GameID == gameId && gp.PlayerID == playerId);
@@ -243,6 +254,7 @@ namespace WMBA_7_2_.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
         public async Task<IActionResult> AddPlayerToGame(int GameID, int PlayerID, bool isHomeTeam)
         {
             var existingGamePlayer = await _context.GamePlayers.FirstOrDefaultAsync(gp => gp.GameID == GameID && gp.PlayerID == PlayerID);
