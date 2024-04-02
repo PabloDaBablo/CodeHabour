@@ -61,6 +61,12 @@
                 <button id="strikeNumberButton" class="custom-btn">Strike: <span id="strikeCount">0</span></button>
             </div>
         </div>
+
+
+    <!-- Toggle Button -->
+    <button id="toggleButton" class="custom-btn" onclick="toggleVisibility()">Show Details</button>
+
+    <div id="collapse-on-mobile">
         <div class="row">
             <div class="col d-flex align-items-center justify-content-center" id="inningDiv">
                 <span id="teamsPlaying">Select a game...</span>
@@ -95,6 +101,7 @@
                 </select>
             </div>
         </div>
+    </div>
 
 
     <div class="svg-container">
@@ -183,7 +190,30 @@
 
     <script type="text/javascript">
         var gameId = @gameId;
-    </script>  
+    </script> 
+    
+    <script type="text/javascript">
+        function toggleVisibility() {
+            var collapseSection = document.getElementById('collapse-on-mobile');
+            var toggleButton = document.getElementById('toggleButton');
+
+            if (collapseSection.style.display === 'none') {
+                collapseSection.style.display = 'block';
+                toggleButton.textContent = 'Hide Details'; // Change the button text to 'Hide'
+            } else {
+                collapseSection.style.display = 'none';
+                toggleButton.textContent = 'Show Details'; // Change the button text to 'Show'
+            }
+        }
+
+        // Optional: automatically adjust button text on page load based on the collapse section state
+        document.addEventListener('DOMContentLoaded', function () {
+            var collapseSection = document.getElementById('collapse-on-mobile');
+            var toggleButton = document.getElementById('toggleButton');
+            toggleButton.textContent = collapseSection.style.display === 'none' ? 'Show Details' : 'Hide Details';
+        });
+    </script>
+
 
 </body>
 </html>

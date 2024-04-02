@@ -23,6 +23,13 @@ namespace WMBA_7_2_.Controllers
             _context = context;
         }
 
+        // Redirect to Dashboard/Home Page
+        public IActionResult RedirectToDashboard()
+        {
+            return RedirectToAction("Index", "Home");
+        }
+
+
         // GET: Game
         [HttpGet]
         [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
