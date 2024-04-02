@@ -23,7 +23,7 @@ namespace WMBA_7_2_.Controllers
         }
 
         // GET: PlayerStats
-        [Authorize(Roles = "Admin, Coaches, Convenor, Scorekeeper")]
+        [Authorize(Roles = "Admin, Coaches, Convenor")]
         public async Task<IActionResult> Index(int? page, string SearchString, string actionButton, string sortDirection = "asc", string sortField = "Runs")
         {
             var wMBAContext = _context.PlayerStats.Include(p => p.Player).AsNoTracking();

@@ -113,7 +113,11 @@ namespace WMBA_7_2_.Controllers
                 //No roles selected so just remove any currently assigned
                 foreach (var r in UserRoles)
                 {
-                    await _userManager.RemoveFromRoleAsync(_user, r);
+                    if (r != "Admin" || !User.IsInRole("Admin"))
+                    {
+                        await _userManager.RemoveFromRoleAsync(_user, r);
+                    }
+
                 }
             }
             else
@@ -138,7 +142,7 @@ namespace WMBA_7_2_.Controllers
                     }
                     else
                     {
-                        if (UserRoles.Contains(r.Name))
+                        if (UserRoles.Contains(r.Name) && !User.IsInRole("Admin"))
                         {
                             await _userManager.RemoveFromRoleAsync(_user, r.Name);
                         }

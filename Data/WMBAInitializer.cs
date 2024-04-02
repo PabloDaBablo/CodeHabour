@@ -37,12 +37,27 @@ namespace WMBA_7_2_.Data
                     context.Divisions.AddRange(
                         new Division
                         {
+                            DivAge = "18U",
+                            LeagueTypeID = 1
+                        },
+                        new Division
+                        {
                             DivAge = "15U",
                             LeagueTypeID = 1
                         },
                         new Division
                         {
                             DivAge = "13U",
+                            LeagueTypeID = 1
+                        },
+                        new Division
+                        {
+                            DivAge = "11U",
+                            LeagueTypeID = 1
+                        },
+                        new Division
+                        {
+                            DivAge = "9U",
                             LeagueTypeID = 1
                         }
 

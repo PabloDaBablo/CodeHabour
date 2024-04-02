@@ -45,6 +45,8 @@ namespace WMBA_7_2_.Controllers
 					.Include(p => p.PlayerStats)
 					.AsQueryable();
 
+                
+
 				if (divisionId.HasValue)
 				{
 					query = query.Where(p => p.DivisionID == divisionId.Value);

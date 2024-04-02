@@ -1,4 +1,5 @@
 ﻿using Humanizer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.DotNet.MSIdentity.Shared;
 using Microsoft.EntityFrameworkCore;
@@ -21,6 +22,7 @@ namespace WMBA_7_2_.Controllers
 
         //Add score to away team
         [HttpPost]
+        [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
         public async Task<IActionResult> AddAwayTeamRun([FromBody] GameScoreUpdateRequest request)
         {
             var game = await _context.Games.FindAsync(request.GameId);
@@ -37,6 +39,7 @@ namespace WMBA_7_2_.Controllers
         
         //Subtract score from away team
         [HttpPost]
+        [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
         public async Task<IActionResult> DecrementAwayTeamRun([FromBody] GameScoreUpdateRequest request)
         {
             var game = await _context.Games.FindAsync(request.GameId);
@@ -56,7 +59,7 @@ namespace WMBA_7_2_.Controllers
             public int GameId { get; set; }
         }
 
-
+        [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
         public IActionResult Index(int gameId)
         {
             var game = _context.Games
@@ -68,6 +71,7 @@ namespace WMBA_7_2_.Controllers
             return View(game);
         }
 
+        [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
         public JsonResult GetPlayers(int gameId)
         {
             var awayTeamID = _context.Games
@@ -100,6 +104,7 @@ namespace WMBA_7_2_.Controllers
             return Json(players);
         }
 
+        [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
         public JsonResult GetPlayersHome(int gameId)
         {
             var homeTeamID = _context.Games
@@ -138,6 +143,7 @@ namespace WMBA_7_2_.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
         public async Task<IActionResult> PlayerScored([FromBody] PlayerScoredDto dto)
         {
             if (dto == null)
@@ -183,6 +189,7 @@ namespace WMBA_7_2_.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
         public async Task<IActionResult> PlayerStruckOut([FromBody] PlayerScoredDto dto)
         {
             if (dto == null || dto.PlayerId <= 0)
@@ -217,6 +224,7 @@ namespace WMBA_7_2_.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
         public async Task<IActionResult> GamesPlayed([FromBody] PlayerScoredDto dto)
         {
             if (dto == null)
@@ -260,6 +268,7 @@ namespace WMBA_7_2_.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
         public async Task<IActionResult> PlateAppearances([FromBody] PlayerScoredDto dto)
         {
             if (dto == null || dto.PlayerId <= 0)
@@ -295,6 +304,7 @@ namespace WMBA_7_2_.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
         public async Task<IActionResult> RunsBattedIn([FromBody] PlayerScoredDto dto)
         {
             if (dto == null || dto.PlayerId <= 0)
@@ -330,6 +340,7 @@ namespace WMBA_7_2_.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
         public async Task<IActionResult> Sacrifice([FromBody] PlayerScoredDto dto)
         {
             if (dto == null || dto.PlayerId <= 0)
@@ -365,6 +376,7 @@ namespace WMBA_7_2_.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
         public async Task<IActionResult> StolenBase([FromBody] PlayerScoredDto dto)
         {
             if (dto == null || dto.PlayerId <= 0)
@@ -400,6 +412,7 @@ namespace WMBA_7_2_.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
         public async Task<IActionResult> BaseOnBalls([FromBody] PlayerScoredDto dto)
         {
             if (dto == null || dto.PlayerId <= 0)
@@ -435,7 +448,8 @@ namespace WMBA_7_2_.Controllers
         }
 
 		[HttpPost]
-		public async Task<IActionResult> HBP([FromBody] PlayerScoredDto dto)
+        [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
+        public async Task<IActionResult> HBP([FromBody] PlayerScoredDto dto)
 		{
 			if (dto == null || dto.PlayerId <= 0)
 			{
@@ -470,6 +484,7 @@ namespace WMBA_7_2_.Controllers
 		}
 
 		[HttpGet]
+        [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
         public async Task<IActionResult> GetGameDetails(int gameId)
         {
             var game = await _context.Games
@@ -496,6 +511,7 @@ namespace WMBA_7_2_.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
         public async Task<IActionResult> PlayerBaseHit([FromBody] PlayerBaseHitDto dto)
         {
             if (dto == null || !new[] { "1B", "2B", "3B", "HR" }.Contains(dto.BaseHitType))
@@ -549,6 +565,7 @@ namespace WMBA_7_2_.Controllers
             }
         }
 
+
         public class PlayerOutDto
         {
             public int PlayerId { get; set; }
@@ -556,6 +573,7 @@ namespace WMBA_7_2_.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
         public async Task<IActionResult> PlayerOut([FromBody] PlayerOutDto dto)
         {
             if (dto == null || !new[] { "GO", "PO", "FO" }.Contains(dto.OutType))
@@ -603,6 +621,7 @@ namespace WMBA_7_2_.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
         public ActionResult LogAction([FromBody] ActionLogDto actionLogDto)
         {
             var actionLog = new ActionLog
@@ -626,6 +645,7 @@ namespace WMBA_7_2_.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
         public async Task<IActionResult> UndoLastAction()
         {
             using var transaction = await _context.Database.BeginTransactionAsync();
@@ -997,6 +1017,7 @@ namespace WMBA_7_2_.Controllers
 
 
         [HttpPost]
+        [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
         public async Task<IActionResult> UndoAllActionsForGame(int gameId)
         {
             using var transaction = await _context.Database.BeginTransactionAsync();

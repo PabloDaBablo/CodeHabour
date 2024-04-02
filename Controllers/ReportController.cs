@@ -26,13 +26,13 @@ namespace WMBA_7_2_.Controllers
         }
 
         // GET: Excel Data
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, Convenor")]
         public async Task<IActionResult> Index()
         {
             return View();
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, Convenor")]
         public IActionResult Reports()
         {
             var report = _context.Reports.AsNoTracking();
@@ -40,7 +40,7 @@ namespace WMBA_7_2_.Controllers
             return View(report);
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, Convenor")]
         public IActionResult DownloadSampleExcel()
         {
             //Create a new spreadsheet from scratch.
@@ -101,7 +101,7 @@ namespace WMBA_7_2_.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, Convenor")]
         public async Task<IActionResult> ImportFromExcel(IFormFile theExcel)
         {
             string feedBack = string.Empty;
@@ -162,7 +162,7 @@ namespace WMBA_7_2_.Controllers
             return RedirectToAction("Index", "Report");
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, Convenor")]
         private async Task ReadImportedData(ExcelWorksheet workSheet, string success)
         {
             //Prepare the colleciton of imported data

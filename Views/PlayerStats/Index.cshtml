@@ -27,10 +27,14 @@
     <input type="hidden" name="sortDirection" value="@ViewData["sortDirection"]" />
     <input type="hidden" name="sortField" value="@ViewData["sortField"]" />
 
-
+    <div class="table-responsive">
     <table class="table table-striped table-bordered">
     <thead>
         <tr>
+            <th>
+                <input type="submit" value="Player" class="btn btn-toolbar" />
+                @* @Html.DisplayNameFor(model => model.Player) *@
+            </th>
             <th>
                 <input type="submit" value="Games Played" class="btn btn-toolbar" />
                 @* @Html.DisplayNameFor(model => model.GP) *@
@@ -108,6 +112,9 @@
 @foreach (var item in Model) {
         <tr>
             <td>
+                @Html.DisplayFor(modelItem => item.Player.PlayerFullName)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.GP)
             </td>
             <td>
@@ -165,5 +172,6 @@
 }
     </tbody>
 </table>
+</div>
 <partial name="_PagingNavBar" />
 </form>

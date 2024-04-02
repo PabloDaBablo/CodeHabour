@@ -22,26 +22,30 @@ namespace WMBA_7_2_.Controllers
 
         // GET: Game
         [HttpGet]
+        [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
         public async Task<IActionResult> Index()
         {
-            var games = await _context.Games
+            var dashboardViewModels = await _context.Games
                 .Include(g => g.Team_Games)
                 .ThenInclude(g => g.Team)
                 .Include(g => g.AwayTeam)
                 .Include(g => g.HomeTeam)
-                .AsNoTracking()
+                .Select(g => new DashboardViewModel
+                {
+                    GameDate = g.GameDate,
+                    GameTime = g.GameTime,
+                    GameLocation = g.GameLocation,
+                    AwayTeam = g.AwayTeam,
+                    HomeTeam = g.HomeTeam
+                })
                 .ToListAsync();
 
-            var gameViewModels = games.Select(game => new DashboardViewModel(game)).ToList();
-
-            ViewData["HomeTeam"] = new SelectList(_context.Teams, "ID", "TeamName");
-            ViewData["AwayTeam"] = new SelectList(_context.Teams, "ID", "TeamName");
-
-            return View(gameViewModels);
+            return View(dashboardViewModels);
         }
 
         // GET: Game/Details/5
         [HttpGet]
+        [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
         public async Task<IActionResult> Details(int? id)
         {
 
@@ -51,37 +55,173 @@ namespace WMBA_7_2_.Controllers
                 return NotFound();
             }
 
-            var gameEntity = await _context.Games
+            var game = await _context.Games
                 .Include(g => g.GamePlayers).ThenInclude(p => p.Player)
                 .Include(g => g.AwayTeam)
                 .Include(g => g.HomeTeam)
                 .FirstOrDefaultAsync(m => m.ID == id);
 
-            if (gameEntity == null)
+            ViewBag.AvailablePlayers = _context.Players.Where(p => p.IsActive && !game.GamePlayers.Select(gp => gp.PlayerID).Contains(p.ID)).ToList();
+
+            if (game == null)
             {
                 return NotFound();
             }
 
-            var gameViewModel = new DashboardViewModel(gameEntity);
-
-            ViewBag.AvailablePlayers = _context.Players
-                .Where(p => p.IsActive && !gameEntity.GamePlayers.Select(gp => gp.PlayerID).Contains(p.ID))
-                .ToList();
-
-            return View(gameViewModel);
+            return View(game);
         }
 
-        // Method to redirect to the Game Create view
-        public IActionResult RedirectToCreateGame()
+        // GET: Game/Create
+        [HttpGet]
+        [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
+        public IActionResult Create()
         {
-            return RedirectToAction("Create", "Game");
+
+            ViewData["HomeTeam"] = new SelectList(_context.Teams, "ID", "TeamName");
+            ViewData["AwayTeam"] = new SelectList(_context.Teams, "ID", "TeamName");
+            return View();
         }
 
+        // POST: Game/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
+        public async Task<IActionResult> Create([Bind("ID,GameDate,GameTime,HomeTeamID,AwayTeamID,GameLocation")] Game game)
+        {
+
+            ViewData["HomeTeam"] = new SelectList(_context.Teams, "ID", "TeamName");
+            ViewData["AwayTeam"] = new SelectList(_context.Teams, "ID", "TeamName");
+
+
+
+            if (ModelState.IsValid)
+            {
+                game.HomeTeam = _context.Teams.Include(t => t.Players).FirstOrDefault(t => t.ID == game.HomeTeamID);
+                game.AwayTeam = _context.Teams.Include(t => t.Players).FirstOrDefault(t => t.ID == game.AwayTeamID);
+
+                FillLineupsWithTeams(game);
+
+                _context.Add(game);
+                await _context.SaveChangesAsync();
+                //return RedirectToAction("Details", new { id = game.ID });
+                return RedirectToAction("Index", new { id = game.ID });
+            }
+
+            return View();
+        }
+
+
+
+        // GET: Game/Edit/5
+        [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null || _context.Games == null)
+            {
+                return NotFound();
+            }
+
+            var game = await _context.Games.FindAsync(id);
+            if (game == null)
+            {
+                return NotFound();
+            }
+
+            ViewData["HomeTeam"] = new SelectList(_context.Teams, "ID", "TeamName");
+            ViewData["AwayTeam"] = new SelectList(_context.Teams, "ID", "TeamName");
+            return View(game);
+        }
+
+        // POST: Game/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
+        public async Task<IActionResult> Edit(int id, [Bind("ID,GameDate,GameTime,HomeTeamID,AwayTeamID,GameLocation")] Game game)
+        {
+
+
+            ViewData["HomeTeam"] = new SelectList(_context.Teams, "ID", "TeamName", game.HomeTeam);
+            ViewData["AwayTeam"] = new SelectList(_context.Teams, "ID", "TeamName", game.AwayTeam);
+
+            if (id != game.ID)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(game);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!GameExists(game.ID))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View(game);
+        }
+
+        // GET: Game/Delete/5\
+        [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null || _context.Games == null)
+            {
+                return NotFound();
+            }
+
+            var game = await _context.Games
+                .FirstOrDefaultAsync(m => m.ID == id);
+            if (game == null)
+            {
+                return NotFound();
+            }
+
+            return View(game);
+        }
+
+        // POST: Game/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            if (_context.Games == null)
+            {
+                return Problem("Entity set 'WMBAContext.Schedules'  is null.");
+            }
+            var game = await _context.Games.FindAsync(id);
+            if (game != null)
+            {
+                _context.Games.Remove(game);
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
         private bool GameExists(int id)
         {
             return _context.Games.Any(e => e.ID == id);
         }
 
+        [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
         private void FillLineupsWithTeams(Game game)
         {
             foreach (Player player in game.HomeTeam.Players)
@@ -106,6 +246,7 @@ namespace WMBA_7_2_.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
         public async Task<IActionResult> RemovePlayerFromGame(int gameId, int playerId)
         {
             var gamePlayer = await _context.GamePlayers.FirstOrDefaultAsync(gp => gp.GameID == gameId && gp.PlayerID == playerId);
@@ -118,6 +259,7 @@ namespace WMBA_7_2_.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin, Convenor, Coaches, Scorekeeper")]
         public async Task<IActionResult> AddPlayerToGame(int GameID, int PlayerID, bool isHomeTeam)
         {
             var existingGamePlayer = await _context.GamePlayers.FirstOrDefaultAsync(gp => gp.GameID == GameID && gp.PlayerID == PlayerID);
@@ -138,5 +280,8 @@ namespace WMBA_7_2_.Controllers
             }
             return RedirectToAction(nameof(Details), new { id = GameID });
         }
+
+
+
     }
 }

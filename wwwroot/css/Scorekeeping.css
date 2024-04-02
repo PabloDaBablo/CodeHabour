@@ -1,66 +1,60 @@
-﻿#popup-menu, #su{
+﻿#popup-menu, #su {
     display: none;
     position: absolute;
-    background: rgba(255, 255, 255, 0.95); 
-    border: 1px solid #ccc; 
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     padding: 15px;
-    border-radius: 8px; 
+    border-radius: 8px;
     width: 200px;
     font-family: Arial, sans-serif;
-    z-index: 1000; 
+    z-index: 1000;
 }
 
-#popup-menu h4 {
-    margin-top: 0;
-    color: #333; 
-}
+    #popup-menu h4 {
+        margin-top: 0;
+        color: #333;
+    }
 
-#popup-menu ul {
-    list-style-type: none; 
-    padding: 0;
-    margin: 0;
-}
-#popup-menu ul li {
-    padding: 8px;
-    border-bottom: 1px solid #eee;
-    cursor: pointer; 
-}
+    #popup-menu ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
 
-#popup-menu ul li:last-child {
-    border-bottom: none; 
+        #popup-menu ul li {
+            padding: 8px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+        }
 
-}
+            #popup-menu ul li:last-child {
+                border-bottom: none;
+            }
 
-#popup-menu ul li:hover {
-    background-color: #f9f9f9; 
-}
+            #popup-menu ul li:hover {
+                background-color: #f9f9f9;
+            }
 
 .player-group.selected {
     stroke: #ff0000;
     stroke-width: 1;
 }
 
-#popup-menu ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-}
-
 #popup-menu > ul > li {
-    position: relative; 
+    position: relative;
 }
-
 
 .submenu {
-    display: none; 
+    display: none;
     position: absolute;
-    left: 100%; 
-    top: 0; 
-    background: white; 
-    border: 1px solid #ccc; 
-    z-index: 1001; 
-    white-space: nowrap; 
+    left: 100%;
+    top: 0;
+    background: white;
+    border: 1px solid #ccc;
+    z-index: 1001;
+    white-space: nowrap;
+    box-sizing: border-box;
 }
 
 #popup-menu li:hover > .submenu {
@@ -73,22 +67,12 @@
     background-color: #f9f9f9;
     border: 1px solid #ddd;
     padding: 5px;
+    box-sizing: border-box;
 }
 
-.submenu li:hover {
-    background-color: #f0f0f0;
-
-}
-
-@media (max-width: 768px) {
-    .svg-container {
-        padding: 5px;
+    .submenu li:hover {
+        background-color: #f0f0f0;
     }
-
-    svg {
-        max-width: 100%;
-    }
-}
 
 #toggleButton {
     display: none;
@@ -110,7 +94,7 @@
     display: none;
     position: fixed;
     top: 0;
-    left: 0; 
+    left: 0;
     background: rgba(255, 255, 255, 0.95);
     border: 1px solid #ccc;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
